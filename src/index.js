@@ -3,6 +3,7 @@ import config from './config/config'
 import MainScene from './scenes/MainScene'
 import WaitingRoom from './scenes/WaitingRoom'
 import MeowsicRoom from './scenes/MeowsicRoom'
+import Login from './scenes/PhaserLogin'
 
 class Game extends Phaser.Game {
     constructor() {
@@ -13,8 +14,9 @@ class Game extends Phaser.Game {
         this.scene.add('MainScene', MainScene)
         this.scene.add('WaitingRoom', WaitingRoom)
         this.scene.add('MeowsicRoom', MeowsicRoom)
+        this.scene.add('Login', Login)
         //Start the game with the mainscene
-        //<<START GAME WITH MAIN SCENE HERE>>
+        //<<START GAME WITH LOGIN HERE>>
         this.scene.start('MainScene')
     }
 }
