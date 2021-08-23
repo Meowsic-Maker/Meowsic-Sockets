@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import Cat from "../helpers/cat";
 import Zone from "../helpers/zone";
+import * as Tone from "tone";
 
 export default class MeowsicRoom extends Phaser.Scene {
     constructor() {
@@ -9,7 +10,10 @@ export default class MeowsicRoom extends Phaser.Scene {
     }
 
     preload() {
+        this.load.image("bg", "/assets/bg.jpg");
         this.load.image("cat", "/assets/neko.jpeg");
+        this.load.audio("meow", "/assets/meow.mp3");
+        this.load.audio("bell", "/assets/bell.mp3");
     }
 
     init(data) {
@@ -111,36 +115,24 @@ export default class MeowsicRoom extends Phaser.Scene {
         this.dropZone7 = this.zone7.renderZone(920, 440, 220, 140);
         this.outline7 = this.zone7.renderOutline(this.dropZone7);
 
+        this.cats = [];
+
         this.dealCats = () => {
             this.dealCats = () => {
                 for (let i = 0; i < 7; i++) {
                     let playerCat = new Cat(this);
                     playerCat.render(80, 100 + i * 100, "cat");
+                    playerCat.name = "Cat " + (i + 1);
+                    this.cats.push(playerCat);
+                    console.log("playerCat", playerCat);
+                    console.log("this.cats", this.cats);
                 }
             };
-            const meow = () => {
-                const audioContext = new AudioContext();
-                const osc = audioContext.createOscillator();
-                osc.type = "triangle";
-                osc.frequency.value = 350;
-                osc.frequency.exponentialRampToValueAtTime(
-                    600,
-                    audioContext.currentTime + 1
-                );
-                const gain = audioContext.createGain();
-                gain.gain.exponentialRampToValueAtTime(
-                    0.001,
-                    audioContext.currentTime + 0.9
-                );
-
-                osc.start();
-                osc.stop(audioContext.currentTime + 1);
-                osc.connect(gain).connect(audioContext.destination);
-            };
-            meow();
         };
 
         this.dealCatText.on("pointerdown", function () {
+            const bell = new Tone.Player("/assets/bell.mp3").toDestination();
+            bell.autostart = true;
             scene.dealCats();
         });
 
@@ -171,12 +163,28 @@ export default class MeowsicRoom extends Phaser.Scene {
         });
 
         this.input.on("drop", function (pointer, gameObject, dropZone) {
-            dropZone.data.values.cats++;
-            gameObject.x = dropZone.x;
-            gameObject.y = dropZone.y;
-            console.log(dropZone)
-            scene.socket.emit('catPlayed', gameObject, dropZone, scene.socket.id);
+            if (!dropZone.data.values.cats) {
+                gameObject.x = dropZone.x;
+                gameObject.y = dropZone.y;
+                dropZone.data.values.cats = true;
+
+                const player = new Tone.Player("/assets/meow.mp3").toDestination();
+                Tone.loaded().then(() => {
+                    const loop = new Tone.Loop((time) => {
+                        player.start();
+                    }, "1n").start(0);
+
+                    Tone.Transport.bpm.value = 80;
+                    Tone.Transport.start();
+                    Tone.Transport.stop(+30);
+                });
+            } else {
+                gameObject.x = gameObject.input.dragStartX;
+                gameObject.y = gameObject.input.dragStartY;
+            }
         });
+
+
     }
 
     update() { }

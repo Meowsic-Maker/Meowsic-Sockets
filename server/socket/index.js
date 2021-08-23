@@ -105,8 +105,8 @@ module.exports = (io) => {
             firebase.auth().signInWithEmailAndPassword(
                 input.username,
                 input.password
-                ).then( () => {
-                   const user = firebaseApp.auth().currentUser;
+            ).then(() => {
+                const user = firebaseApp.auth().currentUser;
                 if (user != null) {
                     var name = user.displayName;
                     var email = user.email;
@@ -114,18 +114,16 @@ module.exports = (io) => {
                     // var emailVerified = user.emailVerified;
                     // var uid = user.uid;
                 } // send back user obj
-                socket.emit("userLoginSuccess", { name, email, photoUrl})
+                socket.emit("userLoginSuccess", { name, email, photoUrl })
                 console.log("HERE IS OUR USER!", user.email)
-                }
-                )
-                .catch(function(error) {
+            }
+            )
+                .catch(function (error) {
                     // Handle Errors here.
                     var errorCode = error.code;
                     var errorMessage = error.message;
                     console.log(error)
                 });
-
-
             // ).then(user => {
             //     console.log("THIS IS OUR USER", user)
             // }).catch(err => {
