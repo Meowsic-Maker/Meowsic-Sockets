@@ -83,7 +83,7 @@ module.exports = (io) => {
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
         });
-        // get a random code for the room
+        // get a random code for the waiting room
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
             while (Object.keys(gameRooms).includes(key)) {
@@ -94,30 +94,55 @@ module.exports = (io) => {
                 players: {},
                 numPlayers: 0,
             };
+            console.log("KEY", key)
             socket.emit("roomCreated", key);
         });
 
-        //FIREBASE:
+        //FIREBASE verification
         socket.on("isUserValid", function (input) {
             // input username & password?
             console.log(input)
-            console.log('firebase', firebaseApp)
-            firebaseApp.auth().signInWithEmailAndPassword(
+            firebase.auth().signInWithEmailAndPassword(
                 input.username,
                 input.password
-            ).then(user => {
-                console.log(user)
-            }).catch(err => {
-                console.log(err)
-            })
-            socket.emit("userLoginSuccess", user)
+                ).then( () => {
+                   const user = firebaseApp.auth().currentUser;
+                if (user != null) {
+                    var name = user.displayName;
+                    var email = user.email;
+                    var photoUrl = user.photoURL;
+                    // var emailVerified = user.emailVerified;
+                    // var uid = user.uid;
+                } // send back user obj
+                socket.emit("userLoginSuccess", { name, email, photoUrl})
+                console.log("HERE IS OUR USER!", user.email)
+                }
+                )
+                .catch(function(error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(error)
+                });
+
+
+            // ).then(user => {
+            //     console.log("THIS IS OUR USER", user)
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+            // if (user !== undefined) {
+            //
+            // } else {
+            // socket.emit("UserNotValid")
+            // }
         })
     });
 };
 
 function codeGenerator() {
     let code = "";
-    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
     for (let i = 0; i < 5; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
     }

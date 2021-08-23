@@ -71,19 +71,19 @@ export default class Login extends Phaser.Scene {
         });
 
         scene.socket.on("roomCreated", function (roomKey) {
+            console.log(roomKey)
             scene.roomKey = roomKey;
             scene.roomKeyText.setText(scene.roomKey);
         });
 
-        scene.socket.on("keyNotValid", function () {
+        scene.socket.on("userNotValid", function () {
             scene.notValidText.setText("Invalid Login!");
         });
         scene.socket.on("userLoginSuccess", function (user) {
-            scene.setState({ loggedInUser: user })
             scene.scene.stop('Login')
-            scene.scene.start("WaitingRoom", { ...scene.state, socket: scene.socket });
+            scene.scene.start("WaitingRoom", { ...this.state, socket: scene.socket });
         });
     }
-    update() { }
+    update() {}
 
 }
