@@ -10,6 +10,7 @@ export default class WaitingRoom extends Phaser.Scene {
     init(data) {
         //initializing the socket passed to the waiting room
         this.socket = data.socket;
+        // this.loggedInUser = data.user
     }
 
     preload() {

@@ -83,7 +83,7 @@ module.exports = (io) => {
                 ? socket.emit("keyIsValid", input)
                 : socket.emit("keyNotValid");
         });
-        // get a random code for the room
+        // get a random code for the waiting room
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
             while (Object.keys(gameRooms).includes(key)) {
@@ -94,10 +94,11 @@ module.exports = (io) => {
                 players: {},
                 numPlayers: 0,
             };
+            console.log("KEY", key)
             socket.emit("roomCreated", key);
         });
 
-        //FIREBASE:
+        //FIREBASE verification
         socket.on("isUserValid", function (input) {
             // input username & password?
             console.log(input)
@@ -139,7 +140,7 @@ module.exports = (io) => {
 
 function codeGenerator() {
     let code = "";
-    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
+    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
     for (let i = 0; i < 5; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
     }
