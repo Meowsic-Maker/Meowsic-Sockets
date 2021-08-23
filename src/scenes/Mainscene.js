@@ -30,7 +30,7 @@ export default class MainScene extends Phaser.Scene {
         this.socket = io()
 
         //LAUNCH WAITING ROOM:
-        scene.scene.launch('WaitingRoom', { socket: scene.socket })
+        scene.scene.launch('Login', { socket: scene.socket })
 
     }
 

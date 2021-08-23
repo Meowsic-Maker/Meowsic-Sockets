@@ -10,6 +10,16 @@ const gameRooms = {
     // }
 }
 
+const firebase = require('firebase/app')
+const firebaseConfig = require("../../src/firebase/firebaseConfig")
+require('firebase/auth');
+// import firebase from "firebase/app";
+// import { auth } from 'firebase/app';
+// import 'firebase/auth';        // for authentication
+// import 'firebase/database';    // database
+// Initialize Firebase
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+
 module.exports = (io) => {
     io.on("connection", (socket) => {
         console.log(
@@ -86,12 +96,28 @@ module.exports = (io) => {
             };
             socket.emit("roomCreated", key);
         });
+
+        //FIREBASE:
+        socket.on("isUserValid", function (input) {
+            // input username & password?
+            console.log(input)
+            console.log('firebase', firebaseApp)
+            firebaseApp.auth().signInWithEmailAndPassword(
+                input.username,
+                input.password
+            ).then(user => {
+                console.log(user)
+            }).catch(err => {
+                console.log(err)
+            })
+            socket.emit("userLoginSuccess", user)
+        })
     });
 };
 
 function codeGenerator() {
     let code = "";
-    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
     for (let i = 0; i < 5; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
     }

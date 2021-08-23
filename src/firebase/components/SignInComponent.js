@@ -50,11 +50,12 @@ const SignInComponent = () => {
         <input ref={passwordRef} type="password" />
         <button onClick={signIn}> Sign in</button>
         <h6>Not yet registered?
-          <span
-            onClick={signUp}
-            className="signin_link">
+          <button onClick={signUp} >
             Sign up
-          </span>
+          </button>
+          <button onClick={signUp} >
+            Just Make Meowsic!
+          </button>
         </h6>
       </form>
     </div>
