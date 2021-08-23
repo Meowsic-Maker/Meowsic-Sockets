@@ -32,29 +32,6 @@ export default class MainScene extends Phaser.Scene {
         //LAUNCH WAITING ROOM:
         scene.scene.launch('WaitingRoom', { socket: scene.socket })
 
-        //JOINED ROOM - SET STATE
-        this.socket.on('setState', function (state) {
-            const { roomKey, players, numPlayers } = state
-            scene.physics.resume()
-
-            //STATE
-            scene.state.roomKey = roomKey
-            scene.state.players = players
-            scene.state.numPlayers = numPlayers
-            scene.state.inRoom = true
-        })
-
-        // DISCONNECT
-        this.socket.on("disconnected", function (arg) {
-            const { playerId, numPlayers } = arg;
-            scene.state.numPlayers = numPlayers;
-            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                if (playerId === otherPlayer.playerId) {
-                    otherPlayer.destroy();
-                }
-            });
-        });
-
     }
 
 

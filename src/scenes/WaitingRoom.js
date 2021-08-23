@@ -77,6 +77,10 @@ export default class WaitingRoom extends Phaser.Scene {
             fontStyle: "bold",
         });
 
+        scene.socket.on('catPlayed', function (gameObject, dropZone, socketId) {
+            scene.socket.emit('catPlayed', gameObject, dropZone, socketId);
+        });
+
         scene.socket.on("roomCreated", function (roomKey) {
             scene.roomKey = roomKey;
             scene.roomKeyText.setText(scene.roomKey);
@@ -88,7 +92,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.socket.on("keyIsValid", function (input) {
             scene.socket.emit("joinRoom", input);
             scene.scene.stop("WaitingRoom");
-            scene.scene.stop('MainRoom')
+            scene.scene.stop('MainScene')
             scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket });
             scene.physics.pause();
         });
