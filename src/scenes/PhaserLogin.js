@@ -39,7 +39,8 @@ export default class Login extends Phaser.Scene {
         //title
         scene.title = scene.add.text(100, 75, "Let's Get Meowsical!", {
             fill: 'darkpurple',
-            fontSize: "66px",
+            fontFamily: 'Garamond',
+            fontSize: "60px",
             fontStyle: "bold",
         });
 
