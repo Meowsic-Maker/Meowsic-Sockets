@@ -39,7 +39,8 @@ export default class Login extends Phaser.Scene {
         //title
         scene.title = scene.add.text(100, 75, "Let's Get Meowsical!", {
             fill: 'darkpurple',
-            fontSize: "66px",
+            fontFamily: 'Garamond',
+            fontSize: "60px",
             fontStyle: "bold",
         });
 
@@ -70,20 +71,16 @@ export default class Login extends Phaser.Scene {
             fontStyle: "bold",
         });
 
-        scene.socket.on("roomCreated", function (roomKey) {
-            console.log(roomKey)
-            scene.roomKey = roomKey;
-            scene.roomKeyText.setText(scene.roomKey);
-        });
 
         scene.socket.on("userNotValid", function () {
             scene.notValidText.setText("Invalid Login!");
         });
         scene.socket.on("userLoginSuccess", function (user) {
             scene.scene.stop('Login')
-            scene.scene.start("WaitingRoom", { ...this.state, socket: scene.socket });
+            scene.scene.launch("WaitingRoom", { ...scene.state, socket: scene.socket });
+            scene.physics.pause();
         });
     }
-    update() {}
+    update() { }
 
 }
