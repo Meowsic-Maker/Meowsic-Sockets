@@ -1,44 +1,39 @@
 const gameRooms = {
     // [roomKey]: {
-    // placedCats: { zone1: catObject, zone2: null, .... etc },
-    // users: [],
-    // players: {},
-    // numPlayers: 0
+    //   roomKey: 'AAAAA'
+    //   placedCats: { zone1: catObject, zone2: null, .... etc },
+    //   users: [ ],
+    //   players: { sockedId#: { playerId: socket.id }, {}, ....},
+    //   numPlayers: 0
     // }
 }
 
+//IMPORT AND INITIALIZE FIREBASE
 const firebase = require('firebase/app')
 const firebaseConfig = require("../../src/firebase/firebaseConfig")
 require('firebase/auth');
-// import firebase from "firebase/app";
-// import { auth } from 'firebase/app';
-// import 'firebase/auth';        // for authentication
-// import 'firebase/database';    // database
-// Initialize Firebase
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 module.exports = (io) => {
+    //IO CREATES A SOCKET CONNECTION AS SOON AS A GAME WINDOW IS OPEN:
     io.on("connection", (socket) => {
-        console.log(
-            `A socket connection to the server has been made: ${socket.id}`
-        );
+        console.log(`A socket connection to the server has been made: ${socket.id}`);
+
+        //WHEN CLIENT EMITS 'JOIN ROOM'
         socket.on("joinRoom", (roomKey) => {
             socket.join(roomKey);
-
             const roomInfo = gameRooms[roomKey];
 
-            roomInfo.players[socket.id] = {
-                //here is where we are creating a player state with current player info
-                playerId: socket.id,
-            };
+            //here is where we are creating a player state with current player info
+            roomInfo.players[socket.id] = { playerId: socket.id };
 
             // update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
             console.log("roomInfo", roomInfo);
-            // set initial state
+            // set initial state on client side:
             socket.emit("setState", roomInfo);
 
-            // send the current cats object to the new player
+            // Send the in-progress scene set-up (if applicable) to the new player
             socket.emit("currentPLayersAndCats", {
                 players: roomInfo.players,
                 numPlayers: roomInfo.numPlayers,
@@ -50,30 +45,21 @@ module.exports = (io) => {
                 playerInfo: roomInfo.players[socket.id],
                 numPlayers: roomInfo.numPlayers,
             });
-
         });
 
-        socket.on('catPlayed', function (args) {
-            io.emit('catPlayedUpdate', args);
-        });
-
-
-        // when a player disconnects, remove them from our players object
+        // WHEN A PLAYER DISCONNECTS FROM SOCKET
         socket.on("disconnect", function () {
-            //find which room they belong to
+            //Find which room they belong to
             let roomKey = 0;
             for (let keys1 in gameRooms) {
                 for (let keys2 in gameRooms[keys1]) {
                     Object.keys(gameRooms[keys1][keys2]).map((el) => {
-                        if (el === socket.id) {
-                            roomKey = keys1;
-                        }
+                        if (el === socket.id) { roomKey = keys1 }
                     });
                 }
             }
 
             const roomInfo = gameRooms[roomKey];
-
             if (roomInfo) {
                 console.log("user disconnected: ", socket.id);
                 // remove this player from our players object
@@ -85,14 +71,12 @@ module.exports = (io) => {
                     playerId: socket.id,
                     numPlayers: roomInfo.numPlayers,
                 });
+                //ADD some logic to delete rooms if there are no more players and it's not saved??
             }
         });
 
-        socket.on("isKeyValid", function (input) {
-            Object.keys(gameRooms).includes(input)
-                ? socket.emit("keyIsValid", input)
-                : socket.emit("keyNotValid");
-        });
+
+        //ROOM KEY CODE LOGIC:
         // get a random code for the waiting room
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
@@ -103,15 +87,21 @@ module.exports = (io) => {
                 roomKey: key,
                 players: {},
                 numPlayers: 0,
+                placedCats: []
             };
             console.log("KEY", key)
             socket.emit("roomCreated", key);
         });
+        socket.on("isKeyValid", function (input) {
+            Object.keys(gameRooms).includes(input)
+                ? socket.emit("keyIsValid", input)
+                : socket.emit("keyNotValid");
+        });
+
 
         //FIREBASE verification
         socket.on("isUserValid", function (input) {
             // input username & password?
-            console.log(input)
             firebase.auth().signInWithEmailAndPassword(
                 input.username,
                 input.password
@@ -121,19 +111,15 @@ module.exports = (io) => {
                     var name = user.displayName;
                     var email = user.email;
                     var photoUrl = user.photoURL;
-                    // var emailVerified = user.emailVerified;
-                    // var uid = user.uid;
                 } // send back user obj
                 socket.emit("userLoginSuccess", { name, email, photoUrl })
-                console.log("HERE IS OUR USER!", user.email)
             }
-            )
-                .catch(function (error) {
-                    // Handle Errors here.
-                    var errorCode = error.code;
-                    var errorMessage = error.message;
-                    console.log(error)
-                });
+            ).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(error)
+            });
             // ).then(user => {
             //     console.log("THIS IS OUR USER", user)
             // }).catch(err => {
@@ -145,12 +131,27 @@ module.exports = (io) => {
             // socket.emit("UserNotValid")
             // }
         })
+
+
+        //PLAYING CATS/ UPDATING SOCKETS:
+        socket.on('catPlayed', function (args) {
+            const { x, y, selectedDropZone, socketId, roomKey } = args
+            console.log(args)
+            const cat = {
+                dropZone: selectedDropZone,
+                cat: 'cat'
+            }
+            // const currentCats = gameRooms[roomKey].placedCats
+            // currentCats.push(cat)
+            console.log('gameroom, args', gameRooms[roomKey])
+            io.emit('catPlayedUpdate', args);
+        });
     });
 };
 
 function codeGenerator() {
     let code = "";
-    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ0123456789";
+    let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
     for (let i = 0; i < 5; i++) {
         code += chars.charAt(Math.floor(Math.random() * chars.length));
     }

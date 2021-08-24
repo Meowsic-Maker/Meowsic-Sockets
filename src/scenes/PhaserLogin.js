@@ -78,7 +78,7 @@ export default class Login extends Phaser.Scene {
         scene.socket.on("userLoginSuccess", function (user) {
             scene.scene.stop('Login')
             scene.scene.launch("WaitingRoom", { ...scene.state, socket: scene.socket });
-            scene.physics.pause();
+
         });
     }
     update() { }
