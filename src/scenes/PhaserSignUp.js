@@ -18,7 +18,7 @@ preload() {
 
 create () {
   const scene = this;
-  // should signUp form differ or mirror login?
+
   scene.popUp = scene.add.graphics();
         scene.boxes = scene.add.graphics();
 
