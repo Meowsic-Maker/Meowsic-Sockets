@@ -36,10 +36,14 @@ export default class MainScene extends Phaser.Scene {
         this.meowsicButton.on("pointerdown", function () {
             //LATER CHANGE TO WAITINGROOM SCREEN!!
             scene.scene.launch('MeowsicRoom', { socket: scene.socket })
+            scene.meowsicButton.disableInteractive()
+            scene.loginButton.disableInteractive()
         })
         this.loginButton = this.add.image(300, 550, 'loginbutton').setScale(.8, .8).setInteractive();
         this.loginButton.on("pointerdown", function () {
             scene.scene.launch('Login', { socket: scene.socket })
+            scene.loginButton.disableInteractive()
+            scene.meowsicButton.disableInteractive()
         })
 
         //LAUNCH WAITING ROOM:
