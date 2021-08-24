@@ -6,36 +6,54 @@ export default class MainScene extends Phaser.Scene {
   constructor() {
     super("MainScene"),
       (this.state = {
-        inRoom: false,
-      });
-  }
+    constructor() {
+        super("MainScene"),
+            (this.state = {
+                inRoom: false,
+            });
+    }
 
-  preload() {
-    this.load.image("bg", "/assets/bg.jpg");
-  }
+    preload() {
+        this.load.image("logo", "/assets/meow-logo.jpg")
+        this.load.image("loginbutton", "/assets/elements/button_login_signUp.png")
+        this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png")
 
-  create() {
-    //Add the background & fit to game window:
-    let image = this.add.image(
-      this.cameras.main.width / 2,
-      this.cameras.main.height / 2,
-      "bg"
-    );
-    let scaleX = this.cameras.main.width / image.width;
-    let scaleY = this.cameras.main.height / image.height;
-    let scale = Math.max(scaleX, scaleY);
-    image.setScale(scale).setScrollFactor(0);
+    }
 
-    let scene = this;
+    create() {
+        //Add the background & fit to game window:
+        let image = this.add.image(
+            this.cameras.main.width / 2,
+            this.cameras.main.height / 2,
+            "logo"
+        );
+        let scaleX = this.cameras.main.width / image.width;
+        let scaleY = this.cameras.main.height / image.height;
+        let scale = Math.max(scaleX, scaleY);
+        image.setScale(scale).setScrollFactor(0);
 
-    //create socket:
-    this.socket = io();
+        let scene = this;
 
-    //LAUNCH WAITING ROOM:
-    scene.scene.launch("Login", { socket: scene.socket });
-  }
+        //create socket:
+        this.socket = io();
 
-  update() {
-    const scene = this;
-  }
+        //BUTTONS!!
+        this.meowsicButton = this.add.image(700, 550, 'meowsicbutton').setScale(.8, .8).setInteractive();
+        this.meowsicButton.on("pointerdown", function () {
+            //LATER CHANGE TO WAITINGROOM SCREEN!!
+            scene.scene.launch('MeowsicRoom', { socket: scene.socket })
+            scene.meowsicButton.disableInteractive()
+            scene.loginButton.disableInteractive()
+        })
+        this.loginButton = this.add.image(300, 550, 'loginbutton').setScale(.8, .8).setInteractive();
+        this.loginButton.on("pointerdown", function () {
+            scene.scene.launch('Login', { socket: scene.socket })
+            scene.loginButton.disableInteractive()
+            scene.meowsicButton.disableInteractive()
+        })
+    }
+
+    update() {
+        const scene = this;
+    }
 }
