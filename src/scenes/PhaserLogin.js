@@ -54,6 +54,8 @@ export default class Login extends Phaser.Scene {
                 const password = scene.inputElement.getChildByName('password')
                 scene.socket.emit("isUserValid", { username: username.value, password: password.value });
             }
+            // if event matches sign up instead element
+            // launch the other scene
         });
 
         // scene.requestButton.setInteractive();
