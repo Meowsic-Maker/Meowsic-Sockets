@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "src/index.js",
+  "engines": {
+    "node": "14.16.1"
+  }
   "scripts": {
     "build-client": "webpack",
     "build-client-watch": "webpack -w",
