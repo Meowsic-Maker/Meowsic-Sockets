@@ -7,13 +7,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     constructor() {
         super("MeowsicRoom")
         this.state = {
-            // zone1: null,
-            // zone2: null,
-            // zone3: null,
-            // zone4: null,
-            // zone5: null,
-            // zone6: null,
-            // zone7: null,
         }
     }
 
@@ -54,9 +47,9 @@ export default class MeowsicRoom extends Phaser.Scene {
             //which is a check to determine whether the client that is receiving the event is the same one that generated it.
             console.log(args)
             const { x, y, selectedDropZone, socketId } = args
-            // console.log('socketId', socketId)
+
             if (socketId !== scene.socket.id) {
-                // scene[selectedDropZone].data.values.cats++;
+                scene[selectedDropZone].data.values.cats = true
                 let playerCat = new Cat(scene);
                 playerCat.render(x, y, 'cat').disableInteractive();
             }
@@ -83,7 +76,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
         //JOINED ROOM - SET STATE
         this.socket.on('setState', function (state) {
-            const { roomKey, players, numPlayers } = state
+            const { roomKey, players, numPlayers, placedCats } = state
             scene.physics.resume()
 
             //STATE
@@ -91,6 +84,7 @@ export default class MeowsicRoom extends Phaser.Scene {
             scene.state.players = players
             scene.state.numPlayers = numPlayers
             scene.state.inRoom = true
+            scene.state.placedCats = placedCats
         })
 
         // DISCONNECT
@@ -198,7 +192,6 @@ export default class MeowsicRoom extends Phaser.Scene {
 
         this.input.on("drop", function (pointer, gameObject, dropZone) {
             if (!dropZone.data.values.cats) {
-                console.log(gameObject)
                 gameObject.x = dropZone.x;
                 gameObject.y = dropZone.y;
                 dropZone.data.values.cats = true;
@@ -213,11 +206,13 @@ export default class MeowsicRoom extends Phaser.Scene {
                     Tone.Transport.start();
                     Tone.Transport.stop(+30);
                 });
+                console.log('state', scene.state)
                 scene.socket.emit('catPlayed', {
                     x: dropZone.x,
                     y: dropZone.y,
                     selectedDropZone: dropZone.name,
-                    socketId: scene.socket.id
+                    socketId: scene.socket.id,
+                    roomKey: scene.state.roomKey
                 })
             } else {
                 gameObject.x = gameObject.input.dragStartX;
