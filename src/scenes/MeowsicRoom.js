@@ -6,7 +6,15 @@ import * as Tone from "tone";
 export default class MeowsicRoom extends Phaser.Scene {
     constructor() {
         super("MeowsicRoom")
-        this.state = {}
+        this.state = {
+            // zone1: null,
+            // zone2: null,
+            // zone3: null,
+            // zone4: null,
+            // zone5: null,
+            // zone6: null,
+            // zone7: null,
+        }
     }
 
     preload() {
@@ -23,35 +31,55 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     create() {
         const scene = this;
-        console.log(this)
+
         let image = this.add.image(this.cameras.main.width / 2, this.cameras.main.height / 2, 'bg')
         let scaleX = this.cameras.main.width / image.width
         let scaleY = this.cameras.main.height / image.height
         let scale = Math.max(scaleX, scaleY)
         image.setScale(scale).setScrollFactor(0)
 
+        // CREATE CURRENT PLAYED CATS GROUP
+        this.playedCats = this.physics.add.group();
 
-        //from this new class, and disable the dealText so that we can't just keep generating cards for no reason.
-        this.socket.on('dealCats', function () {
-            scene.dealCats();
-            scene.dealText.disableInteractive();
-        })
+        //Isn't being called anywhere at the moment:
+        //disable the dealText so that we can't just keep generating cards for no reason.
+        // this.socket.on('dealCats', function () {
+        //     scene.dealCats();
+        //     scene.dealText.disableInteractive();
+        // })
 
 
-        this.socket.on('catPlayed', function (gameObject, selectedDropZone, socketId) {
+        this.socket.on('catPlayedUpdate', function (args) {
             //first compares the isPlayerA boolean it receives from the server against the client's own isPlayerA, 
             //which is a check to determine whether the client that is receiving the event is the same one that generated it.
-            console.log(scene)
-            console.log(selectedDropZone)
-            console.log('socketId', socketId)
-
+            console.log(args)
+            const { x, y, selectedDropZone, socketId } = args
+            // console.log('socketId', socketId)
             if (socketId !== scene.socket.id) {
-                let sprite = gameObject.textureKey;
-                scene[selectedDropZone].data.values.cats++;
+                // scene[selectedDropZone].data.values.cats++;
                 let playerCat = new Cat(scene);
-                playerCat.render((scene.dropZone.x), (scene.dropZone.y), sprite).disableInteractive();
+                playerCat.render(x, y, 'cat').disableInteractive();
             }
         })
+
+        // UPDATING CATS FOR OTHER PLAYERS
+        this.socket.on("currentPlayersAndCats", function (arg) {
+            const { players, numPlayers, placedCats } = arg;
+            scene.state.numPlayers = numPlayers;
+            Object.keys(players).forEach(function (id) {
+                if (players[id].playerId === scene.socket.id) {
+                    scene.addPlayer(scene, players[id]);
+                } else {
+                    scene.addOtherPlayers(scene, players[id]);
+                }
+            });
+        });
+
+        this.socket.on("newPlayer", function (arg) {
+            const { playerInfo, numPlayers } = arg;
+            scene.addOtherPlayers(scene, playerInfo);
+            scene.state.numPlayers = numPlayers;
+        });
 
         //JOINED ROOM - SET STATE
         this.socket.on('setState', function (state) {
@@ -69,11 +97,12 @@ export default class MeowsicRoom extends Phaser.Scene {
         this.socket.on("disconnected", function (arg) {
             const { playerId, numPlayers } = arg;
             scene.state.numPlayers = numPlayers;
-            scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-                if (playerId === otherPlayer.playerId) {
-                    otherPlayer.destroy();
-                }
-            });
+            //CODE to populate user info stuff eventually:
+            // scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+            //     if (playerId === otherPlayer.playerId) {
+            //         otherPlayer.destroy();
+            //     }
+            // });
         });
 
         this.dealCatText = this.add
@@ -101,6 +130,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         this.zone4 = new Zone(this);
         this.dropZone4 = this.zone4.renderZone(610, 200, 140, 200);
         this.outline4 = this.zone4.renderOutline(this.dropZone4);
+        this.dropZone3.name = 'dropZone4'
 
         this.zone5 = new Zone(this);
         this.dropZone5 = this.zone5.renderZone(740, 150, 120, 180);
@@ -110,10 +140,12 @@ export default class MeowsicRoom extends Phaser.Scene {
         this.zone6 = new Zone(this);
         this.dropZone6 = this.zone6.renderZone(860, 305, 220, 130);
         this.outline6 = this.zone6.renderOutline(this.dropZone6);
+        this.dropZone3.name = 'dropZone6'
 
         this.zone7 = new Zone(this);
         this.dropZone7 = this.zone7.renderZone(920, 440, 220, 140);
         this.outline7 = this.zone7.renderOutline(this.dropZone7);
+        this.dropZone3.name = 'dropZone7'
 
         this.cats = [];
 
@@ -124,8 +156,8 @@ export default class MeowsicRoom extends Phaser.Scene {
                     playerCat.render(80, 100 + i * 100, "cat");
                     playerCat.name = "Cat " + (i + 1);
                     this.cats.push(playerCat);
-                    console.log("playerCat", playerCat);
-                    console.log("this.cats", this.cats);
+                    // console.log("playerCat", playerCat);
+                    // console.log("this.cats", this.cats);
                 }
             };
         };
@@ -134,6 +166,8 @@ export default class MeowsicRoom extends Phaser.Scene {
             const bell = new Tone.Player("/assets/bell.mp3").toDestination();
             bell.autostart = true;
             scene.dealCats();
+            scene.dealCats();
+            scene.dealCatText.disableInteractive()
         });
 
         this.dealCatText.on("pointerover", function () {
@@ -164,6 +198,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
         this.input.on("drop", function (pointer, gameObject, dropZone) {
             if (!dropZone.data.values.cats) {
+                console.log(gameObject)
                 gameObject.x = dropZone.x;
                 gameObject.y = dropZone.y;
                 dropZone.data.values.cats = true;
@@ -178,6 +213,12 @@ export default class MeowsicRoom extends Phaser.Scene {
                     Tone.Transport.start();
                     Tone.Transport.stop(+30);
                 });
+                scene.socket.emit('catPlayed', {
+                    x: dropZone.x,
+                    y: dropZone.y,
+                    selectedDropZone: dropZone.name,
+                    socketId: scene.socket.id
+                })
             } else {
                 gameObject.x = gameObject.input.dragStartX;
                 gameObject.y = gameObject.input.dragStartY;

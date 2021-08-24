@@ -1,10 +1,7 @@
 const gameRooms = {
     // [roomKey]: {
-    // placedCats: [],
+    // placedCats: { zone1: catObject, zone2: null, .... etc },
     // users: [],
-    // randomTasks: [],
-    // scores: [],
-    // gameScore: 0,
     // players: {},
     // numPlayers: 0
     // }
@@ -41,10 +38,23 @@ module.exports = (io) => {
             // set initial state
             socket.emit("setState", roomInfo);
 
+            // send the current cats object to the new player
+            socket.emit("currentPLayersAndCats", {
+                players: roomInfo.players,
+                numPlayers: roomInfo.numPlayers,
+                placedCats: roomInfo.placedCats
+            });
+
+            // update all other players of the new player
+            socket.to(roomKey).emit("newPlayer", {
+                playerInfo: roomInfo.players[socket.id],
+                numPlayers: roomInfo.numPlayers,
+            });
+
         });
 
-        socket.on('catPlayed', function (gameObject) {
-            io.emit('catPlayed', gameObject);
+        socket.on('catPlayed', function (args) {
+            io.emit('catPlayedUpdate', args);
         });
 
 
