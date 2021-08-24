@@ -11,7 +11,7 @@ export default class MainScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("bg", "/assets/bg.jpg")
+        this.load.image("logo", "/assets/meow-logo.jpg")
         this.load.image("loginbutton", "/assets/elements/button_login_signUp.png")
         this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png")
 
@@ -22,7 +22,7 @@ export default class MainScene extends Phaser.Scene {
         let image = this.add.image(
             this.cameras.main.width / 2,
             this.cameras.main.height / 2,
-            "bg"
+            "logo"
         );
         let scaleX = this.cameras.main.width / image.width;
         let scaleY = this.cameras.main.height / image.height;
