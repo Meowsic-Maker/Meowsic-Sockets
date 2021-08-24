@@ -24,6 +24,7 @@ export default class MainScene extends Phaser.Scene {
         let scale = Math.max(scaleX, scaleY)
         image.setScale(scale).setScrollFactor(0)
 
+        // could we maybe revert back to this keyword?
         let scene = this;
 
         //create socket:
