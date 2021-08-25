@@ -58,7 +58,7 @@ async function bootApp() {
     await startListening()
 }
 
-//This evaluates as true when this file is directly from the command line 
+//This evaluates as true when this file is directly from the command line
 //i. e. when we say 'node server/index.js' it will evaluate as false when this module is required by a nother module
 //for example if we wanted to require our app in a test spec
 // if (require.main === module) {
