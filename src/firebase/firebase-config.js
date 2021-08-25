@@ -1,4 +1,5 @@
-export const firebaseConfig = {
+// export has an unexpected token err here
+ const firebaseConfig = {
   apiKey: process.env.API_KEY,
     authDomain: process.env.AUTH_DOMAIN,
     projectId: process.env.PROJECT_ID,

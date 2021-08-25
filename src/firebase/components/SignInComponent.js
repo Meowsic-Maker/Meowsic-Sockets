@@ -1,7 +1,7 @@
 import React, { useRef } from 'react'
 // import './Signin.css'
-import firebaseConfig from '../firebaseConfig'
-import firebase from "firebase/app";
+import firebaseConfig from '../firebase-config'
+import firebase from 'firebase/app';
 // import { auth } from 'firebase/app';
 import 'firebase/auth';        // for authentication
 // import 'firebase/database';    // database

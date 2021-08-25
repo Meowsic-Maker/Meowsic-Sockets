@@ -10,7 +10,7 @@ const gameRooms = {
 
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require('firebase/app')
-const firebaseConfig = require("../../src/firebase/firebaseConfig")
+const firebaseConfig = require("../../src/firebase/firebase-config")
 require('firebase/auth');
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
