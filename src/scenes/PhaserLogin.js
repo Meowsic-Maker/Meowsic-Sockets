@@ -53,6 +53,9 @@ export default class Login extends Phaser.Scene {
                 const username = scene.inputElement.getChildByName("username");
                 const password = scene.inputElement.getChildByName('password')
                 scene.socket.emit("isUserValid", { username: username.value, password: password.value });
+            } else if (event.target.name === "signUpButton") {
+                scene.scene.stop('Login')
+                scene.scene.start('SignUp', { socket: scene.socket });
             }
         });
 
@@ -63,14 +66,13 @@ export default class Login extends Phaser.Scene {
 
         scene.notValidText = scene.add.text(670, 295, "", {
             fill: "#ff0000",
-            fontSize: "15px",
+            fontSize: "15px"
         });
         scene.roomKeyText = scene.add.text(210, 250, "", {
             fill: "#ffffff",
             fontSize: "20px",
-            fontStyle: "bold",
+            fontStyle: "bold"
         });
-
 
         scene.socket.on("userNotValid", function () {
             scene.notValidText.setText("Invalid Login!");
