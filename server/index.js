@@ -5,6 +5,8 @@ const compression = require('compression')
 const PORT = process.env.PORT || 8080
 const app = express()
 const socketio = require('socket.io')
+// telling our server to load anything in a .env file to an environment var
+require('dotenv').config()
 module.exports = app
 
 const createApp = () => {
