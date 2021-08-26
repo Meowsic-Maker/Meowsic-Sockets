@@ -11,26 +11,28 @@ export default class MainScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("logo", "/assets/meow-logo.jpg")
+        this.load.image("logo", "/assets/meow-logo.gif")
         this.load.image("loginbutton", "/assets/elements/button_login_signUp.png")
         this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png")
+        this.load.spritesheet('giflogo', '/assets/meow-spritesheet.png', { frameWidth: 1200, frameHeight: 1200 })
 
     }
 
     create() {
-        //Add the background & fit to game window:
-        let image = this.add.image(
-            this.cameras.main.width / 2,
-            this.cameras.main.height / 2,
-            "logo"
-        );
-        let scaleX = this.cameras.main.width / image.width;
-        let scaleY = this.cameras.main.height / image.height;
-        let scale = Math.max(scaleX, scaleY);
-        image.setScale(scale).setScrollFactor(0);
-
         // could we maybe revert back to this keyword?
         let scene = this;
+
+        // Create Background:
+        const background = scene.add.sprite(500, 325, 'giflogo', 0)
+        // Create background Animation:
+        this.anims.create({
+            key: 'wiggle',
+            repeat: -1,
+            frameRate: 5,
+            frames: this.anims.generateFrameNames('giflogo', { start: 0, end: 6 })
+        })
+        // PLAY background animation:
+        background.play('wiggle')
 
         //create socket:
         this.socket = io();
