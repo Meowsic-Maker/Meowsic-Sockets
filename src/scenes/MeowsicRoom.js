@@ -96,13 +96,14 @@ export default class MeowsicRoom extends Phaser.Scene {
       const { x, y, selectedDropZone, socketId } = args;
 
       if (socketId !== scene.socket.id) {
-        scene[selectedDropZone].data.values.cats = true;
+        scene[selectedDropZone].data.values.occupied = true;
         let playerCat = new Cat(scene);
-        playerCat.render(x, y, "cat").disableInteractive();
+        playerCat.render(x, y, "cat")
       }
     });
 
     // UPDATING CATS FOR OTHER PLAYERS
+    //should receieve played cats information (including locations, catnames, etc)
     this.socket.on("currentPlayersAndCats", function (arg) {
       const { players, numPlayers, placedCats } = arg;
       scene.state.numPlayers = numPlayers;
@@ -289,6 +290,17 @@ export default class MeowsicRoom extends Phaser.Scene {
         if (gameObject.data.values.dropZones.length <= 1) {
           gameObject.data.values.meow();
         }
+        //send a notice to server that a cat has been played
+        console.log(gameObject)
+        scene.socket.emit('catPlayed', {
+          x: dropZone.x,
+          y: dropZone.y,
+          selectedDropZone: dropZone.name,
+          socketId: scene.socket.id,
+          roomKey: scene.state.roomKey
+        })
+
+
       } else {
         gameObject.x = gameObject.input.dragStartX;
         gameObject.y = gameObject.input.dragStartY;
@@ -296,5 +308,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
 }
