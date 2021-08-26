@@ -1,11 +1,11 @@
-
-module.exports = firebaseConfig = {
-  apiKey: "AIzaSyClj6ePZpW72m29zL1FT8jd6cjgos6_tsQ",
-  authDomain: "reactfirebase-email-login.firebaseapp.com",
-  projectId: "reactfirebase-email-login",
-  storageBucket: "reactfirebase-email-login.appspot.com",
-  messagingSenderId: "27633334858",
-  appId: "1:27633334858:web:ad228739c2da930648c4b3"
+require('dotenv').config()
+module.exports = {
+  apiKey: process.env.API_KEY,
+  authDomain: process.env.AUTH_DOMAIN,
+  projectId: process.env.PROJECT_ID,
+  storageBucket: process.env.STORAGE_BUCKET,
+  messagingSenderId: process.env.MESSAGING_SENDER_ID,
+  appId: process.env.APP_ID
 };
 
 
