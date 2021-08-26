@@ -43,7 +43,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
 
         this.socket.on('catPlayedUpdate', function (args) {
-            //first compares the isPlayerA boolean it receives from the server against the client's own isPlayerA, 
+            //first compares the isPlayerA boolean it receives from the server against the client's own isPlayerA,
             //which is a check to determine whether the client that is receiving the event is the same one that generated it.
             console.log(args)
             const { x, y, selectedDropZone, socketId } = args

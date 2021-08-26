@@ -1,7 +1,5 @@
 import React, { useRef } from 'react'
-import firebaseConfig from 'firebase-config'
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import firebaseApp from '../firebase-config'
 
 //init Firebase
 const firebaseApp = firebase.initializeApp(firebaseConfig)

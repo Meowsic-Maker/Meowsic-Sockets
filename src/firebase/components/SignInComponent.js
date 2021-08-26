@@ -1,13 +1,6 @@
 import React, { useRef } from 'react'
-// import './Signin.css'
-import firebaseConfig from '../firebase-config'
-import firebase from 'firebase/app';
-// import { auth } from 'firebase/app';
-import 'firebase/auth';        // for authentication
-// import 'firebase/database';    // database
+import firebaseApp from '../firebase-config'
 
-// Initialize Firebase
-const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 //create a link that starts the game AFTER signup
 //create a link that links directly to game without signup
