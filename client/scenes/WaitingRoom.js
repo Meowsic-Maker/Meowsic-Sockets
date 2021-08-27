@@ -105,7 +105,6 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.state.numPlayers = numPlayers;
             scene.state.inRoom = true;
             scene.state.placedCats = placedCats;
-            console.log(scene.state)
             scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket });
 
         })
