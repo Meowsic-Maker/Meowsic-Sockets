@@ -1,7 +1,9 @@
 const gameRooms = {
     // [roomKey]: {
     //   roomKey: 'AAAAA'
-    //   placedCats: { zone1: catObject, zone2: null, .... etc },
+    //   placedCats: { 
+    //{ x, y, spriteName, zoneName }
+    //{....}, ... }
     //   users: [ ],
     //   players: { sockedId#: { playerId: socket.id }, {}, ....},
     //   numPlayers: 0
@@ -34,6 +36,8 @@ module.exports = (io) => {
             socket.emit("setState", roomInfo);
 
             // Send the in-progress scene set-up (if applicable) to the new player
+            // are there cats? what are their locations & names (& sound settings?)
+            //send all that details over to:
             socket.emit("currentPLayersAndCats", {
                 players: roomInfo.players,
                 numPlayers: roomInfo.numPlayers,
@@ -41,7 +45,7 @@ module.exports = (io) => {
             });
 
             // update all other players of the new player
-            socket.to(roomKey).emit("newPlayer", {
+            socket.emit("newPlayer", {
                 playerInfo: roomInfo.players[socket.id],
                 numPlayers: roomInfo.numPlayers,
             });
@@ -89,7 +93,6 @@ module.exports = (io) => {
                 numPlayers: 0,
                 placedCats: []
             };
-            console.log("KEY", key)
             socket.emit("roomCreated", key);
         });
         socket.on("isKeyValid", function (input) {
