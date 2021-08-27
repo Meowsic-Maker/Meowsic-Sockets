@@ -55,7 +55,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       accompaniment.autostart = true;
       accompaniment.loop = true;
     };
-    soundTrack();
+    // soundTrack();
 
     const bellSound = () => {
       const bell = new Tone.Player("/assets/bell.mp3").toDestination();
