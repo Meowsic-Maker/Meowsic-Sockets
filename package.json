@@ -2,7 +2,7 @@
   "name": "socketmeow",
   "version": "1.0.0",
   "description": "",
-  "main": "src/index.js",
+  "main": "client/index.js",
   "engines": {
     "node": "14.x",
     "npm": "6.x"
@@ -28,6 +28,7 @@
     "babel": "^6.23.0",
     "compression": "^1.7.4",
     "connect-session-sequelize": "^7.0.4",
+    "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "firebase": "^8.10.0",
