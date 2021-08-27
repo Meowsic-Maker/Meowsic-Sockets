@@ -10,6 +10,7 @@ export default class WaitingRoom extends Phaser.Scene {
     init(data) {
         //initializing the socket passed to the waiting room
         this.socket = data.socket;
+        this.state = data
         // this.loggedInUser = data.user
     }
 
@@ -97,6 +98,19 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket });
             scene.physics.pause();
         });
+        //JOINED ROOM - SET STATE
+        scene.socket.on("setState", function (state) {
+            console.log('are we here yet?')
+            const { roomKey, players, numPlayers, placedCats } = state;
+
+            scene.state.roomKey = roomKey;
+            scene.state.players = players;
+            scene.state.numPlayers = numPlayers;
+            scene.state.inRoom = true;
+            scene.state.placedCats = placedCats;
+            console.log(scene.state)
+
+        })
     }
     update() { }
 }
