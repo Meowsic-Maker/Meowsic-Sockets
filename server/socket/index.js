@@ -1,7 +1,7 @@
 const gameRooms = {
     // [roomKey]: {
     //   roomKey: 'AAAAA'
-    //   placedCats: { 
+    //   placedCats: {
     //{ x, y, spriteName, zoneName }
     //{....}, ... }
     //   users: [ ],
@@ -170,12 +170,15 @@ module.exports = (io) => {
 
         //PLAYING CATS/ UPDATING SOCKETS:
         socket.on('catPlayed', function (args) {
-            const { x, y, selectedDropZone, socketId, roomKey } = args
-            console.log(args)
+            const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args
+            console.log("ARGS", args)
+            //push this cat to rooms array
             const cat = {
                 dropZone: selectedDropZone,
-                cat: 'cat'
+                spriteName: spriteName,
+                x, y
             }
+            console.log(cat);
             // const currentCats = gameRooms[roomKey].placedCats
             // currentCats.push(cat)
             console.log('gameroom, args', gameRooms[roomKey])

@@ -213,14 +213,14 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setDisplaySize(90, 80)
       .setInteractive();
 
-    // render new cats from menu buttons
+    // RENDER new cats from menu buttons
     this.gameButton1.on(
       "pointerdown",
       function (pointer) {
         bellSound();
         let playerCat = new Cat1(this);
         playerCat.render(80, 120, "cat");
-        playerCat.name = "Cat 1";
+        playerCat.name = "cat";
       }.bind(this)
     );
 
@@ -230,7 +230,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         bellSound();
         let playerCat2 = new Cat2(this);
         playerCat2.render(80, 220, "cat2");
-        playerCat2.name = "Cat 2";
+        playerCat2.name = "cat2";
       }.bind(this)
     );
 
@@ -285,13 +285,15 @@ export default class MeowsicRoom extends Phaser.Scene {
           gameObject.data.values.meow();
         }
         //send a notice to server that a cat has been played
+        // cat is being dropped
         console.log(gameObject)
         scene.socket.emit('catPlayed', {
           x: dropZone.x,
           y: dropZone.y,
           selectedDropZone: dropZone.name,
           socketId: scene.socket.id,
-          roomKey: scene.state.roomKey
+          roomKey: scene.state.roomKey,
+          spriteName: gameObject.data.values.spriteName
         })
 
 
