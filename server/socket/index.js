@@ -1,9 +1,7 @@
 const gameRooms = {
     // [roomKey]: {
     //   roomKey: 'AAAAA'
-    //   placedCats: {
-    //{ x, y, spriteName, zoneName }
-    //{....}, ... }
+    //   placedCats: { { x, y, spriteName, zoneName } ....}
     //   users: [ ],
     //   players: { sockedId#: { playerId: socket.id }, {}, ....},
     //   numPlayers: 0
@@ -27,26 +25,15 @@ module.exports = (io) => {
         socket.on("joinRoom", (roomKey) => {
             socket.join(roomKey);
             const roomInfo = gameRooms[roomKey];
-
             //here is where we are creating a player state with current player info
             roomInfo.players[socket.id] = { playerId: socket.id };
-
             // update number of players
             roomInfo.numPlayers = Object.keys(roomInfo.players).length;
+
             console.log("roomInfo", roomInfo);
-            // set initial state on client side:
+            // set initial state on client side: (Which INCLUDED placed cats!!)
             socket.emit("setState", roomInfo);
 
-            // Send the in-progress scene set-up (if applicable) to the new player
-            // are there cats? what are their locations & names (& sound settings?)
-            //send all that details over to:
-            socket.emit("currentRoomSetUp", roomInfo);
-
-            // update all other players of the new player
-            socket.emit("newPlayer", {
-                playerInfo: roomInfo.players[socket.id],
-                numPlayers: roomInfo.numPlayers,
-            });
         });
 
         // WHEN A PLAYER DISCONNECTS FROM SOCKET
