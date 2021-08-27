@@ -1,5 +1,5 @@
-const DEFAULT_WIDTH = 1000
-const DEFAULT_HEIGHT = 650
+const DEFAULT_WIDTH = 1136
+const DEFAULT_HEIGHT = 640
 
 export default {
     type: Phaser.AUTO, // Specify the underlying browser rendering engine (AUTO, CANVAS, WEBGL)
