@@ -10,6 +10,8 @@ const gameRooms = {
     // }
 }
 
+
+
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require('firebase/app')
 const firebaseConfig = require("../firebaseConfig")
@@ -38,11 +40,7 @@ module.exports = (io) => {
             // Send the in-progress scene set-up (if applicable) to the new player
             // are there cats? what are their locations & names (& sound settings?)
             //send all that details over to:
-            socket.emit("currentPLayersAndCats", {
-                players: roomInfo.players,
-                numPlayers: roomInfo.numPlayers,
-                placedCats: roomInfo.placedCats
-            });
+            socket.emit("currentRoomSetUp", roomInfo);
 
             // update all other players of the new player
             socket.emit("newPlayer", {
