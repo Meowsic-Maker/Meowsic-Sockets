@@ -12,7 +12,7 @@ const gameRooms = {
 
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require('firebase/app')
-const firebaseConfig = require("../../client/firebase/firebaseConfig")
+const firebaseConfig = require("../firebaseConfig")
 require('firebase/auth');
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
@@ -116,6 +116,38 @@ module.exports = (io) => {
                     var photoUrl = user.photoURL;
                 } // send back user obj
                 socket.emit("userLoginSuccess", { name, email, photoUrl })
+            }
+            ).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(error)
+            });
+            // ).then(user => {
+            //     console.log("THIS IS OUR USER", user)
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+            // if (user !== undefined) {
+            //
+            // } else {
+            // socket.emit("UserNotValid")
+            // }
+        })
+
+        socket.on("isSignUpValid", function (input) {
+            // input username & password?
+            firebase.auth().createUserWithEmailAndPassword(
+                input.email,
+                input.password
+            ).then(() => {
+                const user = firebaseApp.auth().currentUser;
+                if (user != null) {
+                    var name = user.displayName;
+                    var email = user.email;
+                    var photoUrl = user.photoURL;
+                } // send back user obj
+                socket.emit("userSignUpSuccess", { name, email, photoUrl })
             }
             ).catch(function (error) {
                 // Handle Errors here.
