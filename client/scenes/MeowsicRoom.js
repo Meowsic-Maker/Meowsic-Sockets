@@ -29,10 +29,12 @@ export default class MeowsicRoom extends Phaser.Scene {
   init(data) {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
+    this.state = { ...data }
   }
 
   create() {
     const scene = this;
+    console.log(this.state)
 
     let image = this.add.image(
       this.cameras.main.width / 2,
@@ -117,23 +119,15 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.socket.on("newPlayer", function (arg) {
+      console.log("newPlayer?")
       const { playerInfo, numPlayers } = arg;
       scene.addOtherPlayers(scene, playerInfo);
       scene.state.numPlayers = numPlayers;
     });
 
-    //JOINED ROOM - SET STATE
-    this.socket.on("setState", function (state) {
-      const { roomKey, players, numPlayers, placedCats } = state;
-      scene.physics.resume();
 
-      //STATE
-      scene.state.roomKey = roomKey;
-      scene.state.players = players;
-      scene.state.numPlayers = numPlayers;
-      scene.state.inRoom = true;
-      scene.state.placedCats = placedCats;
-    });
+
+    //STATE
 
     // DISCONNECT
     this.socket.on("disconnected", function (arg) {
