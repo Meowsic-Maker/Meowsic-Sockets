@@ -1,7 +1,9 @@
 const gameRooms = {
     // [roomKey]: {
     //   roomKey: 'AAAAA'
-    //   placedCats: { zone1: catObject, zone2: null, .... etc },
+    //   placedCats: { 
+    //{ x, y, spriteName, zoneName }
+    //{....}, ... }
     //   users: [ ],
     //   players: { sockedId#: { playerId: socket.id }, {}, ....},
     //   numPlayers: 0
@@ -10,7 +12,7 @@ const gameRooms = {
 
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require('firebase/app')
-const firebaseConfig = require("../../src/firebase/firebaseConfig")
+const firebaseConfig = require("../firebaseConfig")
 require('firebase/auth');
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
@@ -34,6 +36,8 @@ module.exports = (io) => {
             socket.emit("setState", roomInfo);
 
             // Send the in-progress scene set-up (if applicable) to the new player
+            // are there cats? what are their locations & names (& sound settings?)
+            //send all that details over to:
             socket.emit("currentPLayersAndCats", {
                 players: roomInfo.players,
                 numPlayers: roomInfo.numPlayers,
@@ -41,7 +45,7 @@ module.exports = (io) => {
             });
 
             // update all other players of the new player
-            socket.to(roomKey).emit("newPlayer", {
+            socket.emit("newPlayer", {
                 playerInfo: roomInfo.players[socket.id],
                 numPlayers: roomInfo.numPlayers,
             });
@@ -89,7 +93,6 @@ module.exports = (io) => {
                 numPlayers: 0,
                 placedCats: []
             };
-            console.log("KEY", key)
             socket.emit("roomCreated", key);
         });
         socket.on("isKeyValid", function (input) {
@@ -113,6 +116,38 @@ module.exports = (io) => {
                     var photoUrl = user.photoURL;
                 } // send back user obj
                 socket.emit("userLoginSuccess", { name, email, photoUrl })
+            }
+            ).catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                console.log(error)
+            });
+            // ).then(user => {
+            //     console.log("THIS IS OUR USER", user)
+            // }).catch(err => {
+            //     console.log(err)
+            // })
+            // if (user !== undefined) {
+            //
+            // } else {
+            // socket.emit("UserNotValid")
+            // }
+        })
+
+        socket.on("isSignUpValid", function (input) {
+            // input username & password?
+            firebase.auth().createUserWithEmailAndPassword(
+                input.email,
+                input.password
+            ).then(() => {
+                const user = firebaseApp.auth().currentUser;
+                if (user != null) {
+                    var name = user.displayName;
+                    var email = user.email;
+                    var photoUrl = user.photoURL;
+                } // send back user obj
+                socket.emit("userSignUpSuccess", { name, email, photoUrl })
             }
             ).catch(function (error) {
                 // Handle Errors here.
