@@ -29,12 +29,12 @@ export default class MeowsicRoom extends Phaser.Scene {
   init(data) {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
-    this.state = { ...data }
+    this.state = { ...data };
   }
 
   create() {
     const scene = this;
-    console.log(this.state)
+    console.log(this.state);
 
     let image = this.add.image(
       this.cameras.main.width / 2,
@@ -92,30 +92,28 @@ export default class MeowsicRoom extends Phaser.Scene {
     // })
 
     this.socket.on("catPlayedUpdate", function (args) {
-      console.log('cat played update: args', args);
+      console.log("cat played update: args", args);
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
-      let playerCat
+      let playerCat;
       //check to see if the socket that placed the cat is the socket we are one:
       if (socketId !== scene.socket.id) {
         //see which cat was placed and render appropriate cat:
         switch (spriteName) {
-          case 'Cat1':
+          case "Cat1":
             playerCat = new Cat1(scene);
-          case 'Cat2':
+          case "Cat2":
             playerCat = new Cat2(scene);
           default:
             playerCat = new Cat1(scene);
         }
 
-
         scene[selectedDropZone].data.values.occupied = true;
-        const renderedCat = playerCat.render(x, y, spriteName)
+        const renderedCat = playerCat.render(x, y, spriteName);
         renderedCat.data.values.dropZones.push(selectedDropZone);
         renderedCat.data.values.soundOn = true;
         if (renderedCat.data.values.dropZones.length <= 1) {
           renderedCat.data.values.meow();
         }
-
       }
     });
 
@@ -134,13 +132,11 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.socket.on("newPlayer", function (arg) {
-      console.log("newPlayer?")
+      console.log("newPlayer?");
       const { playerInfo, numPlayers } = arg;
       scene.addOtherPlayers(scene, playerInfo);
       scene.state.numPlayers = numPlayers;
     });
-
-
 
     //STATE
 
@@ -158,73 +154,65 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     // render zones
     this.menuZone = new Menu(this);
-    this.menuDropZone = this.menuZone.renderZone(80, 390, 120, 660);
-    this.menuOutline = this.menuZone.renderOutline(this.menuDropZone);
+    this.menuDropZone = this.menuZone.renderZone(80, 320, 120, 600);
     this.menuZone.name = "menuZone";
 
     this.zone1 = new Zone(this);
-    this.dropZone1 = this.zone1.renderZone(600, 480, 210, 360);
-    this.outline1 = this.zone1.renderOutline(this.dropZone1);
+    this.dropZone1 = this.zone1.renderZone(570, 510, 410, 240);
     this.dropZone1.name = "dropZone1";
 
     this.zone2 = new Zone(this);
-    this.dropZone2 = this.zone2.renderZone(330, 400, 140, 240);
-    this.outline2 = this.zone2.renderOutline(this.dropZone2);
+    this.dropZone2 = this.zone2.renderZone(285, 400, 160, 300);
     this.dropZone2.name = "dropZone2";
 
     this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(470, 300, 140, 200);
-    this.outline3 = this.zone3.renderOutline(this.dropZone3);
+    this.dropZone3 = this.zone3.renderZone(405, 295, 160, 300);
     this.dropZone3.name = "dropZone3";
 
     this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(610, 200, 140, 200);
-    this.outline4 = this.zone4.renderOutline(this.dropZone4);
+    this.dropZone4 = this.zone4.renderZone(540, 160, 140, 240);
     this.dropZone3.name = "dropZone4";
 
     this.zone5 = new Zone(this);
-    this.dropZone5 = this.zone5.renderZone(740, 150, 120, 180);
-    this.outline5 = this.zone5.renderOutline(this.dropZone5);
+    this.dropZone5 = this.zone5.renderZone(685, 130, 160, 180);
     this.dropZone5.name = "dropZone5";
 
     this.zone6 = new Zone(this);
-    this.dropZone6 = this.zone6.renderZone(860, 305, 220, 130);
-    this.outline6 = this.zone6.renderOutline(this.dropZone6);
+    this.dropZone6 = this.zone6.renderZone(750, 290, 280, 200);
     this.dropZone3.name = "dropZone6";
 
     this.zone7 = new Zone(this);
-    this.dropZone7 = this.zone7.renderZone(920, 440, 220, 140);
-    this.outline7 = this.zone7.renderOutline(this.dropZone7);
+    this.dropZone7 = this.zone7.renderZone(850, 410, 250, 160);
     this.dropZone3.name = "dropZone7";
 
     // render cat menu buttons
     this.gameButton1 = this.add
-      .sprite(80, 120, "button1")
+      .sprite(80, 70, "button1")
       .setDisplaySize(90, 80)
       .setInteractive();
 
     this.gameButton2 = this.add
-      .sprite(80, 220, "button2")
+      .sprite(80, 170, "button2")
       .setDisplaySize(90, 80)
       .setInteractive();
 
     this.gameButton3 = this.add
-      .sprite(80, 320, "button3")
+      .sprite(80, 270, "button3")
       .setDisplaySize(90, 80)
       .setInteractive();
 
     this.gameButton4 = this.add
-      .sprite(80, 420, "button4")
+      .sprite(80, 370, "button4")
       .setDisplaySize(90, 80)
       .setInteractive();
 
     this.gameButton5 = this.add
-      .sprite(80, 520, "button5")
+      .sprite(80, 470, "button5")
       .setDisplaySize(90, 80)
       .setInteractive();
 
     this.gameButton6 = this.add
-      .sprite(80, 620, "button6")
+      .sprite(80, 570, "button6")
       .setDisplaySize(90, 80)
       .setInteractive();
 
@@ -234,7 +222,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat = new Cat1(this);
-        playerCat.render(80, 120, "Cat1");
+        playerCat.render(80, 70, "Cat1");
         playerCat.name = "Cat1";
       }.bind(this)
     );
@@ -244,7 +232,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat2 = new Cat2(this);
-        playerCat2.render(80, 220, "Cat2");
+        playerCat2.render(80, 170, "Cat2");
         playerCat2.name = "Cat2";
       }.bind(this)
     );
@@ -301,17 +289,15 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         //send a notice to server that a cat has been played
         // cat is being dropped
-        console.log(gameObject)
-        scene.socket.emit('catPlayed', {
+        console.log(gameObject);
+        scene.socket.emit("catPlayed", {
           x: dropZone.x,
           y: dropZone.y,
           selectedDropZone: dropZone.name,
           socketId: scene.socket.id,
           roomKey: scene.state.roomKey,
-          spriteName: gameObject.data.values.spriteName
-        })
-
-
+          spriteName: gameObject.data.values.spriteName,
+        });
       } else {
         gameObject.x = gameObject.input.dragStartX;
         gameObject.y = gameObject.input.dragStartY;
@@ -319,5 +305,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() { }
+  update() {}
 }
