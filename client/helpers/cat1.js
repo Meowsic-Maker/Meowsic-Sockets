@@ -1,6 +1,6 @@
 import * as Tone from "tone";
 
-export default class Cat {
+export default class Cat1 {
   constructor(scene) {
     this.render = (x, y, sprite) => {
       let cat = scene.add
@@ -9,7 +9,7 @@ export default class Cat {
         .setInteractive();
       cat.setData({
         soundOn: false,
-        spriteName: "cat",
+        spriteName: "Cat1",
         music: "/assets/bell.mp3",
         dropZones: [],
         meowSounds: [],

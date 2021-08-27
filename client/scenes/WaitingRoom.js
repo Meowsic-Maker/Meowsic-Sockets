@@ -98,7 +98,6 @@ export default class WaitingRoom extends Phaser.Scene {
         });
         //JOINED ROOM - SET STATE
         scene.socket.on("setState", function (state) {
-            console.log('are we here yet?')
             const { roomKey, players, numPlayers, placedCats } = state;
 
             scene.state.roomKey = roomKey;
