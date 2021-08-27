@@ -12,7 +12,7 @@ export default class MeowsicRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.image("bg", "/assets/bg.jpg");
+    this.load.image("bg", "/assets/stagebg.jpg");
     this.load.image("cat", "/assets/happyneko.png");
     this.load.image("cat2", "/assets/neko.jpeg");
     this.load.image("button1", "/assets/latteneko.png");
