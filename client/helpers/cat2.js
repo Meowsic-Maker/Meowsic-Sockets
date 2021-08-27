@@ -12,6 +12,7 @@ export default class Cat2 {
         music: "/assets/meow.mp3",
         dropZones: [],
         meowSounds: [],
+        spriteName: "Cat2",
         meow() {
           const meowSound = new Tone.Player(this.music).toDestination();
           this.meowSounds.push(meowSound);

@@ -13,8 +13,8 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   preload() {
     this.load.image("bg", "/assets/stagebg.jpg");
-    this.load.image("cat", "/assets/happyneko.png");
-    this.load.image("cat2", "/assets/neko.jpeg");
+    this.load.image("Cat1", "/assets/happyneko.png");
+    this.load.image("Cat2", "/assets/neko.jpeg");
     this.load.image("button1", "/assets/latteneko.png");
     this.load.image("button2", "/assets/caliconeko.png");
     this.load.image("button3", "/assets/greyneko.png");
@@ -92,15 +92,30 @@ export default class MeowsicRoom extends Phaser.Scene {
     // })
 
     this.socket.on("catPlayedUpdate", function (args) {
-      //first compares the isPlayerA boolean it receives from the server against the client's own isPlayerA,
-      //which is a check to determine whether the client that is receiving the event is the same one that generated it.
-      console.log(args);
-      const { x, y, selectedDropZone, socketId } = args;
-
+      console.log('cat played update: args', args);
+      const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
+      let playerCat
+      //check to see if the socket that placed the cat is the socket we are one:
       if (socketId !== scene.socket.id) {
+        //see which cat was placed and render appropriate cat:
+        switch (spriteName) {
+          case 'Cat1':
+            playerCat = new Cat1(scene);
+          case 'Cat2':
+            playerCat = new Cat2(scene);
+          default:
+            playerCat = new Cat1(scene);
+        }
+
+
         scene[selectedDropZone].data.values.occupied = true;
-        let playerCat = new Cat(scene);
-        playerCat.render(x, y, "cat")
+        const renderedCat = playerCat.render(x, y, spriteName)
+        renderedCat.data.values.dropZones.push(selectedDropZone);
+        renderedCat.data.values.soundOn = true;
+        if (renderedCat.data.values.dropZones.length <= 1) {
+          renderedCat.data.values.meow();
+        }
+
       }
     });
 
@@ -219,8 +234,8 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat = new Cat1(this);
-        playerCat.render(80, 120, "cat");
-        playerCat.name = "cat";
+        playerCat.render(80, 120, "Cat1");
+        playerCat.name = "Cat1";
       }.bind(this)
     );
 
@@ -229,8 +244,8 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat2 = new Cat2(this);
-        playerCat2.render(80, 220, "cat2");
-        playerCat2.name = "cat2";
+        playerCat2.render(80, 220, "Cat2");
+        playerCat2.name = "Cat2";
       }.bind(this)
     );
 

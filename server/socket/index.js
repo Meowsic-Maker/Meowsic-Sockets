@@ -171,17 +171,18 @@ module.exports = (io) => {
         //PLAYING CATS/ UPDATING SOCKETS:
         socket.on('catPlayed', function (args) {
             const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args
-            console.log("ARGS", args)
-            //push this cat to rooms array
+
+            //Create a cat object with details needed for re-rendering
             const cat = {
                 dropZone: selectedDropZone,
                 spriteName: spriteName,
                 x, y
             }
-            console.log(cat);
-            // const currentCats = gameRooms[roomKey].placedCats
-            // currentCats.push(cat)
-            console.log('gameroom, args', gameRooms[roomKey])
+            //push that cat object to the rooms/placed cats array
+            //being stored to update NEW sockets:
+            gameRooms[roomKey].placedCats.push(cat)
+
+            //send placed cat info to other OPEN sockets:
             io.emit('catPlayedUpdate', args);
         });
     });
