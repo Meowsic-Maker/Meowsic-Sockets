@@ -84,51 +84,63 @@ export default class MeowsicRoom extends Phaser.Scene {
     // CREATE CURRENT PLAYED CATS GROUP
     this.playedCats = this.physics.add.group();
 
-    //Isn't being called anywhere at the moment:
-    //disable the dealText so that we can't just keep generating cards for no reason.
-    // this.socket.on('dealCats', function () {
-    //     scene.dealCats();
-    //     scene.dealText.disableInteractive();
-    // })
-
-    this.socket.on("catPlayedUpdate", function (args) {
-      console.log("cat played update: args", args);
-      const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
+    this.renderCat = (selectedDropZone, spriteName, x, y) => {
       let playerCat;
-      //check to see if the socket that placed the cat is the socket we are one:
-      if (socketId !== scene.socket.id) {
-        //see which cat was placed and render appropriate cat:
-        switch (spriteName) {
-          case "Cat1":
-            playerCat = new Cat1(scene);
-          case "Cat2":
-            playerCat = new Cat2(scene);
-          default:
-            playerCat = new Cat1(scene);
-        }
+      //see which cat was placed and render appropriate cat:
+      switch (spriteName) {
+        case "Cat1":
+          playerCat = new Cat1(scene);
+        case "Cat2":
+          playerCat = new Cat2(scene);
+        default:
+          playerCat = new Cat1(scene);
+      }
 
-        scene[selectedDropZone].data.values.occupied = true;
+      //scene[selectedDropZone].data.values.occupied = true;
         const renderedCat = playerCat.render(x, y, spriteName);
         renderedCat.data.values.dropZones.push(selectedDropZone);
         renderedCat.data.values.soundOn = true;
         if (renderedCat.data.values.dropZones.length <= 1) {
           renderedCat.data.values.meow();
         }
+    }
+
+    this.socket.on("catPlayedUpdate", function (args) {
+      console.log("cat played update: args", args);
+      const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
+
+      //check to see if the socket that placed the cat is the socket we are one:
+      if (socketId !== scene.socket.id) {
+        scene.renderCat(selectedDropZone, spriteName, x, y)
+        let playerCat;
+        //see which cat was placed and render appropriate cat:
+        // switch (spriteName) {
+        //   case "Cat1":
+        //     playerCat = new Cat1(scene);
+        //   case "Cat2":
+        //     playerCat = new Cat2(scene);
+        //   default:
+        //     playerCat = new Cat1(scene);
+        // }
+
+        // scene[selectedDropZone].data.values.occupied = true;
+        // const renderedCat = playerCat.render(x, y, spriteName);
+        // renderedCat.data.values.dropZones.push(selectedDropZone);
+        // renderedCat.data.values.soundOn = true;
+        // if (renderedCat.data.values.dropZones.length <= 1) {
+        //   renderedCat.data.values.meow();
+        // }
       }
     });
 
     // UPDATING CATS FOR OTHER PLAYERS
     //should receieve played cats information (including locations, catnames, etc)
-    this.socket.on("currentPlayersAndCats", function (arg) {
-      const { players, numPlayers, placedCats } = arg;
-      scene.state.numPlayers = numPlayers;
-      Object.keys(players).forEach(function (id) {
-        if (players[id].playerId === scene.socket.id) {
-          scene.addPlayer(scene, players[id]);
-        } else {
-          scene.addOtherPlayers(scene, players[id]);
-        }
-      });
+    this.socket.on("currentRoomSetUp", function (arg) {
+      const { players, numPlayers, placedCats, roomKey } = arg;
+      // placedCats.forEach(cat) {
+      //   return
+      // }
+
     });
 
     this.socket.on("newPlayer", function (arg) {
@@ -307,3 +319,5 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   update() {}
 }
+
+
