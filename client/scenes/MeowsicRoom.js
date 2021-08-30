@@ -1,6 +1,10 @@
 import Phaser from "phaser";
 import Cat1 from "../helpers/cat1";
 import Cat2 from "../helpers/cat2";
+import Cat3 from "../helpers/cat3";
+import Cat4 from "../helpers/cat4";
+import Cat5 from "../helpers/cat5";
+import Cat6 from "../helpers/cat6";
 import Menu from "../helpers/menu";
 import Zone from "../helpers/zone";
 import * as Tone from "tone";
@@ -24,6 +28,12 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("meow", "/assets/music/meow.mp3");
     this.load.audio("bell", "/assets/music/bell.mp3");
+    this.load.audio("cat1", "/assets/music/cat1.wav");
+    this.load.audio("cat2", "/assets/music/cat2.wav");
+    this.load.audio("cat3", "/assets/music/cat3.wav");
+    this.load.audio("cat4", "/assets/music/cat4.wav");
+    this.load.audio("cat5", "/assets/music/cat5.wav");
+    this.load.audio("cat6", "/assets/music/cat6.wav");
   }
 
   init(data) {
@@ -42,16 +52,53 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
 
-    // sound effects
-    const soundTrack = () => {
-      const accompaniment = new Tone.Player(
-        "/assets/music/bossa-nova-bass.wav"
-      ).toDestination();
-      accompaniment.volume.value = -5;
-      accompaniment.autostart = true;
-      accompaniment.loop = true;
-    };
-    // soundTrack();
+    // let image = this.add.image(
+    //   this.cameras.main.width / 2,
+    //   this.cameras.main.height / 2,
+    //   "bg"
+    // );
+    // let scaleX = this.cameras.main.width / image.width;
+    // let scaleY = this.cameras.main.height / image.height;
+    // let scale = Math.max(scaleX, scaleY);
+    // image.setScale(scale).setScrollFactor(0);
+
+    Tone.Transport.bpm.value = 100;
+    Tone.Transport.loop = true;
+    Tone.Transport.loopStart = "0";
+    Tone.Transport.loopEnd = "6m";
+
+    const track = new Tone.Player({
+      url: "/assets/music/bossa-nova-bass.wav",
+      volume: -10,
+      loop: true,
+      autostart: true,
+    })
+      .toDestination()
+      .sync()
+      .start(0);
+
+    this.playText = this.add
+      .text(1000, 80, ["PLAY"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    this.stopText = this.add
+      .text(1000, 120, ["STOP"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    this.playText.on("pointerdown", function () {
+      Tone.start();
+      Tone.Transport.start();
+    });
+
+    this.stopText.on("pointerdown", function () {
+      Tone.Transport.stop();
+    });
 
     const bellSound = () => {
       const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
@@ -94,7 +141,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       //find a way to find the dropzone! This was coming up as undefined**
       //scene[selectedDropZone].data.values.occupied = true;
 
-      const renderedCat = playerCat.render(x, y, spriteName).setInteractive();;
+      const renderedCat = playerCat.render(x, y, spriteName).setInteractive();
 
       //adding dropzone to the cat's dropzone array
       renderedCat.data.values.dropZones.push(selectedDropZone);
@@ -102,7 +149,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       renderedCat.data.values.soundOn = true;
       // activating cat meow
       scene.input.setDraggable(renderedCat);
-      console.log(renderedCat)
+      console.log(renderedCat);
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
@@ -130,7 +177,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     //   );
 
     //placedCat.currentX
-    //.currentY 
+    //.currentY
 
     //   otherPlayer.playerId = playerInfo.playerId;
     //   scene.otherPlayers.add(otherPlayer);
@@ -146,8 +193,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     //     });
     //   });
     // }
-
-
 
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
@@ -239,6 +284,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       "pointerdown",
       function (pointer) {
         bellSound();
+        // Tone.Transport.start();
         let playerCat = new Cat1(this);
         playerCat.render(80, 70, "Cat1");
         playerCat.name = "Cat1";
@@ -323,7 +369,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         );
         gameObject.data.values.soundOn = false;
         // stop meow
-        gameObject.data.values.meowSounds[0].stop();
+        gameObject.data.values.meowSounds[0].disconnect().stop();
         // remove cat
         gameObject.destroy();
       } else if (!dropZone.data.values.occupied) {
@@ -375,5 +421,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() { }
+  update() {}
 }
