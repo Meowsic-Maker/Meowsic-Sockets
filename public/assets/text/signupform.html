@@ -1,36 +1,26 @@
-
 <style>
+  @import url("https://fonts.googleapis.com/css2?family=Gochi+Hand&family=Indie+Flower&family=Liu+Jian+Mao+Cao&family=Mansalva&family=Rock+Salt&display=swap");
+  * {
+    font-family: "Mansalva", sans-serif;
+    font-size: 16px;
+  }
   .signup {
-    background: #eceeee;
-    border: 1px solid #6F2DBD;
+    background: #bff3f5;
+    border: 2px solid #ffffff;
     border-radius: 6px;
     height: 300px;
     margin: 20px auto 0;
     width: 298px;
   }
-  .signup h1 {
-    background-image: linear-gradient(top, #f1f3f3, #d4dae0);
-    border-bottom: 1px solid #a6abaf;
-    border-radius: 6px 6px 0 0;
-    box-sizing: border-box;
-    color: #DAD0F1;
-    display: block;
-    height: 43px;
-    font: 600 14px/1 "Open Sans", sans-serif;
-    padding-top: 14px;
-    margin: 0;
-    text-align: center;
-    text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2), 0 1px 0 #fff;
-  }
   input[type="password"],
   input[type="text"],
   input[type="email"] {
-    background: linear-gradient(top, #d6d7d7, #dee0e0);
-    border: 1px solid #a1a3a3;
+    background: linear-gradient(top, #fadfe6, #fadfe6);
+    border: 1px solid #070d85;
     border-radius: 4px;
     box-shadow: 0 1px #fff;
     box-sizing: border-box;
-    color: #6F2DBD;
+    color: #6f2dbd;
     height: 39px;
     margin: 31px 0 0 29px;
     padding-left: 37px;
@@ -49,82 +39,48 @@
     margin: 26px 0 0 28px;
     width: 87px;
   }
-  input[type="checkbox"] {
-    cursor: pointer;
-    height: 16px;
-    opacity: 0;
-    position: relative;
-    width: 64px;
-  }
-  input[type="checkbox"]:checked {
-    left: 29px;
-    width: 58px;
-  }
-  .toggle {
-    display: block;
-    height: 16px;
-    margin-top: -20px;
-    width: 87px;
-    z-index: -1;
-  }
-  input[type="checkbox"]:checked + .toggle {
-    background-position: 0 -16px;
-  }
-  .forgot {
-    color: #B298DC;
+  .cancel {
+    color: #c7186d;
     display: inline-block;
     float: right;
-    font: 12px/1 sans-serif;
     left: -19px;
     position: relative;
     text-decoration: none;
     top: 5px;
     transition: color 0.4s;
   }
-  .forgot:hover {
+  .cancel:hover {
     color: #493b4e;
   }
   input[type="submit"] {
-    width: 240px;
-    height: 35px;
-    display: block;
-    font-family: Arial, "Helvetica", sans-serif;
-    font-size: 16px;
+    box-shadow: inset 0px 1px 7px 0px #dba7d8;
+    background: linear-gradient(to bottom, #faa3cd 5%, #d1395f 100%);
+    background-color: #faa3cd;
+    border-radius: 6px;
+    border: 1px solid #c7186d;
+    display: inline-block;
+    cursor: pointer;
+    color: #ffffff;
     font-weight: bold;
-    color: #fff;
+    padding: 9px 24px;
     text-decoration: none;
-    text-transform: uppercase;
+    text-shadow: 0px 1px 0px #c73b7a;
+    display: block;
+    font-size: 16px;
     text-align: center;
-    text-shadow: 1px 1px 0px #D8A7CA;
     padding-top: 6px;
     margin: 29px 0 0 29px;
     position: relative;
     cursor: pointer;
-    border: none;
-    background-color: #D8A7CA;
-    background-image: linear-gradient(top, #20092b, rgba(76, 4, 109, 0.067));
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-    border-bottom-left-radius: 5px;
-    box-shadow: inset 0px 1px 0px #370949, 0px 5px 0px 0px #190624,
-      0px 10px 5px #999;
+    align-self: center;
   }
-
-  .shadow {
-    background: #000;
-    border-radius: 12px 12px 4px 4px;
-    box-shadow: 0 0 20px 10px #000;
-    height: 12px;
-    margin: 30px auto;
-    opacity: 0.2;
-    width: 270px;
+  input[type="submit"]:hover {
+    background: linear-gradient(to bottom, #d1395f 5%, #faa3cd 100%);
+    background-color: #d1395f;
   }
-
   input[type="submit"]:active {
-    top: 3px;
-    box-shadow: inset 0px 1px 0px #190624, 0px 2px 0px 0px #190624,
-      0px 5px 3px #999;
+    position: relative;
+    top: 1px;
   }
 </style>
 
@@ -132,6 +88,6 @@
   <input type="text" placeholder="Username" id="username" name="username" />
   <input type="email" placeholder="Email" id="email" name="email" />
   <input type="password" placeholder="password" id="password" name="password" />
-  <input type="submit" value="Sign Up" name="signUpButton" />
+  <input type="submit" value="SIGN UP" name="signUpButton" />
+  <a href="" name="cancel" class="cancel">cancel</a>
 </div>
-<div class="shadow"></div>

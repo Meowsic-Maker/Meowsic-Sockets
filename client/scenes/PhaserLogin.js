@@ -22,30 +22,18 @@ export default class Login extends Phaser.Scene {
         const scene = this;
 
         scene.popUp = scene.add.graphics();
-        scene.boxes = scene.add.graphics();
 
         // for popup window
         scene.popUp.lineStyle(1, 0xffffff);
-        scene.popUp.fillStyle(0xffffff, 0.5);
-
-        // for boxes
-        scene.boxes.lineStyle(1, 0xffffff);
-        scene.boxes.fillStyle(0xA873D1, 1);
+        scene.popUp.fillStyle(0xffebf0, 0.9);
 
         // popup window
-        scene.popUp.strokeRect(50, 50, 900, 550);
-        scene.popUp.fillRect(50, 50, 900, 550);
+        scene.popUp.strokeRect(25, 25, 1086, 590);
+        scene.popUp.fillRect(25, 25, 1086, 590);
 
-        //title
-        scene.title = scene.add.text(100, 75, "Let's Get Meowsical!", {
-            fill: 'darkpurple',
-            fontFamily: 'Garamond',
-            fontSize: "60px",
-            fontStyle: "bold",
-        });
 
         //CREATE OUR LOGIN FORM (From html import)
-        scene.inputElement = scene.add.dom(500, 350).createFromCache("loginform");
+        scene.inputElement = scene.add.dom(568, 320).createFromCache("loginform");
         scene.inputElement.addListener("click");
         scene.inputElement.on("click", function (event) {
             if (event.target.name === "loginButton") {
@@ -56,6 +44,8 @@ export default class Login extends Phaser.Scene {
             } else if (event.target.name === "signUpButton") {
                 scene.scene.stop('Login')
                 scene.scene.start('SignUp', { socket: scene.socket });
+            } else if (event.target.name === "cancel") {
+                scene.scene.stop('Login')
             }
         });
 
@@ -67,11 +57,6 @@ export default class Login extends Phaser.Scene {
         scene.notValidText = scene.add.text(670, 295, "", {
             fill: "#ff0000",
             fontSize: "15px"
-        });
-        scene.roomKeyText = scene.add.text(210, 250, "", {
-            fill: "#ffffff",
-            fontSize: "20px",
-            fontStyle: "bold"
         });
 
         scene.socket.on("userNotValid", function () {

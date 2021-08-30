@@ -11,7 +11,6 @@ export default class MainScene extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("logo", "/assets/meow-logo.gif")
         this.load.image("loginbutton", "/assets/elements/button_login_signUp.png")
         this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png")
         this.load.spritesheet('giflogo', '/assets/meow-logo-spritesheet.png', { frameWidth: 1200, frameHeight: 1200 })
