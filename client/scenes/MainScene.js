@@ -14,7 +14,7 @@ export default class MainScene extends Phaser.Scene {
         this.load.image("logo", "/assets/meow-logo.gif")
         this.load.image("loginbutton", "/assets/elements/button_login_signUp.png")
         this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png")
-        this.load.spritesheet('giflogo', '/assets/meow-spritesheet.png', { frameWidth: 1200, frameHeight: 1200 })
+        this.load.spritesheet('giflogo', '/assets/meow-logo-spritesheet.png', { frameWidth: 1200, frameHeight: 1200 })
 
     }
 
@@ -23,13 +23,13 @@ export default class MainScene extends Phaser.Scene {
         let scene = this;
 
         // Create Background:
-        const background = scene.add.sprite(500, 325, 'giflogo', 0)
+        const background = scene.add.sprite(568, 320, 'giflogo', 0).setScale(.95)
         // Create background Animation:
         this.anims.create({
             key: 'wiggle',
             repeat: -1,
             frameRate: 5,
-            frames: this.anims.generateFrameNames('giflogo', { start: 0, end: 6 })
+            frames: this.anims.generateFrameNames('giflogo', { start: 0, end: 11 })
         })
         // PLAY background animation:
         background.play('wiggle')
