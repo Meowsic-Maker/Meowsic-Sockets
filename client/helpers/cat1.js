@@ -14,12 +14,14 @@ export default class Cat1 {
         dropZones: [],
         meowSounds: [],
         meow() {
-          const meowSound = new Tone.Player(this.music).toDestination();
+          const meowSound = new Tone.Player({
+            url: this.music,
+            loop: true,
+          })
+            .toDestination()
+            .sync()
+            .start(0);
           this.meowSounds.push(meowSound);
-          Tone.loaded().then(() => {
-            meowSound.start();
-            meowSound.loop = true;
-          });
         },
       });
       scene.input.setDraggable(cat);
