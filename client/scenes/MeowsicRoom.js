@@ -93,12 +93,16 @@ export default class MeowsicRoom extends Phaser.Scene {
       }
       //find a way to find the dropzone! This was coming up as undefined**
       //scene[selectedDropZone].data.values.occupied = true;
-      const renderedCat = playerCat.render(x, y, spriteName);
+
+      const renderedCat = playerCat.render(x, y, spriteName).setInteractive();;
+
       //adding dropzone to the cat's dropzone array
       renderedCat.data.values.dropZones.push(selectedDropZone);
       // turning cat's sound on
       renderedCat.data.values.soundOn = true;
       // activating cat meow
+      scene.input.setDraggable(renderedCat);
+      console.log(renderedCat)
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
@@ -114,6 +118,36 @@ export default class MeowsicRoom extends Phaser.Scene {
       }
       // if cat moves off dropZone, remove from array, and send a removal notification to the server - pseudo code on 325
     } */
+
+    // CREATE OTHER PLAYERS GROUP
+    // this.otherPlayers = this.physics.add.group();
+
+    // addOtherPlayers(scene, playerInfo) {
+    //   const otherPlayer = scene.add.sprite(
+    //     playerInfo.x + 40,
+    //     playerInfo.y + 40,
+    //     "astronaut"
+    //   );
+
+    //placedCat.currentX
+    //.currentY 
+
+    //   otherPlayer.playerId = playerInfo.playerId;
+    //   scene.otherPlayers.add(otherPlayer);
+    // }
+
+    //   this.socket.on("disconnected", function (arg) {
+    //     const { playerId, numPlayers } = arg;
+    //     scene.state.numPlayers = numPlayers;
+    //     scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+    //       if (playerId === otherPlayer.playerId) {
+    //         otherPlayer.destroy();
+    //       }
+    //     });
+    //   });
+    // }
+
+
 
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
@@ -134,25 +168,6 @@ export default class MeowsicRoom extends Phaser.Scene {
         //render cats using our function:
         scene.renderCat(selectedDropZone, spriteName, x, y);
       }
-    });
-
-    // this.socket.on("newPlayer", function (arg) {
-    //   console.log("newPlayer?");
-    //   const { playerInfo, numPlayers } = arg;
-    //   scene.addOtherPlayers(scene, playerInfo);
-    //   scene.state.numPlayers = numPlayers;
-    // });
-
-    // DISCONNECT
-    this.socket.on("disconnected", function (arg) {
-      const { playerId, numPlayers } = arg;
-      scene.state.numPlayers = numPlayers;
-      //CODE to populate user info stuff eventually:
-      // scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-      //     if (playerId === otherPlayer.playerId) {
-      //         otherPlayer.destroy();
-      //     }
-      // });
     });
 
     // render zones
@@ -360,5 +375,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
 }
