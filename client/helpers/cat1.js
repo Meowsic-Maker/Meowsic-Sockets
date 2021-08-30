@@ -18,10 +18,16 @@ export default class Cat1 {
             url: this.music,
             volume: -10,
             loop: true,
-          })
-            .toDestination()
-            .sync()
-            .start(0);
+            autostart: true,
+          }).toDestination();
+          if (Tone.Transport.state === "started") {
+            Tone.Transport.schedule((time) => {
+              meowSound.start(time);
+            }, "0m");
+          }
+          // else {
+          //   meowSound.sync().start(0);
+          // }
           this.meowSounds.push(meowSound);
         },
       });

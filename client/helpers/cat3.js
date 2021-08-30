@@ -17,10 +17,16 @@ export default class Cat3 {
           const meowSound = new Tone.Player({
             url: this.music,
             loop: true,
-          })
-            .toDestination()
-            .sync()
-            .start(0);
+            autostart: true,
+          }).toDestination();
+          if (Tone.Transport.state === "started") {
+            Tone.Transport.schedule((time) => {
+              meowSound.start(time);
+            }, "0m");
+          }
+          // else {
+          //   meowSound.sync().start(0);
+          // }
           this.meowSounds.push(meowSound);
         },
       });
