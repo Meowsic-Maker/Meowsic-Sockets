@@ -14,18 +14,19 @@ export default class Cat6 {
         dropZones: [],
         meowSounds: [],
         meow() {
-          const meowSound = new Tone.Player(this.music).toDestination();
-          // this.meowSounds.push(meowSound);
-          Tone.loaded().then(() => {
-            meowSound.start();
-            meowSound.loop = true;
-            const loop = new Tone.Loop((time) => {
-              meowSound.start();
-            }, "1n").start(0);
-            meowSounds.push(loop);
-            Tone.Transport.bpm.value = 80;
-            Tone.Transport.start();
-          });
+          // const meowSound = new Tone.Player(this.music).toDestination();
+          const meowSound = new Tone.Player({
+            url: this.music,
+            loop: true,
+          })
+            .toDestination()
+            .sync()
+            .start(0);
+          this.meowSounds.push(meowSound);
+          // Tone.loaded().then(() => {
+          //   meowSound.start();
+          //   meowSound.loop = true;
+          // });
         },
       });
       scene.input.setDraggable(cat);
