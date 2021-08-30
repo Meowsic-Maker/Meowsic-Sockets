@@ -26,8 +26,6 @@ font-family: 'Mansalva', cursive;-->
     box-sizing: border-box;
     color: #6f2dbd;
     height: 39px;
-    margin: 31px 0 0 29px;
-    padding-left: 37px;
     transition: box-shadow 0.3s;
     width: 240px;
   }
@@ -45,11 +43,7 @@ font-family: 'Mansalva', cursive;-->
   .cancel {
     color: #c7186d;
     display: inline-block;
-    float: right;
-    left: -19px;
-    position: relative;
     text-decoration: none;
-    top: 5px;
     transition: color 0.4s;
   }
   .cancel:hover {
@@ -65,17 +59,13 @@ font-family: 'Mansalva', cursive;-->
     cursor: pointer;
     color: #ffffff;
     font-weight: bold;
-    padding: 9px 24px;
+    padding: 6px 24px 9px 24px;
     text-decoration: none;
     text-shadow: 0px 1px 0px #c73b7a;
     display: block;
     font-size: 16px;
     text-align: center;
-    padding-top: 6px;
-    margin: 29px 0 0 29px;
-    position: relative;
     cursor: pointer;
-    align-self: center;
   }
   input[type="submit"]:hover {
     background: linear-gradient(to bottom, #d1395f 5%, #faa3cd 100%);
@@ -84,6 +74,17 @@ font-family: 'Mansalva', cursive;-->
   input[type="submit"]:active {
     position: relative;
     top: 1px;
+  }
+  .login {
+    padding: 26px;
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+  }
+  input[type="password"],
+  input[type="text"],
+  input[type="submit"] {
+    margin-bottom: 30px;
   }
 </style>
 
