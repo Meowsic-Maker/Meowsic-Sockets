@@ -117,6 +117,17 @@ export default class MeowsicRoom extends Phaser.Scene {
       }
     }
 
+    /* REMOVING CATS function that removes a cat
+    //this.removeCat = (selectedDropZone, spriteName, x, y) => {
+      - curent cats in the given meowsic room
+      - all currentCats are on a dropZone
+       const placedCats = [gameObject.data.values.spriteName. etc]
+      - event listens for any cats in the placexdCat array to be moved off a dropZone and placed back to menu
+       if (placedCatsArray.dropZone.data.values.isMenu ) {
+      }
+      // if cat moves off dropZone, remove from array, and send a removal notification to the server - pseudo code on 325
+    } */
+
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
       const { players, numPlayers, placedCats, roomKey } = scene.state;
@@ -264,7 +275,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.input.on("drop", function (pointer, gameObject, dropZone) {
       // if cat is dropped back in menu
       if (dropZone.data.values.isMenu) {
-        // reset all previously occupied zones
+        // reset the previously filled zone to empty
         gameObject.data.values.dropZones.forEach(
           (zone) => (zone.data.values.occupied = false)
         );
@@ -294,7 +305,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         //send a notice to server that a cat has been played
         // cat is being dropped
-        console.log(gameObject);
+        console.log(gameObject); //?
         scene.socket.emit("catPlayed", {
           x: dropZone.x,
           y: dropZone.y,
@@ -307,6 +318,18 @@ export default class MeowsicRoom extends Phaser.Scene {
         gameObject.x = gameObject.input.dragStartX;
         gameObject.y = gameObject.input.dragStartY;
       }
+
+      /*  send a notice to server that cat has been removed from drop zone
+       scene.socket.emit("catRemoved", {
+        x: dropZone.x,
+        y: dropZone.y,
+        selectedDropZone: dropZone.name,
+        socketId: scene.socket.id,
+        roomKey: scene.state.roomKey,
+        spriteName: gameObject.data.values.spriteName
+
+       })
+      */
     });
   }
 
