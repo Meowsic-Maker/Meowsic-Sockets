@@ -28,6 +28,9 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("meow", "/assets/music/meow.mp3");
     this.load.audio("bell", "/assets/music/bell.mp3");
+    this.load.audio("cat1", "/assets/music/cat1.wav");
+    this.load.audio("cat2", "/assets/music/cat2.wav");
+    this.load.audio("cat3", "/assets/music/cat3.wav");
     this.load.audio("cat4", "/assets/music/cat4.wav");
     this.load.audio("cat5", "/assets/music/cat5.wav");
     this.load.audio("cat6", "/assets/music/cat6.wav");
@@ -66,48 +69,35 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     const track = new Tone.Player({
       url: "/assets/music/bossa-nova-bass.wav",
+      volume: -10,
       loop: true,
+      autostart: true,
     })
       .toDestination()
       .sync()
       .start(0);
 
     this.playText = this.add
-      .text(800, 80, ["PLAY"])
+      .text(1000, 80, ["PLAY"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#00ffff")
       .setInteractive();
 
     this.stopText = this.add
-      .text(800, 120, ["STOP"])
+      .text(1000, 120, ["STOP"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#00ffff")
       .setInteractive();
 
     this.playText.on("pointerdown", function () {
+      Tone.start();
       Tone.Transport.start();
-    });
-
-    this.playText.on("pointerover", function () {
-      this.playText.setColor("#ff69b4");
-    });
-
-    this.playText.on("pointerout", function () {
-      this.playText.setColor("#00ffff");
     });
 
     this.stopText.on("pointerdown", function () {
       Tone.Transport.stop();
-    });
-
-    this.stopText.on("pointerover", function () {
-      this.playText.setColor("#ff69b4");
-    });
-
-    this.stopText.on("pointerout", function () {
-      this.playText.setColor("#00ffff");
     });
 
     const bellSound = () => {
