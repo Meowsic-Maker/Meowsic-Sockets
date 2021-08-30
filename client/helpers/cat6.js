@@ -15,16 +15,16 @@ export default class Cat6 {
         meowSounds: [],
         meow() {
           const meowSound = new Tone.Player(this.music).toDestination();
-          this.meowSounds.push(meowSound);
+          // this.meowSounds.push(meowSound);
           Tone.loaded().then(() => {
             meowSound.start();
             meowSound.loop = true;
-            // const loop = new Tone.Loop((time) => {
-            //   meowSound.start();
-            // }, "1n").start(0);
-
-            // Tone.Transport.bpm.value = 80;
-            // Tone.Transport.start();
+            const loop = new Tone.Loop((time) => {
+              meowSound.start();
+            }, "1n").start(0);
+            meowSounds.push(loop);
+            Tone.Transport.bpm.value = 80;
+            Tone.Transport.start();
           });
         },
       });
