@@ -10,7 +10,7 @@ export default class Cat4 {
       cat.setData({
         soundOn: false,
         spriteName: "Cat4",
-        music: "/assets/music/bell.mp3",
+        music: "/assets/music/cat4.wav",
         dropZones: [],
         meowSounds: [],
         meow() {
