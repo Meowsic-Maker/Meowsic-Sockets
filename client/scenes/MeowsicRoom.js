@@ -21,9 +21,9 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("button4", "/assets/kuroneko.png");
     this.load.image("button5", "/assets/sleepyneko.png");
     this.load.image("button6", "/assets/coffeeneko.png");
-    this.load.audio("bossanova", "/assets/bossa-nova-bass.wav");
-    this.load.audio("meow", "/assets/meow.mp3");
-    this.load.audio("bell", "/assets/bell.mp3");
+    this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
+    this.load.audio("meow", "/assets/music/meow.mp3");
+    this.load.audio("bell", "/assets/music/bell.mp3");
   }
 
   init(data) {
@@ -55,7 +55,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     // sound effects
     const soundTrack = () => {
       const accompaniment = new Tone.Player(
-        "/assets/bossa-nova-bass.wav"
+        "/assets/music/bossa-nova-bass.wav"
       ).toDestination();
       accompaniment.volume.value = -5;
       accompaniment.autostart = true;
@@ -64,7 +64,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     // soundTrack();
 
     const bellSound = () => {
-      const bell = new Tone.Player("/assets/bell.mp3").toDestination();
+      const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
       bell.autostart = true;
     };
 
