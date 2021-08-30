@@ -21,9 +21,9 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("button4", "/assets/kuroneko.png");
     this.load.image("button5", "/assets/sleepyneko.png");
     this.load.image("button6", "/assets/coffeeneko.png");
-    this.load.audio("bossanova", "/assets/bossa-nova-bass.wav");
-    this.load.audio("meow", "/assets/meow.mp3");
-    this.load.audio("bell", "/assets/bell.mp3");
+    this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
+    this.load.audio("meow", "/assets/music/meow.mp3");
+    this.load.audio("bell", "/assets/music/bell.mp3");
   }
 
   init(data) {
@@ -37,8 +37,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     console.log(this.state);
 
     // background
-    this.background = this.add.image(568, 320, "bg")
-      .setOrigin(.5, .5);
+    this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
     // Based on your game size, it may "stretch" and distort.
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
@@ -56,7 +55,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     // sound effects
     const soundTrack = () => {
       const accompaniment = new Tone.Player(
-        "/assets/bossa-nova-bass.wav"
+        "/assets/music/bossa-nova-bass.wav"
       ).toDestination();
       accompaniment.volume.value = -5;
       accompaniment.autostart = true;
@@ -65,7 +64,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     // soundTrack();
 
     const bellSound = () => {
-      const bell = new Tone.Player("/assets/bell.mp3").toDestination();
+      const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
       bell.autostart = true;
     };
 
@@ -87,8 +86,6 @@ export default class MeowsicRoom extends Phaser.Scene {
       osc.stop(audioContext.currentTime + 1);
       osc.connect(gain).connect(audioContext.destination);
     };
-
-
 
     //////HANDLING CAT RENDERING THROUGH SOCKET///////
 
@@ -115,7 +112,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
-    }
+    };
 
     /* REMOVING CATS function that removes a cat
     //this.removeCat = (selectedDropZone, spriteName, x, y) => {
@@ -131,13 +128,13 @@ export default class MeowsicRoom extends Phaser.Scene {
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
       const { players, numPlayers, placedCats, roomKey } = scene.state;
-      console.log(placedCats)
-      placedCats.forEach(cat => {
-        scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y)
-      })
+      console.log(placedCats);
+      placedCats.forEach((cat) => {
+        scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y);
+      });
     };
     //call the currentCats function:
-    this.renderCurrentCats()
+    this.renderCurrentCats();
 
     //When a current cat is placed in another socket, server emits this:
     this.socket.on("catPlayedUpdate", function (args) {
@@ -145,7 +142,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       //check to see if the socket that placed the cat is the socket we are one:
       if (socketId !== scene.socket.id) {
         //render cats using our function:
-        scene.renderCat(selectedDropZone, spriteName, x, y)
+        scene.renderCat(selectedDropZone, spriteName, x, y);
       }
     });
 
@@ -253,6 +250,46 @@ export default class MeowsicRoom extends Phaser.Scene {
       }.bind(this)
     );
 
+    this.gameButton3.on(
+      "pointerdown",
+      function (pointer) {
+        bellSound();
+        let playerCat3 = new Cat3(this);
+        playerCat3.render(80, 270, "Cat2");
+        playerCat3.name = "Cat3";
+      }.bind(this)
+    );
+
+    this.gameButton4.on(
+      "pointerdown",
+      function (pointer) {
+        bellSound();
+        let playerCat4 = new Cat4(this);
+        playerCat4.render(80, 370, "Cat2");
+        playerCat4.name = "Cat4";
+      }.bind(this)
+    );
+
+    this.gameButton5.on(
+      "pointerdown",
+      function (pointer) {
+        bellSound();
+        let playerCat5 = new Cat5(this);
+        playerCat5.render(80, 470, "Cat2");
+        playerCat5.name = "Cat5";
+      }.bind(this)
+    );
+
+    this.gameButton6.on(
+      "pointerdown",
+      function (pointer) {
+        bellSound();
+        let playerCat6 = new Cat6(this);
+        playerCat6.render(80, 570, "Cat2");
+        playerCat6.name = "Cat6";
+      }.bind(this)
+    );
+
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
       gameObject.x = dragX;
       gameObject.y = dragY;
@@ -333,7 +370,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() { }
+  update() {}
 }
-
-
