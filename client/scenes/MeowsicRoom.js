@@ -244,7 +244,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat3 = new Cat3(this);
-        playerCat3.render(80, 170, "Cat2");
+        playerCat3.render(80, 270, "Cat2");
         playerCat3.name = "Cat3";
       }.bind(this)
     );
@@ -254,7 +254,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat4 = new Cat4(this);
-        playerCat4.render(80, 170, "Cat2");
+        playerCat4.render(80, 370, "Cat2");
         playerCat4.name = "Cat4";
       }.bind(this)
     );
@@ -264,7 +264,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat5 = new Cat5(this);
-        playerCat5.render(80, 170, "Cat2");
+        playerCat5.render(80, 470, "Cat2");
         playerCat5.name = "Cat5";
       }.bind(this)
     );
@@ -274,7 +274,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         bellSound();
         let playerCat6 = new Cat6(this);
-        playerCat6.render(80, 170, "Cat2");
+        playerCat6.render(80, 570, "Cat2");
         playerCat6.name = "Cat6";
       }.bind(this)
     );
