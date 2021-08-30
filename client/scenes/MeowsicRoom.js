@@ -36,15 +36,22 @@ export default class MeowsicRoom extends Phaser.Scene {
     const scene = this;
     console.log(this.state);
 
-    let image = this.add.image(
-      this.cameras.main.width / 2,
-      this.cameras.main.height / 2,
-      "bg"
-    );
-    let scaleX = this.cameras.main.width / image.width;
-    let scaleY = this.cameras.main.height / image.height;
-    let scale = Math.max(scaleX, scaleY);
-    image.setScale(scale).setScrollFactor(0);
+    // background
+    this.background = this.add.image(568, 320, "bg")
+      .setOrigin(.5, .5);
+    // Based on your game size, it may "stretch" and distort.
+    this.background.displayWidth = this.sys.canvas.width;
+    this.background.displayHeight = this.sys.canvas.height;
+
+    // let image = this.add.image(
+    //   this.cameras.main.width / 2,
+    //   this.cameras.main.height / 2,
+    //   "bg"
+    // );
+    // let scaleX = this.cameras.main.width / image.width;
+    // let scaleY = this.cameras.main.height / image.height;
+    // let scale = Math.max(scaleX, scaleY);
+    // image.setScale(scale).setScrollFactor(0);
 
     // sound effects
     const soundTrack = () => {
