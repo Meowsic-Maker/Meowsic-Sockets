@@ -10,12 +10,13 @@ export default class Cat1 {
       cat.setData({
         soundOn: false,
         spriteName: "Cat1",
-        music: "/assets/music/bell.mp3",
+        music: "/assets/music/cat1.wav",
         dropZones: [],
         meowSounds: [],
         meow() {
           const meowSound = new Tone.Player({
             url: this.music,
+            volume: -10,
             loop: true,
           })
             .toDestination()

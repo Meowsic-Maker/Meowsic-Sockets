@@ -14,7 +14,6 @@ export default class Cat6 {
         dropZones: [],
         meowSounds: [],
         meow() {
-          // const meowSound = new Tone.Player(this.music).toDestination();
           const meowSound = new Tone.Player({
             url: this.music,
             loop: true,
@@ -23,10 +22,6 @@ export default class Cat6 {
             .sync()
             .start(0);
           this.meowSounds.push(meowSound);
-          // Tone.loaded().then(() => {
-          //   meowSound.start();
-          //   meowSound.loop = true;
-          // });
         },
       });
       scene.input.setDraggable(cat);

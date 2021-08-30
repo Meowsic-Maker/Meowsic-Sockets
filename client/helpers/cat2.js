@@ -9,7 +9,7 @@ export default class Cat2 {
         .setInteractive();
       cat.setData({
         soundOn: false,
-        music: "/assets/music/meow.mp3",
+        music: "/assets/music/cat2.wav",
         dropZones: [],
         meowSounds: [],
         spriteName: "Cat2",
