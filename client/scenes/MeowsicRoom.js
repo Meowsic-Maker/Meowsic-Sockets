@@ -150,16 +150,59 @@ export default class MeowsicRoom extends Phaser.Scene {
       }
       //find a way to find the dropzone! This was coming up as undefined**
       //scene[selectedDropZone].data.values.occupied = true;
-      const renderedCat = playerCat.render(x, y, spriteName);
+
+      const renderedCat = playerCat.render(x, y, spriteName).setInteractive();
+
       //adding dropzone to the cat's dropzone array
       renderedCat.data.values.dropZones.push(selectedDropZone);
       // turning cat's sound on
       renderedCat.data.values.soundOn = true;
       // activating cat meow
+      scene.input.setDraggable(renderedCat);
+      console.log(renderedCat);
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
     };
+
+    /* REMOVING CATS function that removes a cat
+    //this.removeCat = (selectedDropZone, spriteName, x, y) => {
+      - curent cats in the given meowsic room
+      - all currentCats are on a dropZone
+       const placedCats = [gameObject.data.values.spriteName. etc]
+      - event listens for any cats in the placexdCat array to be moved off a dropZone and placed back to menu
+       if (placedCatsArray.dropZone.data.values.isMenu ) {
+      }
+      // if cat moves off dropZone, remove from array, and send a removal notification to the server - pseudo code on 325
+    } */
+
+    // CREATE OTHER PLAYERS GROUP
+    // this.otherPlayers = this.physics.add.group();
+
+    // addOtherPlayers(scene, playerInfo) {
+    //   const otherPlayer = scene.add.sprite(
+    //     playerInfo.x + 40,
+    //     playerInfo.y + 40,
+    //     "astronaut"
+    //   );
+
+    //placedCat.currentX
+    //.currentY
+
+    //   otherPlayer.playerId = playerInfo.playerId;
+    //   scene.otherPlayers.add(otherPlayer);
+    // }
+
+    //   this.socket.on("disconnected", function (arg) {
+    //     const { playerId, numPlayers } = arg;
+    //     scene.state.numPlayers = numPlayers;
+    //     scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
+    //       if (playerId === otherPlayer.playerId) {
+    //         otherPlayer.destroy();
+    //       }
+    //     });
+    //   });
+    // }
 
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
@@ -180,25 +223,6 @@ export default class MeowsicRoom extends Phaser.Scene {
         //render cats using our function:
         scene.renderCat(selectedDropZone, spriteName, x, y);
       }
-    });
-
-    // this.socket.on("newPlayer", function (arg) {
-    //   console.log("newPlayer?");
-    //   const { playerInfo, numPlayers } = arg;
-    //   scene.addOtherPlayers(scene, playerInfo);
-    //   scene.state.numPlayers = numPlayers;
-    // });
-
-    // DISCONNECT
-    this.socket.on("disconnected", function (arg) {
-      const { playerId, numPlayers } = arg;
-      scene.state.numPlayers = numPlayers;
-      //CODE to populate user info stuff eventually:
-      // scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-      //     if (playerId === otherPlayer.playerId) {
-      //         otherPlayer.destroy();
-      //     }
-      // });
     });
 
     // render zones
@@ -349,7 +373,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.input.on("drop", function (pointer, gameObject, dropZone) {
       // if cat is dropped back in menu
       if (dropZone.data.values.isMenu) {
-        // reset all previously occupied zones
+        // reset the previously filled zone to empty
         gameObject.data.values.dropZones.forEach(
           (zone) => (zone.data.values.occupied = false)
         );
@@ -379,7 +403,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         //send a notice to server that a cat has been played
         // cat is being dropped
-        console.log(gameObject);
+        console.log(gameObject); //?
         scene.socket.emit("catPlayed", {
           x: dropZone.x,
           y: dropZone.y,
@@ -392,6 +416,18 @@ export default class MeowsicRoom extends Phaser.Scene {
         gameObject.x = gameObject.input.dragStartX;
         gameObject.y = gameObject.input.dragStartY;
       }
+
+      /*  send a notice to server that cat has been removed from drop zone
+       scene.socket.emit("catRemoved", {
+        x: dropZone.x,
+        y: dropZone.y,
+        selectedDropZone: dropZone.name,
+        socketId: scene.socket.id,
+        roomKey: scene.state.roomKey,
+        spriteName: gameObject.data.values.spriteName
+
+       })
+      */
     });
   }
 
