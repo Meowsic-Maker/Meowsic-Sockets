@@ -46,7 +46,6 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   create() {
     const scene = this;
-    console.log(this.state);
 
     // background
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
@@ -204,7 +203,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
     this.renderCurrentCats = () => {
       const { players, numPlayers, placedCats, roomKey } = scene.state;
-      console.log(placedCats);
       placedCats.forEach((cat) => {
         scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y);
       });
@@ -342,9 +340,9 @@ export default class MeowsicRoom extends Phaser.Scene {
       "pointerdown",
       function (pointer) {
         bellSound();
-        let playerCat5 = new Cat6(this);
-        playerCat5.render(80, 470, "Cat6");
-        playerCat5.name = "Cat6";
+        let playerCat6 = new Cat6(this);
+        playerCat6.render(80, 570, "Cat6");
+        playerCat6.name = "Cat6";
       }.bind(this)
     );
 
@@ -414,8 +412,6 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         //send a notice to server that a cat has been played
         // cat is being dropped
-        console.log(dropZone.name)
-
         scene.socket.emit("catPlayed", {
           x: dropZone.x,
           y: dropZone.y,

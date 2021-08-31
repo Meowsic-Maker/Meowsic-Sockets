@@ -172,11 +172,9 @@ module.exports = (io) => {
         });
         socket.on('catDestroyed', function (args) {
             const { x, y, selectedDropZone, socketId, roomKey } = args
-
             //filter out the destroyed cat from our placed cats array:
             gameRooms[roomKey].placedCats = gameRooms[roomKey].placedCats.filter((cat) => cat.dropZone !== selectedDropZone)
-            console.log(gameRooms[roomKey])
-            //send placed cat info to other OPEN sockets:
+            //emit a destroyed response to destroy on other users screen
             io.emit('catDestroyedUpdate', args);
         });
     });
