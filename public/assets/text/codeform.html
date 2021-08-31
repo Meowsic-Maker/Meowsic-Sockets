@@ -6,9 +6,6 @@
     border: none;
     outline: none;
   }
-  input {
-    text-transform: uppercase;
-  }
   * {
     font-family: "Mansalva", sans-serif;
     font-size: 16px;
@@ -22,6 +19,7 @@
       id="code-form-id"
       name="code-form"
       placeholder="enter room key"
+      onkeyup="this.value = this.value.toUpperCase();"
     />
     <button type="button" id="enterRoom-id" name="enterRoom">enter</button>
   </form>
