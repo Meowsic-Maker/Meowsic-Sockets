@@ -1,10 +1,10 @@
-import Phaser from "phaser"
+import Phaser from "phaser";
 
 export default class SignUp extends Phaser.Scene {
   constructor() {
     super("SignUp");
     this.state = {
-      signedUpUser: null
+      signedUpUser: null,
     };
   }
 
@@ -34,19 +34,23 @@ export default class SignUp extends Phaser.Scene {
     scene.inputElement.addListener("click");
     scene.inputElement.on("click", function (event) {
       if (event.target.name === "signUpButton") {
-        //grab our username and password inputs from the signup form
+        //grab our email and password inputs from the signup form
         const username = scene.inputElement.getChildByName("username");
         const email = scene.inputElement.getChildByName("email");
-        const password = scene.inputElement.getChildByName('password')
-        scene.socket.emit("isSignUpValid", { username: username.value, email: email.value, password: password.value });
+        const password = scene.inputElement.getChildByName("password");
+        scene.socket.emit("isSignUpValid", {
+          username: username.value,
+          email: email.value,
+          password: password.value,
+        });
       } else if (event.target.name === "cancel") {
-        scene.scene.stop('Login')
+        scene.scene.stop("Login");
       }
     });
 
     scene.notValidText = scene.add.text(670, 295, "", {
       fill: "#ff0000",
-      fontSize: "15px"
+      fontSize: "15px",
     });
 
     scene.socket.on("SignUpNotValid", function () {
@@ -54,8 +58,11 @@ export default class SignUp extends Phaser.Scene {
     });
     // if the user is able to successfully sign-up, send them to the waiting room
     scene.socket.on("userSignUpSuccess", function (user) {
-      scene.scene.stop('SignUp')
-      scene.scene.launch("WaitingRoom", { ...scene.state, socket: scene.socket })
+      scene.scene.stop("SignUp");
+      scene.scene.launch("WaitingRoom", {
+        ...scene.state,
+        socket: scene.socket,
+      });
       scene.physics.pause();
     });
   }
