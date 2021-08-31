@@ -12,16 +12,25 @@ export default class Cat1 extends Phaser.GameObjects.Sprite {
       cat.setData({
         soundOn: false,
         spriteName: "Cat1",
-        music: "/assets/music/bell.mp3",
+        music: "/assets/music/cat1.wav",
         dropZones: [],
         meowSounds: [],
         meow() {
-          const meowSound = new Tone.Player(this.music).toDestination();
+          const meowSound = new Tone.Player({
+            url: this.music,
+            volume: -10,
+            loop: true,
+            autostart: true,
+          }).toDestination();
+          if (Tone.Transport.state === "started") {
+            Tone.Transport.schedule((time) => {
+              meowSound.start(time);
+            }, "0m");
+          }
+          // else {
+          //   meowSound.sync().start(0);
+          // }
           this.meowSounds.push(meowSound);
-          Tone.loaded().then(() => {
-            meowSound.start();
-            meowSound.loop = true;
-          });
         },
       });
       scene.input.setDraggable(cat);

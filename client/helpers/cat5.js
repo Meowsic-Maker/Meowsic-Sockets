@@ -14,12 +14,20 @@ export default class Cat5 {
         dropZones: [],
         meowSounds: [],
         meow() {
-          const meowSound = new Tone.Player(this.music).toDestination();
+          const meowSound = new Tone.Player({
+            url: this.music,
+            loop: true,
+            autostart: true,
+          }).toDestination();
+          if (Tone.Transport.state === "started") {
+            Tone.Transport.schedule((time) => {
+              meowSound.start(time);
+            }, "0m");
+          }
+          // else {
+          //   meowSound.sync().start(0);
+          // }
           this.meowSounds.push(meowSound);
-          Tone.loaded().then(() => {
-            meowSound.start();
-            meowSound.loop = true;
-          });
         },
       });
       scene.input.setDraggable(cat);
