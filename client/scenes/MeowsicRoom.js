@@ -185,7 +185,8 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket.on("catPlayedUpdate", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
       //check to see if the socket that placed the cat is the socket we are one:
-      if (socketId !== scene.socket.id) {
+      console.log(scene.state.roomKey)
+      if (socketId !== scene.socket.id && roomKey === scene.state.roomKey) {
         //render cats using our function:
         scene.renderCat(selectedDropZone, spriteName, x, y);
       }
@@ -195,7 +196,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket.on("catDestroyedUpdate", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
       //check to see if the socket that destroyed cat is our socket:
-      if (socketId !== scene.socket.id) {
+      if (socketId !== scene.socket.id && roomKey === scene.state.roomKey) {
         //find the cat in group by dropzone & destroy it
         scene.currentPlayedCats.getChildren().forEach((cat) => {
           if (selectedDropZone === cat.data.values.dropZones[0]) {
