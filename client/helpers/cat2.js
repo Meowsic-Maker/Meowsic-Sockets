@@ -9,23 +9,25 @@ export default class Cat2 {
         .setInteractive();
       cat.setData({
         soundOn: false,
-        music: "/assets/music/meow.mp3",
+        music: "/assets/music/cat2.wav",
         dropZones: [],
         meowSounds: [],
         spriteName: "Cat2",
         meow() {
-          const meowSound = new Tone.Player(this.music).toDestination();
+          const meowSound = new Tone.Player({
+            url: this.music,
+            loop: true,
+            autostart: true,
+          }).toDestination();
+          if (Tone.Transport.state === "started") {
+            Tone.Transport.schedule((time) => {
+              meowSound.start(time);
+            }, "0m");
+          }
+          // else {
+          //   meowSound.sync().start(0);
+          // }
           this.meowSounds.push(meowSound);
-          Tone.loaded().then(() => {
-            meowSound.start();
-            meowSound.loop = true;
-            // const loop = new Tone.Loop((time) => {
-            //   meowSound.start();
-            // }, "1n").start(0);
-
-            // Tone.Transport.bpm.value = 80;
-            // Tone.Transport.start();
-          });
         },
       });
       scene.input.setDraggable(cat);
