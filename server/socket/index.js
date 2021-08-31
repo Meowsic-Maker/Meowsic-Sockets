@@ -170,6 +170,15 @@ module.exports = (io) => {
             //send placed cat info to other OPEN sockets:
             io.emit('catPlayedUpdate', args);
         });
+        socket.on('catDestroyed', function (args) {
+            const { x, y, selectedDropZone, socketId, roomKey } = args
+
+            //filter out the destroyed cat from our placed cats array:
+            gameRooms[roomKey].placedCats = gameRooms[roomKey].placedCats.filter((cat) => cat.dropZone !== selectedDropZone)
+            console.log(gameRooms[roomKey])
+            //send placed cat info to other OPEN sockets:
+            io.emit('catDestroyedUpdate', args);
+        });
     });
 };
 
