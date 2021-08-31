@@ -6,20 +6,20 @@ const gameRooms = {
     //   players: { sockedId#: { playerId: socket.id }, {}, ....},
     //   numPlayers: 0
     // }
-}
-
-
+};
 
 //IMPORT AND INITIALIZE FIREBASE
-const firebase = require('firebase/app')
-const firebaseConfig = require("../firebaseConfig")
-require('firebase/auth');
+const firebase = require("firebase/app");
+const firebaseConfig = require("../firebaseConfig");
+require("firebase/auth");
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
 module.exports = (io) => {
     //IO CREATES A SOCKET CONNECTION AS SOON AS A GAME WINDOW IS OPEN:
     io.on("connection", (socket) => {
-        console.log(`A socket connection to the server has been made: ${socket.id}`);
+        console.log(
+            `A socket connection to the server has been made: ${socket.id}`
+        );
 
         //WHEN CLIENT EMITS 'JOIN ROOM'
         socket.on("joinRoom", (roomKey) => {
@@ -33,7 +33,6 @@ module.exports = (io) => {
             console.log("roomInfo", roomInfo);
             // set initial state on client side: (Which INCLUDED placed cats!!)
             socket.emit("setState", roomInfo);
-
         });
 
         // WHEN A PLAYER DISCONNECTS FROM SOCKET
@@ -43,7 +42,9 @@ module.exports = (io) => {
             for (let keys1 in gameRooms) {
                 for (let keys2 in gameRooms[keys1]) {
                     Object.keys(gameRooms[keys1][keys2]).map((el) => {
-                        if (el === socket.id) { roomKey = keys1 }
+                        if (el === socket.id) {
+                            roomKey = keys1;
+                        }
                     });
                 }
             }
@@ -64,8 +65,7 @@ module.exports = (io) => {
             }
         });
 
-
-        //ROOM KEY CODE LOGIC:
+        // ROOM KEY CODE LOGIC:
         // get a random code for the waiting room
         socket.on("getRoomCode", async function () {
             let key = codeGenerator();
@@ -76,7 +76,7 @@ module.exports = (io) => {
                 roomKey: key,
                 players: {},
                 numPlayers: 0,
-                placedCats: []
+                placedCats: [],
             };
             socket.emit("roomCreated", key);
         });
@@ -86,28 +86,36 @@ module.exports = (io) => {
                 : socket.emit("keyNotValid");
         });
 
-
         //FIREBASE verification
         socket.on("isUserValid", function (input) {
-            // input username & password?
-            firebase.auth().signInWithEmailAndPassword(
-                input.username,
-                input.password
-            ).then(() => {
-                const user = firebaseApp.auth().currentUser;
-                if (user != null) {
-                    var name = user.displayName;
-                    var email = user.email;
-                    var photoUrl = user.photoURL;
-                } // send back user obj
-                socket.emit("userLoginSuccess", { name, email, photoUrl })
-            }
-            ).catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(error)
-            });
+            // input email & password?
+            firebase
+                .auth()
+                // changed input on html form to "email" instead of "username"
+                .signInWithEmailAndPassword(input.email, input.password)
+                .then(() => {
+                    const user = firebaseApp.auth().currentUser;
+                    if (user != null) {
+                        var username = user.displayName;
+                        var email = user.email;
+                        var photoUrl = user.photoURL;
+                        console.log(
+                            "user.displayName",
+                            user.displayName,
+                            "input.email",
+                            input.email,
+                            "user.email",
+                            user.email
+                        );
+                    } // send back user obj
+                    socket.emit("userLoginSuccess", { username, email, photoUrl });
+                })
+                .catch(function (error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(error);
+                });
             // ).then(user => {
             //     console.log("THIS IS OUR USER", user)
             // }).catch(err => {
@@ -118,58 +126,48 @@ module.exports = (io) => {
             // } else {
             // socket.emit("UserNotValid")
             // }
-        })
+        });
 
         socket.on("isSignUpValid", function (input) {
-            // input username & password?
-            firebase.auth().createUserWithEmailAndPassword(
-                input.email,
-                input.password
-            ).then(() => {
-                const user = firebaseApp.auth().currentUser;
-                if (user != null) {
-                    var name = user.displayName;
-                    var email = user.email;
-                    var photoUrl = user.photoURL;
-                } // send back user obj
-                socket.emit("userSignUpSuccess", { name, email, photoUrl })
-            }
-            ).catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                console.log(error)
-            });
-            // ).then(user => {
-            //     console.log("THIS IS OUR USER", user)
-            // }).catch(err => {
-            //     console.log(err)
-            // })
-            // if (user !== undefined) {
-            //
-            // } else {
-            // socket.emit("UserNotValid")
-            // }
+            // input email & password?
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(input.email, input.password)
+                .then(() => {
+                    const user = firebaseApp.auth().currentUser;
+                    if (user != null) {
+                        var username = user.displayName;
+                        var email = user.email;
+                        var photoUrl = user.photoURL;
+                        console.log(
+                            "user.displayName",
+                            user.displayName,
+                            "user.email",
+                            user.email
+                        );
+                    } // send back user obj
+                    socket.emit("userSignUpSuccess", { username, email, photoUrl });
+                })
+                .catch(function (error) {
+                    // Handle Errors here.
+                    var errorCode = error.code;
+                    var errorMessage = error.message;
+                    console.log(error);
+                });
         })
 
 
         //PLAYING CATS/ UPDATING SOCKETS:
         socket.on('catPlayed', function (args) {
             const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args
-
             //Create a cat object with details needed for re-rendering
-            const cat = {
-                dropZone: selectedDropZone,
-                spriteName: spriteName,
-                x, y
-            }
-            //push that cat object to the rooms/placed cats array
-            //being stored to update NEW sockets:
+            const cat = { dropZone: selectedDropZone, spriteName: spriteName, x, y }
+            //push new cat obj to the placedCats array in the Selected Room:
             gameRooms[roomKey].placedCats.push(cat)
-
             //send placed cat info to other OPEN sockets:
             io.emit('catPlayedUpdate', args);
         });
+
         socket.on('catDestroyed', function (args) {
             const { selectedDropZone, socketId, roomKey } = args
             //filter out the destroyed cat from our placed cats array:
