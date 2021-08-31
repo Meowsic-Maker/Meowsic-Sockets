@@ -20,14 +20,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("bg", "/assets/stagebg.jpg");
     this.load.image("instructions", "/assets/elements/meowsic-instruction.png");
     this.load.image("Cat1", "/assets/happyneko.png");
-    this.load.image("Cat2", "/assets/neko.jpeg");
+    this.load.image("Cat2", "/assets/neko.png");
     this.load.image("button1", "/assets/latteneko.png");
     this.load.image("button2", "/assets/caliconeko.png");
     this.load.image("button3", "/assets/greyneko.png");
     this.load.image("button4", "/assets/kuroneko.png");
     this.load.image("button5", "/assets/sleepyneko.png");
     this.load.image("button6", "/assets/coffeeneko.png");
-    //this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
+    this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("meow", "/assets/music/meow.mp3");
     this.load.audio("bell", "/assets/music/bell.mp3");
     this.load.audio("cat1", "/assets/music/cat1.wav");
@@ -53,12 +53,13 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.background.displayHeight = this.sys.canvas.height;
 
     // INSTRUCTIONS POP UP
-    this.instructions = this.add.image(568, 320, "instructions").setScale(0.4, 0.4).setInteractive();;
+    this.instructions = this.add.sprite(568, 320, "instructions").setDisplaySize(1136, 640).setInteractive();;
     this.instructions.on(
       "pointerdown",
       function (pointer) {
         //renders current room settings once destroyed
         scene.renderCurrentCats();
+        scene.renderButtons()
         this.instructions.destroy()
       }.bind(this)
     );
@@ -242,97 +243,100 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone7.name = "dropZone7";
 
     // render cat menu buttons
-    this.gameButton1 = this.add
-      .sprite(80, 70, "button1")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+    this.renderButtons = () => {
 
-    this.gameButton2 = this.add
-      .sprite(80, 170, "button2")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+      this.gameButton1 = this.add
+        .sprite(80, 70, "button1")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    this.gameButton3 = this.add
-      .sprite(80, 270, "button3")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+      this.gameButton2 = this.add
+        .sprite(80, 170, "button2")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    this.gameButton4 = this.add
-      .sprite(80, 370, "button4")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+      this.gameButton3 = this.add
+        .sprite(80, 270, "button3")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    this.gameButton5 = this.add
-      .sprite(80, 470, "button5")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+      this.gameButton4 = this.add
+        .sprite(80, 370, "button4")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    this.gameButton6 = this.add
-      .sprite(80, 570, "button6")
-      .setDisplaySize(90, 80)
-      .setInteractive();
+      this.gameButton5 = this.add
+        .sprite(80, 470, "button5")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    // RENDER new cats from menu buttons
-    this.gameButton1.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        // Tone.Transport.start();
-        let playerCat = new Cat1(this);
-        playerCat.render(80, 70, "Cat1");
-        playerCat.name = "Cat1";
-      }.bind(this)
-    );
+      this.gameButton6 = this.add
+        .sprite(80, 570, "button6")
+        .setDisplaySize(90, 80)
+        .setInteractive();
 
-    this.gameButton2.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        let playerCat2 = new Cat2(this);
-        playerCat2.render(80, 170, "Cat2");
-        playerCat2.name = "Cat2";
-      }.bind(this)
-    );
+      // RENDER new cats from menu buttons
+      this.gameButton1.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          // Tone.Transport.start();
+          let playerCat = new Cat1(this);
+          playerCat.render(80, 70, "Cat1");
+          playerCat.name = "Cat1";
+        }.bind(this)
+      );
 
-    this.gameButton3.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        let playerCat3 = new Cat3(this);
-        playerCat3.render(80, 270, "Cat2");
-        playerCat3.name = "Cat3";
-      }.bind(this)
-    );
+      this.gameButton2.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          let playerCat2 = new Cat2(this);
+          playerCat2.render(80, 170, "Cat2");
+          playerCat2.name = "Cat2";
+        }.bind(this)
+      );
 
-    this.gameButton4.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        let playerCat4 = new Cat4(this);
-        playerCat4.render(80, 370, "Cat2");
-        playerCat4.name = "Cat4";
-      }.bind(this)
-    );
+      this.gameButton3.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          let playerCat3 = new Cat3(this);
+          playerCat3.render(80, 270, "Cat2");
+          playerCat3.name = "Cat3";
+        }.bind(this)
+      );
 
-    this.gameButton5.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        let playerCat5 = new Cat5(this);
-        playerCat5.render(80, 470, "Cat2");
-        playerCat5.name = "Cat5";
-      }.bind(this)
-    );
+      this.gameButton4.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          let playerCat4 = new Cat4(this);
+          playerCat4.render(80, 370, "Cat2");
+          playerCat4.name = "Cat4";
+        }.bind(this)
+      );
 
-    this.gameButton6.on(
-      "pointerdown",
-      function (pointer) {
-        bellSound();
-        let playerCat6 = new Cat6(this);
-        playerCat6.render(80, 570, "Cat6");
-        playerCat6.name = "Cat6";
-      }.bind(this)
-    );
+      this.gameButton5.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          let playerCat5 = new Cat5(this);
+          playerCat5.render(80, 470, "Cat2");
+          playerCat5.name = "Cat5";
+        }.bind(this)
+      );
+
+      this.gameButton6.on(
+        "pointerdown",
+        function (pointer) {
+          bellSound();
+          let playerCat6 = new Cat6(this);
+          playerCat6.render(80, 570, "Cat6");
+          playerCat6.name = "Cat6";
+        }.bind(this)
+      );
+    }
 
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
       gameObject.x = dragX;
