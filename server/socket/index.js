@@ -171,7 +171,7 @@ module.exports = (io) => {
             io.emit('catPlayedUpdate', args);
         });
         socket.on('catDestroyed', function (args) {
-            const { x, y, selectedDropZone, socketId, roomKey } = args
+            const { selectedDropZone, socketId, roomKey } = args
             //filter out the destroyed cat from our placed cats array:
             gameRooms[roomKey].placedCats = gameRooms[roomKey].placedCats.filter((cat) => cat.dropZone !== selectedDropZone)
             //emit a destroyed response to destroy on other users screen
