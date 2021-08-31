@@ -47,16 +47,17 @@ export default class MeowsicRoom extends Phaser.Scene {
   create() {
     const scene = this;
 
-    // background
+    // BACKGROUND
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
-    // Based on your game size, it may "stretch" and distort.
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
 
+    // INSTRUCTIONS POP UP
     this.instructions = this.add.image(568, 320, "instructions").setScale(0.4, 0.4).setInteractive();;
     this.instructions.on(
       "pointerdown",
       function (pointer) {
+        //renders current room settings once destroyed
         scene.renderCurrentCats();
         this.instructions.destroy()
       }.bind(this)
@@ -126,91 +127,61 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     //////HANDLING CAT RENDERING THROUGH SOCKET///////
 
-    //Create a renderCat function that renders placed cats:
+    //CREATE CURRENT PLAYED CATS GROUP
+    this.currentPlayedCats = this.physics.add.group();
+
+    //Create a renderCat function that renders a placed cat:
     this.renderCat = (selectedDropZone, spriteName, x, y) => {
       let playerCat;
-      //see which cat was placed and render appropriate cat:
       switch (spriteName) {
         case "Cat1":
           playerCat = new Cat1(scene);
         case "Cat2":
           playerCat = new Cat2(scene);
+        case "Cat3":
+          playerCat = new Cat3(scene);
+        case "Cat4":
+          playerCat = new Cat4(scene);
+        case "Cat5":
+          playerCat = new Cat5(scene);
         default:
-          playerCat = new Cat1(scene);
+          playerCat = new Cat6(scene);
       }
-      //find a way to find the dropzone! This was coming up as undefined**
-      scene[selectedDropZone].data.values.occupied = true
-
       const renderedCat = playerCat.render(x, y, spriteName)
-
-      //adding dropzone to the cat's dropzone array
+      //Handling the Drop Zones:
       renderedCat.data.values.dropZones.push(selectedDropZone);
-      // turning cat's sound on
+      scene[selectedDropZone].data.values.occupied = true
+      // activating cat meow
       renderedCat.data.values.soundOn = true;
+      if (renderedCat.data.values.dropZones.length <= 1) {
+        renderedCat.data.values.meow();
+      }
+      // Set destruction button
       renderedCat.on(
         "pointerdown",
         function (pointer) {
           renderedCat.data.values.meowSounds[0].stop();
           renderedCat.destroy()
           scene[selectedDropZone].data.values.occupied = false
+          scene.socket.emit("catDestroyed", {
+            selectedDropZone: selectedDropZone,
+            socketId: scene.socket.id,
+            roomKey: scene.state.roomKey,
+          });
         }.bind(this))
-
-      // activating cat meow
-      if (renderedCat.data.values.dropZones.length <= 1) {
-        renderedCat.data.values.meow();
-      }
+      //Add cat to group:
+      this.currentPlayedCats.add(renderedCat)
     };
 
-    /* REMOVING CATS function that removes a cat
-    //this.removeCat = (selectedDropZone, spriteName, x, y) => {
-      - curent cats in the given meowsic room
-      - all currentCats are on a dropZone
-       const placedCats = [gameObject.data.values.spriteName. etc]
-      - event listens for any cats in the placexdCat array to be moved off a dropZone and placed back to menu
-       if (placedCatsArray.dropZone.data.values.isMenu ) {
-      }
-      // if cat moves off dropZone, remove from array, and send a removal notification to the server - pseudo code on 325
-    } */
-
-    // CREATE OTHER PLAYERS GROUP
-    // this.otherPlayers = this.physics.add.group();
-
-    // addOtherPlayers(scene, playerInfo) {
-    //   const otherPlayer = scene.add.sprite(
-    //     playerInfo.x + 40,
-    //     playerInfo.y + 40,
-    //     "astronaut"
-    //   );
-
-    //placedCat.currentX
-    //.currentY
-
-    //   otherPlayer.playerId = playerInfo.playerId;
-    //   scene.otherPlayers.add(otherPlayer);
-    // }
-
-    //   this.socket.on("disconnected", function (arg) {
-    //     const { playerId, numPlayers } = arg;
-    //     scene.state.numPlayers = numPlayers;
-    //     scene.otherPlayers.getChildren().forEach(function (otherPlayer) {
-    //       if (playerId === otherPlayer.playerId) {
-    //         otherPlayer.destroy();
-    //       }
-    //     });
-    //   });
-    // }
-
-    //FUNCTION UPDATING CATS FOR OTHER PLAYERS WHEN USER JOINS
+    //Function that sets the current cats when a user joins an in-prog session:
     this.renderCurrentCats = () => {
       const { players, numPlayers, placedCats, roomKey } = scene.state;
       placedCats.forEach((cat) => {
         scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y);
       });
     };
-    //call the currentCats function:
-    // this.renderCurrentCats();
 
-    //When a current cat is placed in another socket, server emits this:
+    //Update our page when a cat has been played:
     this.socket.on("catPlayedUpdate", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
       //check to see if the socket that placed the cat is the socket we are one:
@@ -219,6 +190,22 @@ export default class MeowsicRoom extends Phaser.Scene {
         scene.renderCat(selectedDropZone, spriteName, x, y);
       }
     });
+
+    //Update our page when a cat has been destroyed:
+    this.socket.on("catDestroyedUpdate", function (args) {
+      const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
+      //check to see if the socket that destroyed cat is our socket:
+      if (socketId !== scene.socket.id) {
+        //find the cat in group by dropzone & destroy it
+        scene.currentPlayedCats.getChildren().forEach((cat) => {
+          if (selectedDropZone === cat.data.values.dropZones[0]) {
+            cat.data.values.meowSounds[0].stop();
+            scene[selectedDropZone].data.values.occupied = false;
+            cat.destroy()
+          }
+        })
+      }
+    })
 
     // render zones
     this.menuZone = new Menu(this);
@@ -366,23 +353,17 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.input.on("drop", function (pointer, gameObject, dropZone) {
-      // if cat is dropped back in menu
-      if (dropZone.data.values.isMenu) {
-        // reset the previously filled zone to empty
-        gameObject.data.values.dropZones.forEach(
-          (zone) => (zone.data.values.occupied = false)
-        );
-        gameObject.data.values.soundOn = false;
-        // stop meow
-        gameObject.data.values.meowSounds[0].disconnect().stop();
+
+      if (dropZone.data.values.isMenu) { // if cat is dropped back in menu
         // remove cat
         gameObject.destroy();
-      } else if (!dropZone.data.values.occupied) {
-        // if cat is dropped in any other zone, snap into place
+      } else if (!dropZone.data.values.occupied) { // if cat is dropped in an empty zone
+        // snap into place
         gameObject.x = dropZone.x;
         gameObject.y = dropZone.y;
-        // set zone to occupied
+        //set zone to occupied
         dropZone.data.values.occupied = true;
+        // Set destruction button
         gameObject.on(
           "pointerdown",
           function (pointer) {
@@ -390,28 +371,24 @@ export default class MeowsicRoom extends Phaser.Scene {
             dropZone.data.values.occupied = false;
             gameObject.destroy()
             scene.socket.emit("catDestroyed", {
-              x: dropZone.x,
-              y: dropZone.y,
               selectedDropZone: dropZone.name,
               socketId: scene.socket.id,
               roomKey: scene.state.roomKey,
             });
           }.bind(this))
-        // if cat has visited other zones, reset those zones
-        if (gameObject.data.values.dropZones.length !== 0) {
-          gameObject.data.values.dropZones.forEach(
-            (zone) => (zone.data.values.occupied = false)
-          );
-        }
-        // add current zone to zone history
-        gameObject.data.values.dropZones.push(dropZone);
+
+        // Update dropzone details on cat object
+        gameObject.data.values.dropZones.push(dropZone.name);
+
+        // Activate cat and meow
         gameObject.data.values.soundOn = true;
-        // ensure cat only starts sound player once
         if (gameObject.data.values.dropZones.length <= 1) {
           gameObject.data.values.meow();
         }
+        //Add cat to the group:
+        scene.currentPlayedCats.add(gameObject)
+
         //send a notice to server that a cat has been played
-        // cat is being dropped
         scene.socket.emit("catPlayed", {
           x: dropZone.x,
           y: dropZone.y,
@@ -420,22 +397,10 @@ export default class MeowsicRoom extends Phaser.Scene {
           roomKey: scene.state.roomKey,
           spriteName: gameObject.data.values.spriteName,
         });
-      } else {
+      } else { // if dropped anywhere else, return to start
         gameObject.x = gameObject.input.dragStartX;
         gameObject.y = gameObject.input.dragStartY;
       }
-
-      /*  send a notice to server that cat has been removed from drop zone
-       scene.socket.emit("catRemoved", {
-        x: dropZone.x,
-        y: dropZone.y,
-        selectedDropZone: dropZone.name,
-        socketId: scene.socket.id,
-        roomKey: scene.state.roomKey,
-        spriteName: gameObject.data.values.spriteName
-
-       })
-      */
     });
   }
 
