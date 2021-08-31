@@ -1,9 +1,7 @@
 import * as Tone from "tone";
-import Phaser from "phaser";
 
-export default class Cat1 extends Phaser.GameObjects.Sprite {
+export default class Cat1 {
   constructor(scene) {
-    super(scene)
     this.render = (x, y, sprite) => {
       let cat = scene.add
         .image(x, y, sprite)
