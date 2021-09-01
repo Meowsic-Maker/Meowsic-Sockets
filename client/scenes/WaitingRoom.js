@@ -15,46 +15,45 @@ export default class WaitingRoom extends Phaser.Scene {
 
     preload() {
         this.load.html("codeform", "assets/text/codeform.html");
+        this.load.image("waitingroom", "/assets/elements/room-code.png")
+        this.load.image("getroomcode", "/assets/elements/emptybox.png")
     }
 
     create() {
         const scene = this;
 
         scene.popUp = scene.add.graphics();
-        scene.boxes = scene.add.graphics();
+
 
         // for popup window
-        scene.popUp.lineStyle(1, 0xffffff);
-        scene.popUp.fillStyle(0xffffff, 0.5);
-
-        // for boxes
-        scene.boxes.lineStyle(1, 0xffffff);
-        scene.boxes.fillStyle(0xA873D1, 1);
-
-        // popup window
-        scene.popUp.strokeRect(50, 50, 900, 550);
+        // scene.popUp.lineStyle(1, 0xffffff);
+        scene.popUp.fillStyle(0xfadfe6, 0.8);
+        // scene.popUp.strokeRect(50, 50, 1036, 540);
         scene.popUp.fillRect(50, 50, 900, 550);
 
-        //title
-        scene.title = scene.add.text(100, 75, "Let's Get Meowsical!", {
-            fill: 'darkpurple',
-            fontSize: "66px",
-            fontStyle: "bold",
-        });
+        // for boxes
 
-        //left popup
-        scene.boxes.strokeRect(100, 200, 275, 100);
-        scene.boxes.fillRect(100, 200, 275, 100);
-        scene.requestButton = scene.add.text(140, 215, "Request Room Key", {
-            fill: "#000000",
-            fontSize: "20px",
-            fontStyle: "bold",
-        });
+
+        this.codeBoxes = this.add.image(568, 320, "waitingroom").setOrigin(0.5, 0.5).setScale(.37);
+
+
+        // //left popup
+        // scene.boxes.strokeRect(100, 200, 275, 100);
+        // scene.boxes = scene.add.graphics();
+        // scene.boxes.fillStyle(0xA873D1, .3);
+        // scene.boxes.fillRect(100, 200, 275, 100);
+        // scene.requestButton = scene.add.text(140, 215, "Request Room Key", {
+        //     fill: "#000000",
+
+        //     fontSize: "20px",
+        //     fontStyle: "bold",
+        // });
 
         //right popup
-        scene.boxes.strokeRect(425, 200, 275, 100);
-        scene.boxes.fillRect(425, 200, 275, 100);
-        scene.inputElement = scene.add.dom(562.5, 250).createFromCache("codeform");
+        // scene.boxes.strokeRect(425, 200, 275, 100);
+        // scene.boxes.fillRect(425, 200, 275, 100);
+
+        scene.inputElement = scene.add.dom(320, 420).createFromCache("codeform");
         scene.inputElement.addListener("click");
         scene.inputElement.on("click", function (event) {
             if (event.target.name === "enterRoom") {
@@ -62,20 +61,21 @@ export default class WaitingRoom extends Phaser.Scene {
                 scene.socket.emit("isKeyValid", input.value);
             }
         });
-
-        scene.requestButton.setInteractive();
-        scene.requestButton.on("pointerdown", () => {
+        this.getCodeBox = this.add.image(740, 380, "getroomcode")
+        scene.getCodeBox.setInteractive();
+        scene.getCodeBox.on("pointerdown", () => {
             scene.socket.emit("getRoomCode");
         });
 
-        scene.notValidText = scene.add.text(670, 295, "", {
+
+        scene.notValidText = scene.add.text(320, 470, "", {
             fill: "#ff0000",
             fontSize: "15px",
         });
-        scene.roomKeyText = scene.add.text(210, 250, "", {
-            fill: "#ffffff",
-            fontSize: "20px",
-            fontStyle: "bold",
+        scene.roomKeyText = scene.add.text(720, 420, "", {
+            fill: "#00000",
+            fontSize: "50px",
+            // fontStyle: "bold",
         });
 
         // scene.socket.on('catPlayed', function (gameObject, dropZone, socketId) {
