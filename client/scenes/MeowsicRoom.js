@@ -207,6 +207,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       renderedCat.on(
         "pointerdown",
         function (pointer) {
+          renderedCat.data.values.meowSounds[0].disconnect();
           renderedCat.data.values.meowSounds[0].stop();
           renderedCat.destroy();
           scene[selectedDropZone].data.values.occupied = false;
@@ -248,6 +249,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         //find the cat in group by dropzone & destroy it
         scene.currentPlayedCats.getChildren().forEach((cat) => {
           if (selectedDropZone === cat.data.values.dropZones[0]) {
+            cat.data.values.meowSounds[0].disconnect();
             cat.data.values.meowSounds[0].stop();
             scene[selectedDropZone].data.values.occupied = false;
             cat.destroy();
@@ -266,15 +268,15 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone2.name = "dropZone2";
 
     this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(405, 295, 160, 300);
+    this.dropZone3 = this.zone3.renderZone(400, 295, 160, 300);
     this.dropZone3.name = "dropZone3";
 
     this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(540, 160, 140, 240);
+    this.dropZone4 = this.zone4.renderZone(550, 165, 140, 240);
     this.dropZone4.name = "dropZone4";
 
     this.zone5 = new Zone(this);
-    this.dropZone5 = this.zone5.renderZone(685, 130, 160, 180);
+    this.dropZone5 = this.zone5.renderZone(675, 145, 160, 180);
     this.dropZone5.name = "dropZone5";
 
     this.zone6 = new Zone(this);
@@ -355,6 +357,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         gameObject.on(
           "pointerdown",
           function (pointer) {
+            gameObject.data.values.meowSounds[0].disconnect();
             gameObject.data.values.meowSounds[0].stop();
             dropZone.data.values.occupied = false;
             gameObject.destroy();
