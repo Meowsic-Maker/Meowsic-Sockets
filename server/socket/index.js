@@ -88,7 +88,11 @@ module.exports = (io) => {
 
     //FIREBASE verification
     socket.on("isUserValid", function (input) {
-      // input email & password?
+      // checking if input credentials are valid
+      if (!input.email.includes("@")) {
+        // set this text to display on form!
+        socket.emit("emailNotValid")
+      }
       firebase
         .auth()
         .signInWithEmailAndPassword(input.email, input.password)
@@ -112,6 +116,7 @@ module.exports = (io) => {
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(error);
+         // write custom error functions - reference emailNotValid, 56 phaserSignUp
         });
       // ).then(user => {
       //     console.log("THIS IS OUR USER", user)
@@ -126,7 +131,10 @@ module.exports = (io) => {
     });
 
     socket.on("isSignUpValid", function (input) {
-      // input email & password?
+      if (!input.email.includes("@")) {
+        // set this text to display on form!
+        socket.emit("emailNotValid")
+      }
       firebase
         .auth()
         .createUserWithEmailAndPassword(input.email, input.password)

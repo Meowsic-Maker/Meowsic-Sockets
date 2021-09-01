@@ -53,6 +53,10 @@ export default class SignUp extends Phaser.Scene {
       fontSize: "15px",
     });
 
+    scene.socket.on("emailNotValid", function () {
+      scene.notValidText.setText("Invalid email! OH NOOOOOOOOOOOOOOOO");
+  });
+
     scene.socket.on("SignUpNotValid", function () {
       scene.notValidText.setText("Invalid SignUp!");
     });
