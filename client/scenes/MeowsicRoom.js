@@ -128,14 +128,17 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.homeText.on("pointerdown", function () {
+      Tone.Transport.stop();
       scene.scene.start("MainScene", { socket: scene.socket });
     });
 
     this.newGameText.on("pointerdown", function () {
+      Tone.Transport.stop();
       scene.scene.start("WaitingRoom", { socket: scene.socket });
     });
 
     // this.logInText.on("pointerdown", function () {
+    //   Tone.Transport.stop();
     //   scene.scene.start("MainScene", { socket: scene.socket });
     // });
 
