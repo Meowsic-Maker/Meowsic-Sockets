@@ -75,12 +75,12 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#00ffff")
       .setInteractive();
 
-    this.newGameText = this.add
-      .text(1000, 100, ["NEW GAME"])
-      .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
-      .setColor("#00ffff")
-      .setInteractive();
+    // this.newGameText = this.add
+    //   .text(1000, 100, ["NEW GAME"])
+    //   .setFontSize(18)
+    //   .setFontFamily("Trebuchet MS")
+    //   .setColor("#00ffff")
+    //   .setInteractive();
 
     // this.logInText = this.add
     //   .text(1000, 150, ["LOG IN"])
@@ -132,10 +132,10 @@ export default class MeowsicRoom extends Phaser.Scene {
       scene.scene.start("MainScene", { socket: scene.socket });
     });
 
-    this.newGameText.on("pointerdown", function () {
-      Tone.Transport.stop();
-      scene.scene.start("WaitingRoom", { socket: scene.socket });
-    });
+    // this.newGameText.on("pointerdown", function () {
+    //   Tone.Transport.stop();
+    //   scene.scene.start("WaitingRoom", { socket: scene.socket });
+    // });
 
     // this.logInText.on("pointerdown", function () {
     //   Tone.Transport.stop();
