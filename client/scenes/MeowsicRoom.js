@@ -53,6 +53,34 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
 
+    this.roomKeyText = this.add
+      .text(540, 25, [scene.state.roomKey])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#ffffff")
+      .setInteractive();
+
+    this.home = this.add
+      .text(1000, 50, ["HOME"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    this.newGame = this.add
+      .text(1000, 100, ["NEW GAME"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    this.home = this.add
+      .text(1000, 150, ["LOG IN"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
+
     Tone.Transport.bpm.value = 100;
     Tone.Transport.loop = true;
     Tone.Transport.loopStart = "0";
