@@ -17,6 +17,7 @@ export default class MeowsicRoom extends Phaser.Scene {
   }
 
   preload() {
+    // game.load.script('gaegu', 'https://fonts.googleapis.com/css2?family=Gaegu:wght@300&display=swap');
     this.load.image("bg", "/assets/stagebg.jpg");
     this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
       frameWidth: 1200,
@@ -77,12 +78,12 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#00ffff")
       .setInteractive();
 
-    this.logInText = this.add
-      .text(1000, 150, ["LOG IN"])
-      .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
-      .setColor("#00ffff")
-      .setInteractive();
+    // this.logInText = this.add
+    //   .text(1000, 150, ["LOG IN"])
+    //   .setFontSize(18)
+    //   .setFontFamily("Trebuchet MS")
+    //   .setColor("#00ffff")
+    //   .setInteractive();
 
     Tone.Transport.bpm.value = 100;
     Tone.Transport.loop = true;
@@ -125,6 +126,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.homeText.on("pointerdown", function () {
       scene.scene.start("MainScene", { socket: scene.socket });
     });
+
+    this.newGameText.on("pointerdown", function () {
+      scene.scene.start("WaitingRoom", { socket: scene.socket });
+    });
+
+    // this.logInText.on("pointerdown", function () {
+    //   scene.scene.start("MainScene", { socket: scene.socket });
+    // });
 
     const bellSound = () => {
       const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
