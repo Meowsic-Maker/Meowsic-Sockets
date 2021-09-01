@@ -18,6 +18,10 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   preload() {
     // game.load.script('gaegu', 'https://fonts.googleapis.com/css2?family=Gaegu:wght@300&display=swap');
+    this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("bg", "/assets/stagebg.jpg");
     this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
       frameWidth: 1200,
