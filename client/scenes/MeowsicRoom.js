@@ -199,6 +199,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       renderedCat.on(
         "pointerdown",
         function (pointer) {
+          renderedCat.data.values.meowSounds[0].disconnect();
           renderedCat.data.values.meowSounds[0].stop();
           renderedCat.destroy();
           scene[selectedDropZone].data.values.occupied = false;
@@ -240,6 +241,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         //find the cat in group by dropzone & destroy it
         scene.currentPlayedCats.getChildren().forEach((cat) => {
           if (selectedDropZone === cat.data.values.dropZones[0]) {
+            cat.data.values.meowSounds[0].disconnect();
             cat.data.values.meowSounds[0].stop();
             scene[selectedDropZone].data.values.occupied = false;
             cat.destroy();
@@ -347,6 +349,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         gameObject.on(
           "pointerdown",
           function (pointer) {
+            gameObject.data.values.meowSounds[0].disconnect();
             gameObject.data.values.meowSounds[0].stop();
             dropZone.data.values.occupied = false;
             gameObject.destroy();
