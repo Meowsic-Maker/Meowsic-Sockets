@@ -19,7 +19,10 @@ export default class Cat4 {
             loop: true,
             autostart: true,
           }).toDestination();
-          if (Tone.Transport.state === "started") {
+          if (
+            Tone.Transport.state === "started" ||
+            Tone.Transport.state === "stopped"
+          ) {
             Tone.Transport.schedule((time) => {
               meowSound.start(time);
             }, "0m");
