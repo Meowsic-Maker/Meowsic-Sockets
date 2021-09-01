@@ -75,12 +75,12 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#00ffff")
       .setInteractive();
 
-    // this.newGameText = this.add
-    //   .text(1000, 100, ["NEW GAME"])
-    //   .setFontSize(18)
-    //   .setFontFamily("Trebuchet MS")
-    //   .setColor("#00ffff")
-    //   .setInteractive();
+    this.newGameText = this.add
+      .text(1000, 100, ["NEW GAME"])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#00ffff")
+      .setInteractive();
 
     // this.logInText = this.add
     //   .text(1000, 150, ["LOG IN"])
@@ -128,16 +128,22 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.homeText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
       Tone.Transport.stop();
       scene.scene.start("MainScene", { socket: scene.socket });
     });
 
-    // this.newGameText.on("pointerdown", function () {
-    //   Tone.Transport.stop();
-    //   scene.scene.start("WaitingRoom", { socket: scene.socket });
-    // });
+    this.newGameText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
+      Tone.Transport.stop();
+      scene.scene.start("WaitingRoom", { socket: scene.socket });
+    });
 
     // this.logInText.on("pointerdown", function () {
+    //   stopAllCatSounds();
+    //   Tone.Transport.cancel(0);
     //   Tone.Transport.stop();
     //   scene.scene.start("MainScene", { socket: scene.socket });
     // });
@@ -164,6 +170,13 @@ export default class MeowsicRoom extends Phaser.Scene {
       osc.start();
       osc.stop(audioContext.currentTime + 1);
       osc.connect(gain).connect(audioContext.destination);
+    };
+
+    const stopAllCatSounds = () => {
+      scene.currentPlayedCats.getChildren().forEach((cat) => {
+        cat.data.values.meowSounds[0].disconnect();
+        cat.data.values.meowSounds[0].stop();
+      });
     };
 
     // INSTRUCTIONS POP UP
