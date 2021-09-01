@@ -18,7 +18,10 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   preload() {
     this.load.image("bg", "/assets/stagebg.jpg");
-    this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("Cat1", "/assets/happyneko.png");
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
@@ -60,21 +63,21 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#ffffff")
       .setInteractive();
 
-    this.home = this.add
+    this.homeText = this.add
       .text(1000, 50, ["HOME"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#00ffff")
       .setInteractive();
 
-    this.newGame = this.add
+    this.newGameText = this.add
       .text(1000, 100, ["NEW GAME"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#00ffff")
       .setInteractive();
 
-    this.home = this.add
+    this.logInText = this.add
       .text(1000, 150, ["LOG IN"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
@@ -119,6 +122,10 @@ export default class MeowsicRoom extends Phaser.Scene {
       Tone.Transport.stop();
     });
 
+    this.homeText.on("pointerdown", function () {
+      scene.scene.start("MainScene", { socket: scene.socket });
+    });
+
     const bellSound = () => {
       const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
       bell.autostart = true;
@@ -146,16 +153,19 @@ export default class MeowsicRoom extends Phaser.Scene {
     // INSTRUCTIONS POP UP
     this.instructions = this.add
       .sprite(568, 320, "instructions")
-      .setScale(.94)
+      .setScale(0.94)
       .setInteractive();
     this.anims.create({
-      key: 'play',
+      key: "play",
       repeat: -1,
       frameRate: 7,
-      frames: this.anims.generateFrameNames('instructions', { start: 0, end: 11 })
-    })
+      frames: this.anims.generateFrameNames("instructions", {
+        start: 0,
+        end: 11,
+      }),
+    });
     // PLAY background animation:
-    this.instructions.play('play')
+    this.instructions.play("play");
     this.instructions.on(
       "pointerdown",
       function (pointer) {
@@ -422,5 +432,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() { }
+  update() {}
 }
