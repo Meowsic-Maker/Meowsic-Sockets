@@ -20,13 +20,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("bg", "/assets/stagebg.jpg");
     this.load.image("instructions", "/assets/elements/meowsic-instruction.png");
     this.load.image("Cat1", "/assets/happyneko.png");
-    this.load.image("Cat2", "/assets/neko.png");
-    this.load.image("button1", "/assets/latteneko.png");
-    this.load.image("button2", "/assets/caliconeko.png");
-    this.load.image("button3", "/assets/greyneko.png");
-    this.load.image("button4", "/assets/kuroneko.png");
-    this.load.image("button5", "/assets/sleepyneko.png");
-    this.load.image("button6", "/assets/coffeeneko.png");
+    this.load.image("Cat2", "/assets/coffeeneko.png");
+    this.load.image("Cat3", "/assets/latteneko.png");
+    this.load.image("Cat4", "/assets/caliconeko.png");
+    this.load.image("Cat5", "/assets/greyneko.png");
+    this.load.image("Cat6", "/assets/kuroneko.png");
+    this.load.image("Cat7", "/assets/sleepyneko.png");
+    this.load.image("Cat8", "/assets/neko.png");
+
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("meow", "/assets/music/meow.mp3");
     this.load.audio("bell", "/assets/music/bell.mp3");
@@ -59,7 +60,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         //renders current room settings once destroyed
         scene.renderCurrentCats();
-        scene.renderButtons()
+        scene.renderButtons(1, 2, 3, 4, 5, 6)
         this.instructions.destroy()
       }.bind(this)
     );
@@ -137,16 +138,22 @@ export default class MeowsicRoom extends Phaser.Scene {
       switch (spriteName) {
         case "Cat1":
           playerCat = new Cat1(scene);
+          break;
         case "Cat2":
           playerCat = new Cat2(scene);
+          break;
         case "Cat3":
           playerCat = new Cat3(scene);
+          break;
         case "Cat4":
           playerCat = new Cat4(scene);
+          break;
         case "Cat5":
           playerCat = new Cat5(scene);
+          break;
         default:
           playerCat = new Cat6(scene);
+          break;
       }
       const renderedCat = playerCat.render(x, y, spriteName)
       //Handling the Drop Zones:
@@ -210,10 +217,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     })
 
     // render zones
-    this.menuZone = new Menu(this);
-    this.menuDropZone = this.menuZone.renderZone(80, 320, 120, 600);
-    this.menuZone.name = "menuZone";
-
     this.zone1 = new Zone(this);
     this.dropZone1 = this.zone1.renderZone(570, 510, 410, 240);
     this.dropZone1.name = "dropZone1";
@@ -243,99 +246,42 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone7.name = "dropZone7";
 
     // render cat menu buttons
-    this.renderButtons = () => {
+    this.renderButtons = (a, b, c, d, e, f) => {
+      if (a) {
+        let playerCat = new Cat1(this);
+        playerCat.render(80, 70, "Cat1");
+        playerCat.name = "Cat1";
+      }
 
-      this.gameButton1 = this.add
-        .sprite(80, 70, "button1")
-        .setDisplaySize(90, 80)
-        .setInteractive();
+      if (b) {
+        let playerCat2 = new Cat2(this);
+        playerCat2.render(80, 170, "Cat2");
+        playerCat2.name = "Cat2";
+      }
 
-      this.gameButton2 = this.add
-        .sprite(80, 170, "button2")
-        .setDisplaySize(90, 80)
-        .setInteractive();
+      if (c) {
+        let playerCat3 = new Cat3(this);
+        playerCat3.render(80, 270, "Cat3");
+        playerCat3.name = "Cat3";
+      }
 
-      this.gameButton3 = this.add
-        .sprite(80, 270, "button3")
-        .setDisplaySize(90, 80)
-        .setInteractive();
+      if (d) {
+        let playerCat4 = new Cat4(this);
+        playerCat4.render(80, 370, "Cat4");
+        playerCat4.name = "Cat4";
+      }
 
-      this.gameButton4 = this.add
-        .sprite(80, 370, "button4")
-        .setDisplaySize(90, 80)
-        .setInteractive();
+      if (e) {
+        let playerCat5 = new Cat5(this);
+        playerCat5.render(80, 470, "Cat5");
+        playerCat5.name = "Cat5";
+      }
 
-      this.gameButton5 = this.add
-        .sprite(80, 470, "button5")
-        .setDisplaySize(90, 80)
-        .setInteractive();
-
-      this.gameButton6 = this.add
-        .sprite(80, 570, "button6")
-        .setDisplaySize(90, 80)
-        .setInteractive();
-
-      // RENDER new cats from menu buttons
-      this.gameButton1.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          // Tone.Transport.start();
-          let playerCat = new Cat1(this);
-          playerCat.render(80, 70, "Cat1");
-          playerCat.name = "Cat1";
-        }.bind(this)
-      );
-
-      this.gameButton2.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          let playerCat2 = new Cat2(this);
-          playerCat2.render(80, 170, "Cat2");
-          playerCat2.name = "Cat2";
-        }.bind(this)
-      );
-
-      this.gameButton3.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          let playerCat3 = new Cat3(this);
-          playerCat3.render(80, 270, "button3");
-          playerCat3.name = "Cat3";
-        }.bind(this)
-      );
-
-      this.gameButton4.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          let playerCat4 = new Cat4(this);
-          playerCat4.render(80, 370, "button4");
-          playerCat4.name = "Cat4";
-        }.bind(this)
-      );
-
-      this.gameButton5.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          let playerCat5 = new Cat5(this);
-          playerCat5.render(80, 470, "button5");
-          playerCat5.name = "Cat5";
-        }.bind(this)
-      );
-
-      this.gameButton6.on(
-        "pointerdown",
-        function (pointer) {
-          bellSound();
-          let playerCat6 = new Cat6(this);
-          playerCat6.render(80, 570, "button6");
-          playerCat6.name = "Cat6";
-        }.bind(this)
-      );
+      if (f) {
+        let playerCat6 = new Cat6(this);
+        playerCat6.render(80, 570, "Cat6");
+        playerCat6.name = "Cat6";
+      }
     }
 
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
@@ -359,10 +305,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     this.input.on("drop", function (pointer, gameObject, dropZone) {
 
-      if (dropZone.data.values.isMenu) { // if cat is dropped back in menu
-        // remove cat
-        gameObject.destroy();
-      } else if (!dropZone.data.values.occupied) { // if cat is dropped in an empty zone
+      if (!dropZone.data.values.occupied) { // if cat is dropped in an empty zone
         // snap into place
         gameObject.x = dropZone.x;
         gameObject.y = dropZone.y;
@@ -390,6 +333,31 @@ export default class MeowsicRoom extends Phaser.Scene {
         if (gameObject.data.values.dropZones.length <= 1) {
           gameObject.data.values.meow();
         }
+
+        //respawn button:
+        let a, b, c, d, e, f
+        switch (gameObject.data.values.spriteName) {
+          case "Cat1":
+            a = true
+            break;
+          case "Cat2":
+            b = true
+            break;
+          case "Cat3":
+            c = true
+            break;
+          case "Cat4":
+            d = true
+            break;
+          case "Cat5":
+            e = true
+            break;
+          case "Cat6":
+            f = true
+            break;
+        }
+        scene.renderButtons(a, b, c, d, e, f)
+
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject)
 
