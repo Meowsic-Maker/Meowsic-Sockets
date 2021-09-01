@@ -260,11 +260,11 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone2.name = "dropZone2";
 
     this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(405, 295, 160, 300);
+    this.dropZone3 = this.zone3.renderZone(400, 295, 160, 300);
     this.dropZone3.name = "dropZone3";
 
     this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(545, 165, 140, 240);
+    this.dropZone4 = this.zone4.renderZone(550, 165, 140, 240);
     this.dropZone4.name = "dropZone4";
 
     this.zone5 = new Zone(this);
