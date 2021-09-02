@@ -92,7 +92,7 @@ module.exports = (io) => {
       // checking if input credentials are valid
       if (!input.email.includes("@")) {
         // set this text to display on form!
-        socket.emit("emailNotValid")
+        socket.emit("emailNotValid");
       }
       firebase
         .auth()
@@ -102,7 +102,6 @@ module.exports = (io) => {
           if (user != null) {
             var username = user.displayName;
             var email = user.email;
-            var photoUrl = user.photoURL;
             console.log(
               "user.displayName",
               user.displayName,
@@ -110,14 +109,14 @@ module.exports = (io) => {
               user.email
             );
           } // send back user obj
-          socket.emit("userLoginSuccess", { username, email, photoUrl });
+          socket.emit("userLoginSuccess", { username, email });
         })
         .catch(function (error) {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(error);
-         // write custom error functions - reference emailNotValid, 56 phaserSignUp
+          // write custom error functions - reference emailNotValid, 56 phaserSignUp
         });
       // ).then(user => {
       //     console.log("THIS IS OUR USER", user)
@@ -134,7 +133,7 @@ module.exports = (io) => {
     socket.on("isSignUpValid", function (input) {
       if (!input.email.includes("@")) {
         // set this text to display on form!
-        socket.emit("emailNotValid")
+        socket.emit("emailNotValid");
       }
       firebase
         .auth()
@@ -146,7 +145,6 @@ module.exports = (io) => {
           if (user != null) {
             var username = user.displayName;
             var email = user.email;
-            var photoUrl = user.photoURL;
             console.log(
               "user.displayName",
               user.displayName,
@@ -154,7 +152,7 @@ module.exports = (io) => {
               user.email
             );
           } // send back user obj
-          socket.emit("userSignUpSuccess", { username, email, photoUrl });
+          socket.emit("userSignUpSuccess", { username, email });
         })
         .catch(function (error) {
           // Handle Errors here.
