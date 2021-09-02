@@ -18,6 +18,10 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   preload() {
     // game.load.script('gaegu', 'https://fonts.googleapis.com/css2?family=Gaegu:wght@300&display=swap');
+    this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("bg", "/assets/stagebg.jpg");
     this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
       frameWidth: 1200,
@@ -124,14 +128,23 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.homeText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
+      Tone.Transport.stop();
       scene.scene.start("MainScene", { socket: scene.socket });
     });
 
     this.newGameText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
+      Tone.Transport.stop();
       scene.scene.start("WaitingRoom", { socket: scene.socket });
     });
 
     // this.logInText.on("pointerdown", function () {
+    //   stopAllCatSounds();
+    //   Tone.Transport.cancel(0);
+    //   Tone.Transport.stop();
     //   scene.scene.start("MainScene", { socket: scene.socket });
     // });
 
@@ -157,6 +170,13 @@ export default class MeowsicRoom extends Phaser.Scene {
       osc.start();
       osc.stop(audioContext.currentTime + 1);
       osc.connect(gain).connect(audioContext.destination);
+    };
+
+    const stopAllCatSounds = () => {
+      scene.currentPlayedCats.getChildren().forEach((cat) => {
+        cat.data.values.meowSounds[0].disconnect();
+        cat.data.values.meowSounds[0].stop();
+      });
     };
 
     // INSTRUCTIONS POP UP
