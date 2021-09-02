@@ -56,6 +56,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   create() {
     const scene = this;
+    console.log("meowsic room state", scene.state);
     console.log("THIS WILL WORK THE TRUTH YAY", scene.user.username);
     // BACKGROUND
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
@@ -69,12 +70,11 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#ffffff")
       .setInteractive();
 
-      this.userNameText = this.add
+    this.userNameText = this.add
       .text(540, 75, [scene.user.username])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
-      .setColor("#ffffff")
-
+      .setColor("#ffffff");
 
     this.homeText = this.add
       .text(1000, 50, ["HOME"])

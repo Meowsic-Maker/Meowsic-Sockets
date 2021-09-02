@@ -2,7 +2,7 @@ const gameRooms = {
   // [roomKey]: {
   //   roomKey: 'AAAAA'
   //   placedCats: { { x, y, spriteName, zoneName } ....}
-  //   users: [ ],
+  //   usernames: [ ],
   //   players: { sockedId#: { playerId: socket.id }, {}, ....},
   //   numPlayers: 0
   // }
@@ -22,12 +22,12 @@ module.exports = (io) => {
     );
 
     //WHEN CLIENT EMITS 'JOIN ROOM'
-    socket.on("joinRoom", (roomKey) => {
+    socket.on("joinRoom", (roomKey, username) => {
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
       //here is where we are creating a player state with current player info
       roomInfo.players[socket.id] = { playerId: socket.id };
-
+      roomInfo.usernames.push(username);
       // update number of players
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
@@ -50,6 +50,7 @@ module.exports = (io) => {
         }
       }
 
+      // UPDATE ROOMINFO - REMOVE USERNAME
       const roomInfo = gameRooms[roomKey];
       if (roomInfo) {
         console.log("user disconnected: ", socket.id);
@@ -76,6 +77,7 @@ module.exports = (io) => {
       gameRooms[key] = {
         roomKey: key,
         players: {},
+        usernames: [],
         numPlayers: 0,
         placedCats: [],
       };
