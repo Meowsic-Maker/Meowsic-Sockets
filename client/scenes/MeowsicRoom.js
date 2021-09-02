@@ -51,12 +51,12 @@ export default class MeowsicRoom extends Phaser.Scene {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
     this.state = { ...data };
-    this.username = data.username;
+    this.user = data.user;
   }
 
   create() {
     const scene = this;
-
+    console.log("THIS WILL WORK THE TRUTH YAY", scene.user.username);
     // BACKGROUND
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
     this.background.displayWidth = this.sys.canvas.width;
@@ -70,7 +70,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setInteractive();
 
       this.userNameText = this.add
-      .text(540, 75, [scene.username])
+      .text(540, 75, [scene.user.username])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#ffffff")
