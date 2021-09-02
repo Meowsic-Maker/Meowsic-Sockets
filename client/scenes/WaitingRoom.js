@@ -26,7 +26,7 @@ export default class WaitingRoom extends Phaser.Scene {
 
         scene.popUp = scene.add.graphics();
 
-        console.log(this.state.loggedInUser);
+        console.log(scene.state.loggedInUser);
 
         // for popup window
         // scene.popUp.lineStyle(1, 0xffffff);
@@ -108,7 +108,7 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.state.numPlayers = numPlayers;
             scene.state.inRoom = true;
             scene.state.placedCats = placedCats;
-            scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket, username: scene.username });
+            scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket, user: scene.state.loggedInUser });
 
         })
     }
