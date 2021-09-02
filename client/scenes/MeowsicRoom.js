@@ -51,6 +51,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
     this.state = { ...data };
+    this.username = data.username;
   }
 
   create() {
@@ -67,6 +68,13 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setFontFamily("Trebuchet MS")
       .setColor("#ffffff")
       .setInteractive();
+
+      this.userNameText = this.add
+      .text(540, 75, [scene.username])
+      .setFontSize(18)
+      .setFontFamily("Trebuchet MS")
+      .setColor("#ffffff")
+
 
     this.homeText = this.add
       .text(1000, 50, ["HOME"])
