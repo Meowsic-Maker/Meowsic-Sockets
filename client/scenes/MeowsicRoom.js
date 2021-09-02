@@ -56,8 +56,6 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   create() {
     const scene = this;
-    console.log("meowsic room state", scene.state);
-    console.log("THIS WILL WORK THE TRUTH YAY", scene.user.username);
     // BACKGROUND
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
     this.background.displayWidth = this.sys.canvas.width;
@@ -70,12 +68,6 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setColor("#ffffff")
       .setInteractive();
 
-    this.userNameText = this.add
-      .text(540, 75, [scene.user.username])
-      .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
-      .setColor("#ffffff");
-
     this.homeText = this.add
       .text(1000, 50, ["HOME"])
       .setFontSize(18)
@@ -84,7 +76,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setInteractive();
 
     this.newGameText = this.add
-      .text(1000, 100, ["NEW GAME"])
+      .text(980, 100, ["NEW GAME"])
       .setFontSize(18)
       .setFontFamily("Trebuchet MS")
       .setColor("#00ffff")
@@ -208,6 +200,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       function (pointer) {
         //renders current room settings once destroyed
         scene.renderCurrentCats();
+        scene.renderPlayerUsernames();
         scene.renderButtons(1, 2, 3, 4, 5, 6);
         this.instructions.destroy();
       }.bind(this)
@@ -275,6 +268,18 @@ export default class MeowsicRoom extends Phaser.Scene {
       placedCats.forEach((cat) => {
         scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y);
       });
+    };
+
+    this.renderPlayerUsernames = () => {
+      const { usernames } = scene.state;
+      for (let i = 0; i < usernames.length; i++) {
+        this.add
+          .text(1000, 225 + i * 50, [usernames[i]])
+          .setFontSize(18)
+          .setFontFamily("Trebuchet MS")
+          .setColor("#ffffff")
+          .setInteractive();
+      }
     };
 
     //Update our page when a cat has been played:
