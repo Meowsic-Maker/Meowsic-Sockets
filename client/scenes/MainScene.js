@@ -48,12 +48,12 @@ export default class MainScene extends Phaser.Scene {
       scene.meowsicButton.disableInteractive();
       // scene.loginButton.disableInteractive();
     });
-    // this.loginButton = this.add.image(300, 550, 'loginbutton').setScale(.8, .8).setInteractive();
-    // this.loginButton.on("pointerdown", function () {
-    //     scene.scene.launch('Login', { socket: scene.socket })
-    //     scene.loginButton.disableInteractive()
-    //     scene.meowsicButton.disableInteractive()
-    // })
+    this.loginButton = this.add.image(300, 550, 'loginbutton').setScale(.8, .8).setInteractive();
+    this.loginButton.on("pointerdown", function () {
+        scene.scene.launch('Login', { socket: scene.socket })
+        scene.loginButton.disableInteractive()
+        scene.meowsicButton.disableInteractive()
+    })
   }
 
   update() {
