@@ -16,7 +16,7 @@ export default class Cat1 {
         meow() {
           const meowSound = new Tone.Player({
             url: this.music,
-            volume: -10,
+            volume: -20,
             loop: true,
             autostart: true,
           }).toDestination();
