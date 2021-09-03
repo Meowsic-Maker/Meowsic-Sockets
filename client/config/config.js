@@ -1,11 +1,14 @@
+// if w/h on 8-11 can't be detected, revert to these default specs
 const DEFAULT_WIDTH = 1136
 const DEFAULT_HEIGHT = 640
 
 export default {
-    type: Phaser.AUTO, // Specify the underlying browser rendering engine (AUTO, CANVAS, WEBGL)
+    type: Phaser.CANVAS, // Specify the underlying browser rendering engine (AUTO, CANVAS, WEBGL)
     // AUTO will attempt to use WEBGL, but if not available it'll default to CANVAS
-    width: 1136, // Game width in pixels
-    height: 640, // Game height in pixels
+    width: window.innerWidth * window.devicePixelRatio,
+    //1136, // Game width in pixels
+    height: window.innerHeight * window.devicePixelRatio,
+    //640, // Game height in pixels
     render: {
         pixelArt: true,
     },
