@@ -132,7 +132,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.newGameText.on("pointerdown", function () {
-      scene.scene.start("WaitingRoom", { socket: scene.socket });
+      scene.scene.launch("WaitingRoom", { socket: scene.socket });
     });
 
     // this.logInText.on("pointerdown", function () {
@@ -445,5 +445,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
 }

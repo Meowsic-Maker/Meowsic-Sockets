@@ -66,6 +66,9 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.getCodeBox.on("pointerdown", () => {
             scene.socket.emit("getRoomCode");
         });
+        scene.getCodeBox.on("pointerover", (pointer) => {
+            scene.getCodeBox.setTint(0xff69b4);
+        })
 
 
         scene.notValidText = scene.add.text(320, 470, "", {
