@@ -27,8 +27,8 @@ module.exports = (io) => {
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
       //here is where we are creating a player state with current player info
-      roomInfo.players[socket.id] = { playerId: socket.id };
-      roomInfo.usernames.push(username);
+      roomInfo.players[socket.id] = { playerId: socket.id, username: username || "Anony-mouse" };
+      // roomInfo.usernames.push(username);
       // update number of players
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
