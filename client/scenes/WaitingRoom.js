@@ -78,13 +78,14 @@ export default class WaitingRoom extends Phaser.Scene {
             fontStyle: "bold",
         });
 
-        // scene.socket.on('catPlayed', function (gameObject, dropZone, socketId) {
-        //     scene.socket.emit('catPlayed', gameObject, dropZone, socketId);
-        // });
-
         scene.socket.on("roomCreated", function (roomKey) {
             scene.roomKey = roomKey;
-            scene.roomKeyText.setText(scene.roomKey);
+            // scene.roomKeyText.setText(scene.roomKey);
+            scene.socket.emit("joinRoom", roomKey);
+            scene.scene.stop("WaitingRoom");
+            scene.scene.stop('MainScene')
+            scene.physics.pause();
+
         });
 
         scene.socket.on("keyNotValid", function () {
