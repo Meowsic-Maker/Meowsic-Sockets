@@ -1,4 +1,5 @@
 import Phaser from "phaser";
+import WebFontFile from "../../public/webfont";
 
 export default class WaitingRoom extends Phaser.Scene {
     constructor() {
@@ -14,6 +15,7 @@ export default class WaitingRoom extends Phaser.Scene {
     }
 
     preload() {
+        this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
         this.load.html("codeform", "assets/text/codeform.html");
         this.load.image("waitingroom", "/assets/elements/room-code.png");
         this.load.image("getroomcode", "/assets/elements/emptybox.png");
@@ -25,33 +27,14 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.popUp = scene.add.graphics();
 
         // for popup window
-        // scene.popUp.lineStyle(1, 0xffffff);
         scene.popUp.fillStyle(0xfadfe6, 0.8);
-        // scene.popUp.strokeRect(50, 50, 1036, 540);
-        scene.popUp.fillRect(50, 50, 900, 550);
+        scene.popUp.fillRect(75, 75, 3258, 1770);
 
         // for boxes
 
         this.codeBoxes = this.add
-            .image(568, 320, "waitingroom")
+            .image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "waitingroom")
             .setOrigin(0.5, 0.5)
-            .setScale(0.37);
-
-        // //left popup
-        // scene.boxes.strokeRect(100, 200, 275, 100);
-        // scene.boxes = scene.add.graphics();
-        // scene.boxes.fillStyle(0xA873D1, .3);
-        // scene.boxes.fillRect(100, 200, 275, 100);
-        // scene.requestButton = scene.add.text(140, 215, "Request Room Key", {
-        //     fill: "#000000",
-
-        //     fontSize: "20px",
-        //     fontStyle: "bold",
-        // });
-
-        //right popup
-        // scene.boxes.strokeRect(425, 200, 275, 100);
-        // scene.boxes.fillRect(425, 200, 275, 100);
 
         scene.inputElement = scene.add.dom(320, 420).createFromCache("codeform");
         scene.inputElement.addListener("click");
@@ -61,21 +44,17 @@ export default class WaitingRoom extends Phaser.Scene {
                 scene.socket.emit("isKeyValid", input.value);
             }
         });
-        this.getCodeBox = this.add.image(740, 380, "getroomcode");
+        this.getCodeBox = this.add.image(2220, 1140, "getroomcode").setScale(3);
         scene.getCodeBox.setInteractive();
         scene.getCodeBox.on("pointerdown", () => {
             scene.socket.emit("getRoomCode");
         });
 
-        scene.notValidText = scene.add.text(320, 470, "", {
-            fill: "#ff0000",
-            fontSize: "15px",
-        });
-        scene.roomKeyText = scene.add.text(720, 420, "", {
-            fill: "#00000",
-            fontSize: "50px",
-            // fontStyle: "bold",
-        });
+        scene.notValidText = scene.add.text(920, 1200, "")
+            .setFontSize(80)
+            .setFontFamily("Gaegu")
+            .setFontStyle("Bold")
+            .setColor("#FF10F0")
 
         scene.socket.on("roomCreated", function (roomKey) {
             scene.roomKey = roomKey;

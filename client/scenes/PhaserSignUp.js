@@ -10,6 +10,7 @@ export default class SignUp extends Phaser.Scene {
 
   init(data) {
     this.socket = data.socket;
+    this.state.currentRoom = data.currentRoom
   }
 
   preload() {
@@ -24,13 +25,11 @@ export default class SignUp extends Phaser.Scene {
     // for popup window
     scene.popUp.lineStyle(1, 0xffffff);
     scene.popUp.fillStyle(0xffebf0, 0.9);
-
-    // popup window
-    scene.popUp.strokeRect(25, 25, 1086, 590);
-    scene.popUp.fillRect(25, 25, 1086, 590);
+    scene.popUp.strokeRect(75, 75, 3258, 1770);
+    scene.popUp.fillRect(75, 75, 3258, 1770);
 
     // CREATE SIGN UP FORM (from html)
-    scene.inputElement = scene.add.dom(568, 320).createFromCache("signupform");
+    scene.inputElement = scene.add.dom(this.sys.canvas.width / 2, this.sys.canvas.height / 2).createFromCache("signupform");
     scene.inputElement.addListener("click");
     scene.inputElement.on("click", function (event) {
       if (event.target.name === "signUpButton") {
@@ -63,12 +62,18 @@ export default class SignUp extends Phaser.Scene {
     // if the user is able to successfully sign-up, send them to the waiting room
     scene.socket.on("userSignUpSuccess", function (user) {
       scene.scene.stop("SignUp");
-      scene.scene.launch("WaitingRoom", {
-        ...scene.state,
-        socket: scene.socket,
-        user: user,
-      });
-      scene.physics.pause();
+      if (scene.state.currentRoom) {
+        // let username = scene.state.loggedInUser.username;
+        scene.socket.emit("joinRoom", scene.state.currentRoom, user.username);
+        scene.physics.pause();
+        scene.scene.stop("MeowsicRoom");
+      } else {
+        scene.scene.launch("WaitingRoom", {
+          ...scene.state,
+          socket: scene.socket,
+          user: user,
+        });
+      }
     });
   }
 }

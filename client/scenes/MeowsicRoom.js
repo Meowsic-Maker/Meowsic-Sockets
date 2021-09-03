@@ -14,20 +14,21 @@ import WebFontFile from "../../public/webfont";
 export default class MeowsicRoom extends Phaser.Scene {
   constructor() {
     super("MeowsicRoom");
-    this.state = {};
+    this.state = { backgroundMusicOn: false };
   }
 
   preload() {
     this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
-    this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
-    this.load.image("bg", "/assets/stagebg.jpg");
+    this.load.image("bg", "/assets/elements/stagebg.jpg");
     this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
       frameWidth: 1200,
       frameHeight: 1200,
     });
+
+    this.load.image("loginButton", "/assets/elements/loginbutton.png")
+    this.load.image("homeButton", "/assets/elements/homebutton.png")
+    this.load.image("pauseButton", "/assets/elements/pausebutton.png")
+    this.load.image("playButton", "/assets/elements/playbutton.png")
     this.load.image("Cat1", "/assets/happyneko.png");
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
@@ -58,37 +59,89 @@ export default class MeowsicRoom extends Phaser.Scene {
   create() {
     const scene = this;
     // BACKGROUND
-    this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
+    this.background = this.add.image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "bg").setOrigin(0.5, 0.5);
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
 
+    // INSTRUCTIONS POP UP
+    this.instructions = this.add
+      .sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "instructions")
+      .setScale(2.94)
+      .setInteractive();
+    this.anims.create({
+      key: "play",
+      repeat: -1,
+      frameRate: 7,
+      frames: this.anims.generateFrameNames("instructions", {
+        start: 0,
+        end: 11,
+      }),
+    });
+    // PLAY instructions animation:
+    this.instructions.play("play");
+    this.instructions.on(
+      "pointerdown",
+      function (pointer) {
+        //renders current room settings once destroyed
+        scene.renderCurrentCats();
+        scene.renderPlayerUsernames();
+        scene.renderButtons()
+        scene.renderCatButtons(1, 2, 3, 4, 5, 6);
+        this.instructions.destroy();
+      }.bind(this)
+    );
+
     this.roomKeyText = this.add
-      .text(540, 25, [scene.state.roomKey])
-      .setFontSize(18)
+      .text(1580, 130, [scene.state.roomKey])
+      .setFontSize(80)
       .setFontFamily("Gaegu")
-      .setColor("#ffffff")
+      .setFontStyle("Bold")
+      .setColor("navy")
       .setInteractive();
 
-    this.homeText = this.add
-      .text(1000, 50, ["HOME"])
-      .setFontSize(18)
-      .setFontFamily("Gaegu")
-      .setColor("#00ffff")
-      .setInteractive();
+    this.renderButtons = () => {
+      //HOME Button
+      scene.homeButton = this.add.image(1050 * 3, 130, "homeButton").setInteractive().setScale(1.2)
+      scene.homeButton.on("pointerdown", function () {
+        stopAllCatSounds();
+        track.stop().disconnect();
+        Tone.Transport.stop();
+        scene.scene.start("MainScene", { socket: scene.socket, user: scene.state.loggedInUser });
+      });
+      //LOGIN/SIGNUP Button
+      if (!scene.state.loggedInUser) {
+        scene.loginButton = this.add.image(3060, 960, "loginButton").setInteractive().setScale(1.2)
+        scene.loginButton.on("pointerdown", function () {
+          stopAllCatSounds();
+          Tone.Transport.cancel(0);
+          Tone.Transport.stop();
+          scene.scene.launch("Login", { socket: scene.socket, currentRoom: scene.state.roomKey });
+        });
+      }
 
-    this.newGameText = this.add
-      .text(980, 100, ["NEW GAME"])
-      .setFontSize(18)
-      .setFontFamily("Gaegu")
-      .setColor("#00ffff")
-      .setInteractive();
+      //PLAY Button
+      scene.togglePlay('pause')
+    }
 
-    // this.logInText = this.add
-    //   .text(1000, 150, ["LOG IN"])
-    //   .setFontSize(18)
-    //   .setFontFamily("Gaegu")
-    //   .setColor("#00ffff")
-    //   .setInteractive();
+    //TOGGLE Play/pause
+    this.togglePlay = (status) => {
+      if (status === 'play') {
+        scene.pauseButton = this.add.image(1020 * 3, 1570, "pauseButton").setInteractive().setScale(1.2),
+          scene.pauseButton.on("pointerdown", function () {
+            Tone.Transport.stop();
+            this.destroy()
+            scene.togglePlay('pause')
+          })
+      } else {
+        scene.playButton = this.add.image(1020 * 3, 1570, "playButton").setInteractive().setScale(1.2),
+          scene.playButton.on("pointerdown", function () {
+            Tone.start();
+            Tone.Transport.start();
+            this.destroy()
+            scene.togglePlay('play')
+          })
+      }
+    }
 
     Tone.Transport.bpm.value = 100;
     Tone.Transport.loop = true;
@@ -104,50 +157,6 @@ export default class MeowsicRoom extends Phaser.Scene {
       .toDestination()
       .sync()
       .start(0);
-
-    this.playText = this.add
-      .text(1000, 500, ["PLAY"])
-      .setFontSize(18)
-      .setFontFamily("Gaegu")
-      .setColor("#00ffff")
-      .setInteractive();
-
-    this.stopText = this.add
-      .text(1000, 550, ["STOP"])
-      .setFontSize(18)
-      .setFontFamily("Gaegu")
-      .setColor("#00ffff")
-      .setInteractive();
-
-    this.playText.on("pointerdown", function () {
-      Tone.start();
-      Tone.Transport.start();
-    });
-
-    this.stopText.on("pointerdown", function () {
-      Tone.Transport.stop();
-    });
-
-    this.homeText.on("pointerdown", function () {
-      stopAllCatSounds();
-      track.stop().disconnect();
-      Tone.Transport.stop();
-      scene.scene.start("MainScene", { socket: scene.socket });
-    });
-
-    this.newGameText.on("pointerdown", function () {
-      stopAllCatSounds();
-      track.stop().disconnect();
-      Tone.Transport.stop();
-      scene.scene.start("WaitingRoom", { socket: scene.socket });
-    });
-
-    // this.logInText.on("pointerdown", function () {
-    //   stopAllCatSounds();
-    //   Tone.Transport.cancel(0);
-    //   Tone.Transport.stop();
-    //   scene.scene.start("MainScene", { socket: scene.socket });
-    // });
 
     const bellSound = () => {
       const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
@@ -179,33 +188,6 @@ export default class MeowsicRoom extends Phaser.Scene {
         cat.data.values.meowSounds[0].stop();
       });
     };
-
-    // INSTRUCTIONS POP UP
-    this.instructions = this.add
-      .sprite(568, 320, "instructions")
-      .setScale(0.94)
-      .setInteractive();
-    this.anims.create({
-      key: "play",
-      repeat: -1,
-      frameRate: 7,
-      frames: this.anims.generateFrameNames("instructions", {
-        start: 0,
-        end: 11,
-      }),
-    });
-    // PLAY background animation:
-    this.instructions.play("play");
-    this.instructions.on(
-      "pointerdown",
-      function (pointer) {
-        //renders current room settings once destroyed
-        scene.renderCurrentCats();
-        scene.renderPlayerUsernames();
-        scene.renderButtons(1, 2, 3, 4, 5, 6);
-        this.instructions.destroy();
-      }.bind(this)
-    );
 
     //////HANDLING CAT RENDERING THROUGH SOCKET///////
 
@@ -275,8 +257,8 @@ export default class MeowsicRoom extends Phaser.Scene {
       const { usernames } = scene.state;
       for (let i = 0; i < usernames.length; i++) {
         this.add
-          .text(1000, 225 + i * 50, [usernames[i]])
-          .setFontSize(18)
+          .text(2900, 325 + i * 100, [usernames[i]])
+          .setFontSize(50)
           .setFontFamily("Gaegu")
           .setColor("#ffffff")
           .setInteractive();
@@ -313,35 +295,35 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     // render zones
     this.zone1 = new Zone(this);
-    this.dropZone1 = this.zone1.renderZone(570, 510, 410, 240);
+    this.dropZone1 = this.zone1.renderZone(1710, 1530, 1230, 720);
     this.dropZone1.name = "dropZone1";
 
     this.zone2 = new Zone(this);
-    this.dropZone2 = this.zone2.renderZone(285, 400, 160, 300);
+    this.dropZone2 = this.zone2.renderZone(855, 1200, 480, 900);
     this.dropZone2.name = "dropZone2";
 
     this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(400, 295, 160, 300);
+    this.dropZone3 = this.zone3.renderZone(1200, 885, 480, 900);
     this.dropZone3.name = "dropZone3";
 
     this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(550, 165, 140, 240);
+    this.dropZone4 = this.zone4.renderZone(1650, 495, 420, 720);
     this.dropZone4.name = "dropZone4";
 
     this.zone5 = new Zone(this);
-    this.dropZone5 = this.zone5.renderZone(675, 145, 160, 180);
+    this.dropZone5 = this.zone5.renderZone(2025, 435, 480, 540);
     this.dropZone5.name = "dropZone5";
 
     this.zone6 = new Zone(this);
-    this.dropZone6 = this.zone6.renderZone(750, 290, 280, 200);
+    this.dropZone6 = this.zone6.renderZone(2250, 870, 840, 600);
     this.dropZone6.name = "dropZone6";
 
     this.zone7 = new Zone(this);
-    this.dropZone7 = this.zone7.renderZone(850, 410, 250, 160);
+    this.dropZone7 = this.zone7.renderZone(2550, 1230, 750, 480);
     this.dropZone7.name = "dropZone7";
 
     // render cat menu buttons
-    this.renderButtons = (a, b, c, d, e, f) => {
+    this.renderCatButtons = (a, b, c, d, e, f) => {
       if (a) {
         let playerCat = new Cat1(this);
         playerCat.render(80, 70, "Cat1");
@@ -453,7 +435,7 @@ export default class MeowsicRoom extends Phaser.Scene {
             f = true;
             break;
         }
-        scene.renderButtons(a, b, c, d, e, f);
+        scene.renderCatButtons(a, b, c, d, e, f);
 
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject);
