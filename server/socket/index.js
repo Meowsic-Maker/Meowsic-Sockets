@@ -10,6 +10,7 @@ const gameRooms = {
 
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require("firebase/app");
+const { LibManifestPlugin } = require("webpack");
 const firebaseConfig = require("../firebaseConfig");
 require("firebase/auth");
 const firebaseApp = firebase.initializeApp(firebaseConfig);
@@ -188,9 +189,14 @@ module.exports = (io) => {
 };
 
 function codeGenerator() {
+  let words = ['heart', 'pizza', 'water', 'happy', 'green', 'music', 'party', 'dream', 'apple', 'tiger', 'river', 'house',
+    'light', 'story', 'candy', 'puppy', 'queen', 'king', 'plant', 'black', 'zebra', 'panda', 'mouse', 'dress', 'sweet',
+    'beach', 'love', 'wolf', 'goat', 'fish', 'tree', 'song', 'star', 'city', 'duck', 'lion', 'fire', 'wood', 'cake', 'dark',
+    'leaf', 'pear', 'boat', 'snow', 'book', 'rose', 'kitten', 'claw', 'bird', 'taco']
   let code = "";
-  let chars = "ABCDEFGHJKLMNPQRSTUVWXYZ123456789";
-  for (let i = 0; i < 5; i++) {
+  code += words[Math.floor(Math.random() * words.length)].toUpperCase()
+  let chars = "123456789";
+  for (let i = 0; i < 2; i++) {
     code += chars.charAt(Math.floor(Math.random() * chars.length));
   }
   return code;
