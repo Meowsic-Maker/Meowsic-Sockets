@@ -54,6 +54,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket = data.socket;
     this.state = { ...data };
     this.user = data.user;
+    this.state.loggedInUser = data.user
   }
 
   create() {
@@ -254,15 +255,30 @@ export default class MeowsicRoom extends Phaser.Scene {
     };
 
     this.renderPlayerUsernames = () => {
-      const { usernames } = scene.state;
-      for (let i = 0; i < usernames.length; i++) {
+      const { players } = scene.state;
+      console.log(players)
+      let spacing = 0
+      Object.keys(players).forEach((player) => {
         this.add
-          .text(2900, 325 + i * 100, [usernames[i]])
+          .text(2900, 325 + spacing * 58, players[player].username)
           .setFontSize(50)
           .setFontFamily("Gaegu")
           .setColor("#ffffff")
           .setInteractive();
-      }
+        spacing++
+      })
+
+
+      // for (let i = 0; i < Object.keys(players).length; i++) {
+      //   console.log(players[i].username)
+      //   this.add
+      //     .text(2900, 325 + spacing * 100, players[i].username)
+      //     .setFontSize(50)
+      //     .setFontFamily("Gaegu")
+      //     .setColor("#ffffff")
+      //     .setInteractive();
+      //   spacing++
+      // }
     };
 
     //Update our page when a cat has been played:
