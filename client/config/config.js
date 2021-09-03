@@ -1,8 +1,8 @@
 // if w/h on 8-11 can't be detected, revert to these default specs
 const DEFAULT_WIDTH = //window.innerWidth * window.devicePixelRatio
-1136
+    3408
 const DEFAULT_HEIGHT = //window.innerHeight * window.devicePixelRatio
-640
+    1920
 
 export default {
     type: Phaser.CANVAS, // Specify the underlying browser rendering engine (AUTO, CANVAS, WEBGL)

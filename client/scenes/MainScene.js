@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import io from "socket.io-client";
+import WebFontFile from "../../public/webfont";
+
 // updated this filename
 
 export default class MainScene extends Phaser.Scene {
@@ -11,6 +13,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   preload() {
+    this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
     this.load.image("loginbutton", "/assets/elements/button_login_signUp.png");
     this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png");
     this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
@@ -24,7 +27,7 @@ export default class MainScene extends Phaser.Scene {
     let scene = this;
 
     // Create Background:
-    const background = scene.add.sprite(568, 320, "giflogo", 0).setScale(0.95);
+    const background = scene.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "giflogo", 0).setScale(2.9);
     // Create background Animation:
     this.anims.create({
       key: "wiggle",

@@ -11,6 +11,7 @@ export default class Login extends Phaser.Scene {
   init(data) {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
+    this.state.currentRoom = data.currentRoom
   }
 
   preload() {
@@ -25,13 +26,11 @@ export default class Login extends Phaser.Scene {
     // for popup window
     scene.popUp.lineStyle(1, 0xffffff);
     scene.popUp.fillStyle(0xffebf0, 0.9);
-
-    // popup window
-    scene.popUp.strokeRect(25, 25, 1086, 590);
-    scene.popUp.fillRect(25, 25, 1086, 590);
+    scene.popUp.strokeRect(75, 75, 3258, 1770);
+    scene.popUp.fillRect(75, 75, 3258, 1770);
 
     //CREATE OUR LOGIN FORM (From html import)
-    scene.inputElement = scene.add.dom(568, 320).createFromCache("loginform");
+    scene.inputElement = scene.add.dom(this.sys.canvas.width / 2, this.sys.canvas.height / 2).createFromCache("loginform");
     scene.inputElement.addListener("click");
     scene.inputElement.on("click", function (event) {
       if (event.target.name === "loginButton") {
@@ -44,7 +43,7 @@ export default class Login extends Phaser.Scene {
         });
       } else if (event.target.name === "signUpButton") {
         scene.scene.stop("Login");
-        scene.scene.start("SignUp", { socket: scene.socket });
+        scene.scene.start("SignUp", { socket: scene.socket, ...scene.state });
       } else if (event.target.name === "cancel") {
         scene.scene.stop("Login");
       }
@@ -66,12 +65,19 @@ export default class Login extends Phaser.Scene {
 
     scene.socket.on("userLoginSuccess", function (user) {
       scene.scene.stop("Login");
-      scene.scene.launch("WaitingRoom", {
-        ...scene.state,
-        socket: scene.socket,
-        user: user,
-      });
+      if (scene.state.currentRoom) {
+        // let username = scene.state.loggedInUser.username;
+        scene.socket.emit("joinRoom", scene.state.currentRoom, user.username);
+        scene.physics.pause();
+        scene.scene.stop("MeowsicRoom");
+      } else {
+        scene.scene.launch("WaitingRoom", {
+          ...scene.state,
+          socket: scene.socket,
+          user: user,
+        });
+      }
     });
   }
-  update() {}
+  update() { }
 }
