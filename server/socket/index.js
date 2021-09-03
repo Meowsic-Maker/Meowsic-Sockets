@@ -2,7 +2,7 @@ const gameRooms = {
   // [roomKey]: {
   //   roomKey: 'AAAAA'
   //   placedCats: { { x, y, spriteName, zoneName } ....}
-  //   users: [ ],
+  //   usernames: [ ],
   //   players: { sockedId#: { playerId: socket.id }, {}, ....},
   //   numPlayers: 0
   // }
@@ -23,11 +23,12 @@ module.exports = (io) => {
     );
 
     //WHEN CLIENT EMITS 'JOIN ROOM'
-    socket.on("joinRoom", (roomKey) => {
+    socket.on("joinRoom", (roomKey, username) => {
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
       //here is where we are creating a player state with current player info
       roomInfo.players[socket.id] = { playerId: socket.id };
+      roomInfo.usernames.push(username);
       // update number of players
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
@@ -50,6 +51,7 @@ module.exports = (io) => {
         }
       }
 
+      // UPDATE ROOMINFO - REMOVE USERNAME
       const roomInfo = gameRooms[roomKey];
       if (roomInfo) {
         console.log("user disconnected: ", socket.id);
@@ -76,6 +78,7 @@ module.exports = (io) => {
       gameRooms[key] = {
         roomKey: key,
         players: {},
+        usernames: [],
         numPlayers: 0,
         placedCats: [],
       };
@@ -92,7 +95,7 @@ module.exports = (io) => {
       // checking if input credentials are valid
       if (!input.email.includes("@")) {
         // set this text to display on form!
-        socket.emit("emailNotValid")
+        socket.emit("emailNotValid");
       }
       firebase
         .auth()
@@ -102,7 +105,6 @@ module.exports = (io) => {
           if (user != null) {
             var username = user.displayName;
             var email = user.email;
-            var photoUrl = user.photoURL;
             console.log(
               "user.displayName",
               user.displayName,
@@ -110,7 +112,7 @@ module.exports = (io) => {
               user.email
             );
           } // send back user obj
-          socket.emit("userLoginSuccess", { username, email, photoUrl });
+          socket.emit("userLoginSuccess", { username, email });
         })
         .catch(function (error) {
           // Handle Errors here.
@@ -134,7 +136,7 @@ module.exports = (io) => {
     socket.on("isSignUpValid", function (input) {
       if (!input.email.includes("@")) {
         // set this text to display on form!
-        socket.emit("emailNotValid")
+        socket.emit("emailNotValid");
       }
       firebase
         .auth()
@@ -146,7 +148,6 @@ module.exports = (io) => {
           if (user != null) {
             var username = user.displayName;
             var email = user.email;
-            var photoUrl = user.photoURL;
             console.log(
               "user.displayName",
               user.displayName,
@@ -154,7 +155,7 @@ module.exports = (io) => {
               user.email
             );
           } // send back user obj
-          socket.emit("userSignUpSuccess", { username, email, photoUrl });
+          socket.emit("userSignUpSuccess", { username, email });
         })
         .catch(function (error) {
           // Handle Errors here.

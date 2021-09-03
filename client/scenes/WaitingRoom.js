@@ -34,24 +34,10 @@ export default class WaitingRoom extends Phaser.Scene {
         // for boxes
 
 
-        this.codeBoxes = this.add.image(568, 320, "waitingroom").setOrigin(0.5, 0.5).setScale(.37);
-
-
-        // //left popup
-        // scene.boxes.strokeRect(100, 200, 275, 100);
-        // scene.boxes = scene.add.graphics();
-        // scene.boxes.fillStyle(0xA873D1, .3);
-        // scene.boxes.fillRect(100, 200, 275, 100);
-        // scene.requestButton = scene.add.text(140, 215, "Request Room Key", {
-        //     fill: "#000000",
-
-        //     fontSize: "20px",
-        //     fontStyle: "bold",
-        // });
-
-        //right popup
-        // scene.boxes.strokeRect(425, 200, 275, 100);
-        // scene.boxes.fillRect(425, 200, 275, 100);
+        this.codeBoxes = this.add
+            .image(568, 320, "waitingroom")
+            .setOrigin(0.5, 0.5)
+            .setScale(.37);
 
         scene.inputElement = scene.add.dom(320, 420).createFromCache("codeform");
         scene.inputElement.addListener("click");
@@ -66,9 +52,6 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.getCodeBox.on("pointerdown", () => {
             scene.socket.emit("getRoomCode");
         });
-        scene.getCodeBox.on("pointerover", (pointer) => {
-            scene.getCodeBox.setTint(0xff69b4);
-        })
 
 
         scene.notValidText = scene.add.text(320, 470, "", {
@@ -78,12 +61,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.roomKeyText = scene.add.text(720, 420, "", {
             fill: "#00000",
             fontSize: "50px",
-            // fontStyle: "bold",
         });
-
-        // scene.socket.on('catPlayed', function (gameObject, dropZone, socketId) {
-        //     scene.socket.emit('catPlayed', gameObject, dropZone, socketId);
-        // });
 
         scene.socket.on("roomCreated", function (roomKey) {
             scene.roomKey = roomKey;
@@ -108,7 +86,11 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.state.numPlayers = numPlayers;
             scene.state.inRoom = true;
             scene.state.placedCats = placedCats;
-            scene.scene.start("MeowsicRoom", { ...scene.state, socket: scene.socket });
+            scene.scene.start("MeowsicRoom", {
+                ...scene.state,
+                socket: scene.socket,
+                user: scene.state.loggedInUser,
+            });
 
         })
     }

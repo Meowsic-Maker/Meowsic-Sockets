@@ -55,7 +55,7 @@ export default class SignUp extends Phaser.Scene {
 
     scene.socket.on("emailNotValid", function () {
       scene.notValidText.setText("Invalid email! OH NOOOOOOOOOOOOOOOO");
-  });
+    });
 
     scene.socket.on("SignUpNotValid", function () {
       scene.notValidText.setText("Invalid SignUp!");
@@ -66,6 +66,7 @@ export default class SignUp extends Phaser.Scene {
       scene.scene.launch("WaitingRoom", {
         ...scene.state,
         socket: scene.socket,
+        user: user,
       });
       scene.physics.pause();
     });
