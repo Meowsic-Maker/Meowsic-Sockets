@@ -97,7 +97,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.scene.stop("MainScene");
         scene.physics.pause();
       } else {
-        username = scene.state.loggedInUser.username;
+       const username = scene.state.loggedInUser.username;
         scene.socket.emit("joinRoom", input, username);
         scene.scene.stop("WaitingRoom");
         scene.scene.stop("MainScene");
