@@ -9,6 +9,7 @@ import Menu from "../helpers/menu";
 import Zone from "../helpers/zone";
 import * as Tone from "tone";
 import { render } from "react-dom";
+import WebFontFile from "../../public/webfont";
 
 export default class MeowsicRoom extends Phaser.Scene {
   constructor() {
@@ -17,8 +18,16 @@ export default class MeowsicRoom extends Phaser.Scene {
   }
 
   preload() {
+    this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
+    this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("bg", "/assets/stagebg.jpg");
-    this.load.image("instructions", "/assets/elements/meowsic-instruction.png");
+    this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("Cat1", "/assets/happyneko.png");
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
@@ -43,15 +52,43 @@ export default class MeowsicRoom extends Phaser.Scene {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
     this.state = { ...data };
+    this.user = data.user;
   }
 
   create() {
     const scene = this;
-
     // BACKGROUND
     this.background = this.add.image(568, 320, "bg").setOrigin(0.5, 0.5);
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
+
+    this.roomKeyText = this.add
+      .text(540, 25, [scene.state.roomKey])
+      .setFontSize(18)
+      .setFontFamily("Gaegu")
+      .setColor("#ffffff")
+      .setInteractive();
+
+    this.homeText = this.add
+      .text(1000, 50, ["HOME"])
+      .setFontSize(18)
+      .setFontFamily("Gaegu")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    this.newGameText = this.add
+      .text(980, 100, ["NEW GAME"])
+      .setFontSize(18)
+      .setFontFamily("Gaegu")
+      .setColor("#00ffff")
+      .setInteractive();
+
+    // this.logInText = this.add
+    //   .text(1000, 150, ["LOG IN"])
+    //   .setFontSize(18)
+    //   .setFontFamily("Gaegu")
+    //   .setColor("#00ffff")
+    //   .setInteractive();
 
     Tone.Transport.bpm.value = 100;
     Tone.Transport.loop = true;
@@ -71,14 +108,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.playText = this.add
       .text(1000, 500, ["PLAY"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
     this.stopText = this.add
       .text(1000, 550, ["STOP"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
@@ -90,6 +127,27 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.stopText.on("pointerdown", function () {
       Tone.Transport.stop();
     });
+
+    this.homeText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
+      Tone.Transport.stop();
+      scene.scene.start("MainScene", { socket: scene.socket });
+    });
+
+    this.newGameText.on("pointerdown", function () {
+      stopAllCatSounds();
+      track.stop().disconnect();
+      Tone.Transport.stop();
+      scene.scene.start("WaitingRoom", { socket: scene.socket });
+    });
+
+    // this.logInText.on("pointerdown", function () {
+    //   stopAllCatSounds();
+    //   Tone.Transport.cancel(0);
+    //   Tone.Transport.stop();
+    //   scene.scene.start("MainScene", { socket: scene.socket });
+    // });
 
     const bellSound = () => {
       const bell = new Tone.Player("/assets/music/bell.mp3").toDestination();
@@ -115,16 +173,35 @@ export default class MeowsicRoom extends Phaser.Scene {
       osc.connect(gain).connect(audioContext.destination);
     };
 
+    const stopAllCatSounds = () => {
+      scene.currentPlayedCats.getChildren().forEach((cat) => {
+        cat.data.values.meowSounds[0].disconnect();
+        cat.data.values.meowSounds[0].stop();
+      });
+    };
+
     // INSTRUCTIONS POP UP
     this.instructions = this.add
       .sprite(568, 320, "instructions")
-      .setDisplaySize(1136, 640)
+      .setScale(0.94)
       .setInteractive();
+    this.anims.create({
+      key: "play",
+      repeat: -1,
+      frameRate: 7,
+      frames: this.anims.generateFrameNames("instructions", {
+        start: 0,
+        end: 11,
+      }),
+    });
+    // PLAY background animation:
+    this.instructions.play("play");
     this.instructions.on(
       "pointerdown",
       function (pointer) {
         //renders current room settings once destroyed
         scene.renderCurrentCats();
+        scene.renderPlayerUsernames();
         scene.renderButtons(1, 2, 3, 4, 5, 6);
         this.instructions.destroy();
       }.bind(this)
@@ -171,6 +248,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       renderedCat.on(
         "pointerdown",
         function (pointer) {
+          renderedCat.data.values.meowSounds[0].disconnect();
           renderedCat.data.values.meowSounds[0].stop();
           renderedCat.destroy();
           scene[selectedDropZone].data.values.occupied = false;
@@ -193,6 +271,18 @@ export default class MeowsicRoom extends Phaser.Scene {
       });
     };
 
+    this.renderPlayerUsernames = () => {
+      const { usernames } = scene.state;
+      for (let i = 0; i < usernames.length; i++) {
+        this.add
+          .text(1000, 225 + i * 50, [usernames[i]])
+          .setFontSize(18)
+          .setFontFamily("Gaegu")
+          .setColor("#ffffff")
+          .setInteractive();
+      }
+    };
+
     //Update our page when a cat has been played:
     this.socket.on("catPlayedUpdate", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
@@ -212,6 +302,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         //find the cat in group by dropzone & destroy it
         scene.currentPlayedCats.getChildren().forEach((cat) => {
           if (selectedDropZone === cat.data.values.dropZones[0]) {
+            cat.data.values.meowSounds[0].disconnect();
             cat.data.values.meowSounds[0].stop();
             scene[selectedDropZone].data.values.occupied = false;
             cat.destroy();
@@ -230,15 +321,15 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone2.name = "dropZone2";
 
     this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(405, 295, 160, 300);
+    this.dropZone3 = this.zone3.renderZone(400, 295, 160, 300);
     this.dropZone3.name = "dropZone3";
 
     this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(540, 160, 140, 240);
+    this.dropZone4 = this.zone4.renderZone(550, 165, 140, 240);
     this.dropZone4.name = "dropZone4";
 
     this.zone5 = new Zone(this);
-    this.dropZone5 = this.zone5.renderZone(685, 130, 160, 180);
+    this.dropZone5 = this.zone5.renderZone(675, 145, 160, 180);
     this.dropZone5.name = "dropZone5";
 
     this.zone6 = new Zone(this);
@@ -319,6 +410,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         gameObject.on(
           "pointerdown",
           function (pointer) {
+            gameObject.data.values.meowSounds[0].disconnect();
             gameObject.data.values.meowSounds[0].stop();
             dropZone.data.values.occupied = false;
             gameObject.destroy();
@@ -383,5 +475,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
 }

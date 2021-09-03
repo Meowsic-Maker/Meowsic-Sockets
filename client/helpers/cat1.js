@@ -16,11 +16,13 @@ export default class Cat1 {
         meow() {
           const meowSound = new Tone.Player({
             url: this.music,
-            volume: -10,
             loop: true,
             autostart: true,
           }).toDestination();
-          if (Tone.Transport.state === "started") {
+          if (
+            Tone.Transport.state === "started" ||
+            Tone.Transport.state === "stopped"
+          ) {
             Tone.Transport.schedule((time) => {
               meowSound.start(time);
             }, "0m");
