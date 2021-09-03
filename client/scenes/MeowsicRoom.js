@@ -9,6 +9,7 @@ import Menu from "../helpers/menu";
 import Zone from "../helpers/zone";
 import * as Tone from "tone";
 import { render } from "react-dom";
+import WebFontFile from "../../public/webfont";
 
 export default class MeowsicRoom extends Phaser.Scene {
   constructor() {
@@ -17,7 +18,7 @@ export default class MeowsicRoom extends Phaser.Scene {
   }
 
   preload() {
-    // game.load.script('gaegu', 'https://fonts.googleapis.com/css2?family=Gaegu:wght@300&display=swap');
+    this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
     this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
       frameWidth: 1200,
       frameHeight: 1200,
@@ -64,28 +65,28 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.roomKeyText = this.add
       .text(540, 25, [scene.state.roomKey])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#ffffff")
       .setInteractive();
 
     this.homeText = this.add
       .text(1000, 50, ["HOME"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
     this.newGameText = this.add
       .text(980, 100, ["NEW GAME"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
     // this.logInText = this.add
     //   .text(1000, 150, ["LOG IN"])
     //   .setFontSize(18)
-    //   .setFontFamily("Trebuchet MS")
+    //   .setFontFamily("Gaegu")
     //   .setColor("#00ffff")
     //   .setInteractive();
 
@@ -107,14 +108,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.playText = this.add
       .text(1000, 500, ["PLAY"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
     this.stopText = this.add
       .text(1000, 550, ["STOP"])
       .setFontSize(18)
-      .setFontFamily("Trebuchet MS")
+      .setFontFamily("Gaegu")
       .setColor("#00ffff")
       .setInteractive();
 
@@ -276,7 +277,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         this.add
           .text(1000, 225 + i * 50, [usernames[i]])
           .setFontSize(18)
-          .setFontFamily("Trebuchet MS")
+          .setFontFamily("Gaegu")
           .setColor("#ffffff")
           .setInteractive();
       }
