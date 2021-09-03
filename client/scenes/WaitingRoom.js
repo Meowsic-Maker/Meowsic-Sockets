@@ -90,11 +90,19 @@ export default class WaitingRoom extends Phaser.Scene {
       scene.notValidText.setText("Invalid Room Key");
     });
     scene.socket.on("keyIsValid", function (input) {
-      const username = scene.state.loggedInUser.username;
-      scene.socket.emit("joinRoom", input, username);
-      scene.scene.stop("WaitingRoom");
-      scene.scene.stop("MainScene");
-      scene.physics.pause();
+      if (!scene.state.loggedInUser) {
+        const username = "Anonymous";
+        scene.socket.emit("joinRoom", input, username);
+        scene.scene.stop("WaitingRoom");
+        scene.scene.stop("MainScene");
+        scene.physics.pause();
+      } else {
+        username = scene.state.loggedInUser.username;
+        scene.socket.emit("joinRoom", input, username);
+        scene.scene.stop("WaitingRoom");
+        scene.scene.stop("MainScene");
+        scene.physics.pause();
+      }
     });
 
     //JOINED ROOM - SET STATE
