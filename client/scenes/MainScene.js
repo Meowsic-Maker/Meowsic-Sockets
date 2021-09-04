@@ -14,8 +14,10 @@ export default class MainScene extends Phaser.Scene {
 
   preload() {
     this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
-    this.load.image("loginbutton", "/assets/elements/button_login_signUp.png");
-    this.load.image("meowsicbutton", "/assets/elements/button_makeMeowsic.png");
+    this.load.image("loginbutton", "/assets/elements/login-button.png");
+    this.load.image("loginbuttonhover", "/assets/elements/login-button-hover.png");
+    this.load.image("meowsicbutton", "/assets/elements/meowsic-button.png");
+    this.load.image("meowsicbuttonhover", "/assets/elements/meowsic-button-hover.png");
     this.load.spritesheet("giflogo", "/assets/meow-logo-spritesheet.png", {
       frameWidth: 1200,
       frameHeight: 1200,
@@ -43,7 +45,7 @@ export default class MainScene extends Phaser.Scene {
 
     //BUTTONS!!
     this.meowsicButton = this.add
-      .image(800, 560, "meowsicbutton")
+      .image(2400, 1680, "meowsicbutton")
       .setScale(0.8, 0.8)
       .setInteractive();
     this.meowsicButton.on("pointerdown", function () {
@@ -52,7 +54,7 @@ export default class MainScene extends Phaser.Scene {
       scene.loginButton.disableInteractive();
     });
     this.loginButton = this.add
-      .image(330, 560, "loginbutton")
+      .image(940, 1680, "loginbutton")
       .setScale(0.8, 0.8)
       .setInteractive();
     this.loginButton.on("pointerdown", function () {
