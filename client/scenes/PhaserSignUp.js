@@ -62,7 +62,9 @@ export default class SignUp extends Phaser.Scene {
     // if the user is able to successfully sign-up, send them to the waiting room
     scene.socket.on("userSignUpSuccess", function (user) {
       scene.scene.stop("SignUp");
+      console.log(user.username)
       if (scene.state.currentRoom) {
+        console.log(scene.state.currentRoom)
         // let username = scene.state.loggedInUser.username;
         scene.socket.emit("joinRoom", scene.state.currentRoom, user.username);
         scene.physics.pause();
