@@ -29,7 +29,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("homeButton", "/assets/elements/homebutton.png")
     this.load.image("pauseButton", "/assets/elements/pausebutton.png")
     this.load.image("playButton", "/assets/elements/playbutton.png")
-    this.load.image("Cat1", "/assets/happyneko.png");
+    this.load.spritesheet("Cat1", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
     this.load.image("Cat4", "/assets/caliconeko.png");
@@ -365,37 +365,37 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.renderCatButtons = (a, b, c, d, e, f) => {
       if (a) {
         let playerCat = new Cat1(this);
-        playerCat.render(80, 70, "Cat1");
+        playerCat.render(200, 300, "Cat1");
         playerCat.name = "Cat1";
       }
 
       if (b) {
         let playerCat2 = new Cat2(this);
-        playerCat2.render(80, 170, "Cat2");
+        playerCat2.render(200, 450, "Cat2");
         playerCat2.name = "Cat2";
       }
 
       if (c) {
         let playerCat3 = new Cat3(this);
-        playerCat3.render(80, 270, "Cat3");
+        playerCat3.render(200, 600, "Cat3");
         playerCat3.name = "Cat3";
       }
 
       if (d) {
         let playerCat4 = new Cat4(this);
-        playerCat4.render(80, 370, "Cat4");
+        playerCat4.render(200, 750, "Cat4");
         playerCat4.name = "Cat4";
       }
 
       if (e) {
         let playerCat5 = new Cat5(this);
-        playerCat5.render(80, 470, "Cat5");
+        playerCat5.render(200, 900, "Cat5");
         playerCat5.name = "Cat5";
       }
 
       if (f) {
         let playerCat6 = new Cat6(this);
-        playerCat6.render(80, 570, "Cat6");
+        playerCat6.render(200, 1050, "Cat6");
         playerCat6.name = "Cat6";
       }
     };
@@ -452,6 +452,7 @@ export default class MeowsicRoom extends Phaser.Scene {
           gameObject.data.values.meow();
         }
 
+
         //respawn button:
         let a, b, c, d, e, f;
         switch (gameObject.data.values.spriteName) {
@@ -476,8 +477,10 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         scene.renderCatButtons(a, b, c, d, e, f);
 
+
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject);
+        scene.currentPlayedCats.playAnimation("dance")
 
         //send a notice to server that a cat has been played
         scene.socket.emit("catPlayed", {
