@@ -18,7 +18,7 @@ export default class WaitingRoom extends Phaser.Scene {
         this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
         this.load.html("codeform", "assets/text/codeform.html");
         this.load.image("waitingroom", "/assets/elements/room-code.png");
-        this.load.image("getroomcode", "/assets/elements/emptybox.png");
+        this.load.image("getroomcode", "/assets/elements/new-room-button.png");
     }
 
     create() {
@@ -33,10 +33,11 @@ export default class WaitingRoom extends Phaser.Scene {
         // for boxes
 
         this.codeBoxes = this.add
-            .image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "waitingroom")
+            .image(1704, 900, "waitingroom")
             .setOrigin(0.5, 0.5)
+            .setScale(1.1)
 
-        scene.inputElement = scene.add.dom(320, 420).createFromCache("codeform");
+        scene.inputElement = scene.add.dom(1710, 1440).createFromCache("codeform");
         scene.inputElement.addListener("click");
         scene.inputElement.on("click", function (event) {
             if (event.target.name === "enterRoom") {
@@ -44,14 +45,14 @@ export default class WaitingRoom extends Phaser.Scene {
                 scene.socket.emit("isKeyValid", input.value);
             }
         });
-        this.getCodeBox = this.add.image(2220, 1140, "getroomcode").setScale(3);
+        this.getCodeBox = this.add.image(this.sys.canvas.width / 2, 870, "getroomcode").setScale(1);
         scene.getCodeBox.setInteractive();
         scene.getCodeBox.on("pointerdown", () => {
             scene.socket.emit("getRoomCode");
         });
 
-        scene.notValidText = scene.add.text(920, 1200, "")
-            .setFontSize(80)
+        scene.notValidText = scene.add.text(1500, 1570, "")
+            .setFontSize(60)
             .setFontFamily("Gaegu")
             .setFontStyle("Bold")
             .setColor("#FF10F0")
@@ -59,7 +60,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.socket.on("roomCreated", function (roomKey) {
             scene.roomKey = roomKey;
             // scene.roomKeyText.setText(scene.roomKey);
-            let username = "Anonymous";
+            let username = "Anony-mouse";
             if (scene.state.loggedInUser) {
                 username = scene.state.loggedInUser.username;
             }
@@ -74,7 +75,7 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.notValidText.setText("Invalid Room Key");
         });
         scene.socket.on("keyIsValid", function (input) {
-            let username = "Anonymous";
+            let username = "Anony-mouse";
             if (scene.state.loggedInUser) {
                 username = scene.state.loggedInUser.username;
             }

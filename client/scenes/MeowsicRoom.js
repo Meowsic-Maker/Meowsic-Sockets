@@ -67,8 +67,9 @@ export default class MeowsicRoom extends Phaser.Scene {
     // INSTRUCTIONS POP UP
     this.instructions = this.add
       .sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "instructions")
-      .setScale(2.94)
+      .setScale(2.7)
       .setInteractive();
+    this.instructions.displayWidth = this.sys.canvas.width;
     this.anims.create({
       key: "play",
       repeat: -1,
@@ -93,7 +94,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     );
 
     this.roomKeyText = this.add
-      .text(1580, 130, [scene.state.roomKey])
+      .text(1560, 130, [scene.state.roomKey])
       .setFontSize(80)
       .setFontFamily("Gaegu")
       .setFontStyle("Bold")
