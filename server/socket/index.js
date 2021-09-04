@@ -33,7 +33,7 @@ module.exports = (io) => {
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
 
       console.log("roomInfo", roomInfo);
-      // set initial state on client side: (Which INCLUDED placed cats!!)
+      // set initial state on client side: (Which INCLUDES placed cats!!)
       socket.emit("setState", roomInfo);
     });
 
@@ -61,7 +61,7 @@ module.exports = (io) => {
         roomInfo.numPlayers = Object.keys(roomInfo.players).length;
         // emit a message to all players to remove this player
         io.to(roomKey).emit("disconnected", {
-          playerId: socket.id,
+          players: roomInfo.players,
           numPlayers: roomInfo.numPlayers,
         });
         //ADD some logic to delete rooms if there are no more players and it's not saved??
@@ -132,6 +132,13 @@ module.exports = (io) => {
       // socket.emit("UserNotValid")
       // }
     });
+
+    socket.on("userConnectedToRoom", function (args) {
+      const { roomKey, socket } = args
+      let roomInfo = gameRooms[roomKey]
+      io.to(roomKey).emit("newUserUpdate", roomInfo)
+
+    })
 
     socket.on("isSignUpValid", function (input) {
       if (!input.email.includes("@")) {
