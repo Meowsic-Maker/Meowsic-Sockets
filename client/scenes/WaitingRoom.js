@@ -88,7 +88,7 @@ export default class WaitingRoom extends Phaser.Scene {
         //JOINED ROOM - SET STATE
         scene.socket.on("setState", function (state) {
             console.log("setstate state", state);
-            const { roomKey, players, usernames, numPlayers, placedCats } = state;
+            const { roomKey, players, usernames, numPlayers, placedCats, loggedInUser } = state;
 
             scene.state.roomKey = roomKey;
             scene.state.players = players;
@@ -96,6 +96,7 @@ export default class WaitingRoom extends Phaser.Scene {
             scene.state.numPlayers = numPlayers;
             scene.state.inRoom = true;
             scene.state.placedCats = placedCats;
+            if (loggedInUser) scene.state.loggedInUser = loggedInUser
             scene.scene.start("MeowsicRoom", {
                 ...scene.state,
                 socket: scene.socket,

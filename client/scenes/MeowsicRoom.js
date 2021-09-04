@@ -90,6 +90,8 @@ export default class MeowsicRoom extends Phaser.Scene {
         scene.renderButtons()
         scene.renderCatButtons(1, 2, 3, 4, 5, 6);
         this.instructions.destroy();
+        let roomKey = scene.state.roomKey
+        this.socket.emit("userConnectedToRoom", { roomKey })
       }.bind(this)
     );
 
@@ -255,32 +257,52 @@ export default class MeowsicRoom extends Phaser.Scene {
       });
     };
 
+    //USERNAMES:
+    this.currentUsers = this.physics.add.group();
+
     this.renderPlayerUsernames = () => {
+      this.currentUsers.clear(true, true)
       const { players } = scene.state;
       console.log(players)
       let spacing = 0
-      Object.keys(players).forEach((player) => {
-        this.add
-          .text(2900, 325 + spacing * 58, players[player].username)
-          .setFontSize(50)
-          .setFontFamily("Gaegu")
-          .setColor("#ffffff")
-          .setInteractive();
-        spacing++
+      Object.keys(players).forEach((player, idx) => {
+        if (idx < 9) {
+          let username = this.add
+            .text(2900, 325 + spacing * 58, players[player].username)
+            .setFontSize(50)
+            .setFontFamily("Gaegu")
+            .setColor("#ffffff")
+            .setInteractive();
+          spacing++
+          this.currentUsers.add(username)
+        } else if (idx = 9) {
+          let username = this.add
+            .text(2900, 325 + spacing * 58, "...")
+            .setFontSize(50)
+            .setFontFamily("Gaegu")
+            .setColor("#ffffff")
+            .setInteractive();
+          this.currentUsers.add(username)
+        }
       })
-
-
-      // for (let i = 0; i < Object.keys(players).length; i++) {
-      //   console.log(players[i].username)
-      //   this.add
-      //     .text(2900, 325 + spacing * 100, players[i].username)
-      //     .setFontSize(50)
-      //     .setFontFamily("Gaegu")
-      //     .setColor("#ffffff")
-      //     .setInteractive();
-      //   spacing++
-      // }
     };
+
+    this.socket.on('disconnected', function (args) {
+      const { players, numPlayers } = args
+      console.log('args', args)
+      scene.state.players = players
+      scene.state.numPlayers = numPlayers
+      console.log(scene.state)
+      scene.renderPlayerUsernames()
+    })
+
+    this.socket.on("newUserUpdate", function (roomInfo) {
+      const { players, usernames, numPlayers } = roomInfo;
+      scene.state.players = players;
+      scene.state.usernames = usernames;
+      scene.state.numPlayers = numPlayers;
+      scene.renderPlayerUsernames()
+    })
 
     //Update our page when a cat has been played:
     this.socket.on("catPlayedUpdate", function (args) {
