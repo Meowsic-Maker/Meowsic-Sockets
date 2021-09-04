@@ -37,12 +37,23 @@ export default class WaitingRoom extends Phaser.Scene {
             .setOrigin(0.5, 0.5)
             .setScale(1.1)
 
+        const checkRoomKey = () => {
+            const input = scene.inputElement.getChildByName("code-form");
+            scene.socket.emit("isKeyValid", input.value);
+        }
+
         scene.inputElement = scene.add.dom(1710, 1440).createFromCache("codeform");
         scene.inputElement.addListener("click");
+        scene.inputElement.addListener("keyup");
+        scene.inputElement.on("keyup", function (event) {
+            if(event.keyCode === 13) {
+                // if enter key
+                checkRoomKey();
+            };
+        })
         scene.inputElement.on("click", function (event) {
             if (event.target.name === "enterRoom") {
-                const input = scene.inputElement.getChildByName("code-form");
-                scene.socket.emit("isKeyValid", input.value);
+                checkRoomKey();
             }
         });
         this.getCodeBox = this.add.image(this.sys.canvas.width / 2, 870, "getroomcode").setScale(1);
