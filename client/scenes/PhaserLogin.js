@@ -65,7 +65,6 @@ export default class Login extends Phaser.Scene {
 
     scene.socket.on("userLoginSuccess", function (user) {
       scene.scene.stop("Login");
-      console.log(scene.state)
       if (scene.state.currentRoom) {
         // let username = scene.state.loggedInUser.username;
         scene.socket.emit("joinRoom", scene.state.currentRoom, user.username);

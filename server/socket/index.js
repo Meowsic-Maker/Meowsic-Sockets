@@ -24,6 +24,7 @@ module.exports = (io) => {
 
     //WHEN CLIENT EMITS 'JOIN ROOM'
     socket.on("joinRoom", (roomKey, username) => {
+      console.log(username)
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
       //here is where we are creating a player state with current player info
@@ -162,7 +163,7 @@ module.exports = (io) => {
               user.email
             );
           } // send back user obj
-          socket.emit("userSignUpSuccess", { username, email });
+          socket.emit("userSignUpSuccess", { username: input.username, email });
         })
         .catch(function (error) {
           // Handle Errors here.
