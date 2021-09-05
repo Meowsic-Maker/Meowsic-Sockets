@@ -18,28 +18,39 @@ export default class MeowsicRoom extends Phaser.Scene {
   }
 
   preload() {
-    this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
+    this.load.addFile(new WebFontFile(this.load, "Gaegu"));
     this.load.image("bg", "/assets/elements/stagebg.jpg");
     this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
       frameWidth: 1200,
       frameHeight: 1200,
     });
 
-    this.load.image("loginButton", "/assets/elements/loginbutton.png")
-    this.load.image("homeButton", "/assets/elements/homebutton.png")
-    this.load.image("pauseButton", "/assets/elements/pausebutton.png")
-    this.load.image("playButton", "/assets/elements/playbutton.png")
-    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.image("loginButton", "/assets/elements/loginbutton.png");
+    this.load.image("homeButton", "/assets/elements/homebutton.png");
+    this.load.image("pauseButton", "/assets/elements/pausebutton.png");
+    this.load.image("playButton", "/assets/elements/playbutton.png");
+    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
-    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
-    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
+    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.image("Cat8", "/assets/kuroneko.png");
     this.load.image("Cat7", "/assets/sleepyneko.png");
-    this.load.spritesheet("Cat6", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.spritesheet("Cat6", "/assets/cats/cat8-sheet.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
 
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
-    this.load.audio("meow", "/assets/music/meow.mp3");
     this.load.audio("bell", "/assets/music/bell.mp3");
     this.load.audio("cat1", "/assets/music/cat1.wav");
     this.load.audio("cat2", "/assets/music/cat2.wav");
@@ -47,6 +58,12 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.audio("cat4", "/assets/music/cat4.wav");
     this.load.audio("cat5", "/assets/music/cat5.wav");
     this.load.audio("cat6", "/assets/music/cat6.wav");
+    this.load.audio("cat7", "/assets/music/cat7.wav");
+    this.load.audio("cat8", "/assets/music/cat8.wav");
+    this.load.audio("cat9", "/assets/music/cat9.wav");
+    this.load.audio("cat10", "/assets/music/cat10.wav");
+    this.load.audio("cat11", "/assets/music/cat11.wav");
+    this.load.audio("cat12", "/assets/music/cat12.wav");
   }
 
   init(data) {
@@ -54,19 +71,25 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket = data.socket;
     this.state = { ...data };
     this.user = data.user;
-    this.state.loggedInUser = data.user
+    this.state.loggedInUser = data.user;
   }
 
   create() {
     const scene = this;
     // BACKGROUND
-    this.background = this.add.image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "bg").setOrigin(0.5, 0.5);
+    this.background = this.add
+      .image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "bg")
+      .setOrigin(0.5, 0.5);
     this.background.displayWidth = this.sys.canvas.width;
     this.background.displayHeight = this.sys.canvas.height;
 
     // INSTRUCTIONS POP UP
     this.instructions = this.add
-      .sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "instructions")
+      .sprite(
+        this.sys.canvas.width / 2,
+        this.sys.canvas.height / 2,
+        "instructions"
+      )
       .setScale(2.7)
       .setInteractive();
     this.instructions.displayWidth = this.sys.canvas.width;
@@ -87,11 +110,11 @@ export default class MeowsicRoom extends Phaser.Scene {
         //renders current room settings once destroyed
         scene.renderCurrentCats();
         scene.renderPlayerUsernames();
-        scene.renderButtons()
+        scene.renderButtons();
         scene.renderCatButtons(1, 2, 3, 4, 5, 6);
         this.instructions.destroy();
-        let roomKey = scene.state.roomKey
-        this.socket.emit("userConnectedToRoom", { roomKey })
+        let roomKey = scene.state.roomKey;
+        this.socket.emit("userConnectedToRoom", { roomKey });
       }.bind(this)
     );
 
@@ -105,47 +128,65 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     this.renderButtons = () => {
       //HOME Button
-      scene.homeButton = this.add.image(1050 * 3, 130, "homeButton").setInteractive().setScale(1.2)
+      scene.homeButton = this.add
+        .image(1050 * 3, 130, "homeButton")
+        .setInteractive()
+        .setScale(1.2);
       scene.homeButton.on("pointerdown", function () {
         stopAllCatSounds();
         track.stop().disconnect();
         Tone.Transport.stop();
-        scene.scene.start("MainScene", { socket: scene.socket, user: scene.state.loggedInUser });
+        scene.scene.start("MainScene", {
+          socket: scene.socket,
+          user: scene.state.loggedInUser,
+        });
       });
       //LOGIN/SIGNUP Button
       if (!scene.state.loggedInUser) {
-        scene.loginButton = this.add.image(3060, 960, "loginButton").setInteractive().setScale(1.2)
+        scene.loginButton = this.add
+          .image(3060, 960, "loginButton")
+          .setInteractive()
+          .setScale(1.2);
         scene.loginButton.on("pointerdown", function () {
           stopAllCatSounds();
           Tone.Transport.cancel(0);
           Tone.Transport.stop();
-          scene.scene.launch("Login", { socket: scene.socket, currentRoom: scene.state.roomKey });
+          scene.scene.launch("Login", {
+            socket: scene.socket,
+            currentRoom: scene.state.roomKey,
+          });
         });
       }
 
       //PLAY Button
-      scene.togglePlay('pause')
-    }
+      scene.togglePlay("pause");
+    };
 
     //TOGGLE Play/pause
     this.togglePlay = (status) => {
-      if (status === 'play') {
-        scene.pauseButton = this.add.image(1020 * 3, 1570, "pauseButton").setInteractive().setScale(1.2),
+      if (status === "play") {
+        (scene.pauseButton = this.add
+          .image(1020 * 3, 1570, "pauseButton")
+          .setInteractive()
+          .setScale(1.2)),
           scene.pauseButton.on("pointerdown", function () {
             Tone.Transport.stop();
-            this.destroy()
-            scene.togglePlay('pause')
-          })
+            this.destroy();
+            scene.togglePlay("pause");
+          });
       } else {
-        scene.playButton = this.add.image(1020 * 3, 1570, "playButton").setInteractive().setScale(1.2),
+        (scene.playButton = this.add
+          .image(1020 * 3, 1570, "playButton")
+          .setInteractive()
+          .setScale(1.2)),
           scene.playButton.on("pointerdown", function () {
             Tone.start();
             Tone.Transport.start();
-            this.destroy()
-            scene.togglePlay('play')
-          })
+            this.destroy();
+            scene.togglePlay("play");
+          });
       }
-    }
+    };
 
     Tone.Transport.bpm.value = 100;
     Tone.Transport.loop = true;
@@ -261,10 +302,10 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.currentUsers = this.physics.add.group();
 
     this.renderPlayerUsernames = () => {
-      this.currentUsers.clear(true, true)
+      this.currentUsers.clear(true, true);
       const { players } = scene.state;
-      console.log(players)
-      let spacing = 0
+      console.log(players);
+      let spacing = 0;
       Object.keys(players).forEach((player, idx) => {
         if (idx < 9) {
           let username = this.add
@@ -273,36 +314,36 @@ export default class MeowsicRoom extends Phaser.Scene {
             .setFontFamily("Gaegu")
             .setColor("#ffffff")
             .setInteractive();
-          spacing++
-          this.currentUsers.add(username)
-        } else if (idx = 9) {
+          spacing++;
+          this.currentUsers.add(username);
+        } else if ((idx = 9)) {
           let username = this.add
             .text(2900, 325 + spacing * 58, "...")
             .setFontSize(50)
             .setFontFamily("Gaegu")
             .setColor("#ffffff")
             .setInteractive();
-          this.currentUsers.add(username)
+          this.currentUsers.add(username);
         }
-      })
+      });
     };
 
-    this.socket.on('disconnected', function (args) {
-      const { players, numPlayers } = args
-      console.log('args', args)
-      scene.state.players = players
-      scene.state.numPlayers = numPlayers
-      console.log(scene.state)
-      scene.renderPlayerUsernames()
-    })
+    this.socket.on("disconnected", function (args) {
+      const { players, numPlayers } = args;
+      console.log("args", args);
+      scene.state.players = players;
+      scene.state.numPlayers = numPlayers;
+      console.log(scene.state);
+      scene.renderPlayerUsernames();
+    });
 
     this.socket.on("newUserUpdate", function (roomInfo) {
       const { players, usernames, numPlayers } = roomInfo;
       scene.state.players = players;
       scene.state.usernames = usernames;
       scene.state.numPlayers = numPlayers;
-      scene.renderPlayerUsernames()
-    })
+      scene.renderPlayerUsernames();
+    });
 
     //Update our page when a cat has been played:
     this.socket.on("catPlayedUpdate", function (args) {
@@ -452,7 +493,6 @@ export default class MeowsicRoom extends Phaser.Scene {
           gameObject.data.values.meow();
         }
 
-
         //respawn button:
         let a, b, c, d, e, f;
         switch (gameObject.data.values.spriteName) {
@@ -477,10 +517,9 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
         scene.renderCatButtons(a, b, c, d, e, f);
 
-
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject);
-        gameObject.play(gameObject.data.values.spriteName, true)
+        gameObject.play(gameObject.data.values.spriteName, true);
 
         //send a notice to server that a cat has been played
         scene.socket.emit("catPlayed", {
@@ -499,5 +538,5 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() { }
+  update() {}
 }
