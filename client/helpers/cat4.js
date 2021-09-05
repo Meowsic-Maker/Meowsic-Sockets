@@ -4,9 +4,15 @@ export default class Cat4 {
   constructor(scene) {
     this.render = (x, y, sprite) => {
       let cat = scene.add
-        .image(x, y, sprite)
-        .setDisplaySize(90, 80)
+        .sprite(x, y, sprite, 0)
+        .setScale(.25)
         .setInteractive();
+      scene.anims.create({
+        key: "Cat4",
+        repeat: -1,
+        frameRate: 5,
+        frames: scene.anims.generateFrameNames("Cat4", { start: 1, end: 4 }),
+      })
       cat.setData({
         soundOn: false,
         spriteName: "Cat4",

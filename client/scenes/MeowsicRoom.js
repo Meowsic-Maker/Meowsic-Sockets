@@ -29,14 +29,14 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("homeButton", "/assets/elements/homebutton.png")
     this.load.image("pauseButton", "/assets/elements/pausebutton.png")
     this.load.image("playButton", "/assets/elements/playbutton.png")
-    this.load.spritesheet("Cat1", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
     this.load.image("Cat2", "/assets/coffeeneko.png");
     this.load.image("Cat3", "/assets/latteneko.png");
-    this.load.image("Cat4", "/assets/caliconeko.png");
-    this.load.image("Cat5", "/assets/greyneko.png");
-    this.load.image("Cat6", "/assets/kuroneko.png");
+    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
+    this.load.image("Cat8", "/assets/kuroneko.png");
     this.load.image("Cat7", "/assets/sleepyneko.png");
-    this.load.image("Cat8", "/assets/neko.png");
+    this.load.spritesheet("Cat6", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200 });
 
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("meow", "/assets/music/meow.mp3");
@@ -371,31 +371,31 @@ export default class MeowsicRoom extends Phaser.Scene {
 
       if (b) {
         let playerCat2 = new Cat2(this);
-        playerCat2.render(200, 450, "Cat2");
+        playerCat2.render(200, 500, "Cat2");
         playerCat2.name = "Cat2";
       }
 
       if (c) {
         let playerCat3 = new Cat3(this);
-        playerCat3.render(200, 600, "Cat3");
+        playerCat3.render(200, 700, "Cat3");
         playerCat3.name = "Cat3";
       }
 
       if (d) {
         let playerCat4 = new Cat4(this);
-        playerCat4.render(200, 750, "Cat4");
+        playerCat4.render(200, 900, "Cat4");
         playerCat4.name = "Cat4";
       }
 
       if (e) {
         let playerCat5 = new Cat5(this);
-        playerCat5.render(200, 900, "Cat5");
+        playerCat5.render(200, 1100, "Cat5");
         playerCat5.name = "Cat5";
       }
 
       if (f) {
         let playerCat6 = new Cat6(this);
-        playerCat6.render(200, 1050, "Cat6");
+        playerCat6.render(200, 1300, "Cat6");
         playerCat6.name = "Cat6";
       }
     };
@@ -480,7 +480,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject);
-        scene.currentPlayedCats.playAnimation("dance")
+        gameObject.play(gameObject.data.values.spriteName, true)
 
         //send a notice to server that a cat has been played
         scene.socket.emit("catPlayed", {
