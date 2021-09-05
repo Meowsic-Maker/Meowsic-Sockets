@@ -58,6 +58,8 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.audio("cat4", "/assets/music/cat4.wav");
     this.load.audio("cat5", "/assets/music/cat5.wav");
     this.load.audio("cat6", "/assets/music/cat6.wav");
+    this.load.audio("cat7", "/assets/music/cat7.wav");
+    this.load.audio("cat8", "/assets/music/cat8.wav");
   }
 
   init(data) {

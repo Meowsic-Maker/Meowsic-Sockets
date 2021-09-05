@@ -5,14 +5,14 @@ export default class Cat5 {
     this.render = (x, y, sprite) => {
       let cat = scene.add
         .sprite(x, y, sprite, 0)
-        .setScale(.25)
+        .setScale(0.25)
         .setInteractive();
       scene.anims.create({
         key: "Cat5",
         repeat: -1,
         frameRate: 5,
         frames: scene.anims.generateFrameNames("Cat5", { start: 1, end: 4 }),
-      })
+      });
       cat.setData({
         soundOn: false,
         spriteName: "Cat5",
@@ -22,7 +22,6 @@ export default class Cat5 {
         meow() {
           const meowSound = new Tone.Player({
             url: this.music,
-            volume: -5,
             loop: true,
             autostart: true,
           }).toDestination();
@@ -34,9 +33,6 @@ export default class Cat5 {
               meowSound.start(time);
             }, "0m");
           }
-          // else {
-          //   meowSound.sync().start(0);
-          // }
           this.meowSounds.push(meowSound);
         },
       });
