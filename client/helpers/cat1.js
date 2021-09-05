@@ -8,7 +8,7 @@ export default class Cat1 {
         .setScale(.25)
         .setInteractive();
       scene.anims.create({
-        key: "dance",
+        key: "Cat1",
         repeat: -1,
         frameRate: 5,
         frames: scene.anims.generateFrameNames("Cat1", { start: 1, end: 4 }),
