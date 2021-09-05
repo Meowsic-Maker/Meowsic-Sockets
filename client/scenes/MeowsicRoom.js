@@ -225,11 +225,12 @@ export default class MeowsicRoom extends Phaser.Scene {
       //Handling the Drop Zones:
       renderedCat.data.values.dropZones.push(selectedDropZone);
       scene[selectedDropZone].data.values.occupied = true;
-      // activating cat meow
+      // activating cat meow and dance
       renderedCat.data.values.soundOn = true;
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
+      renderedCat.play(spriteName, true)
       // Set destruction button
       renderedCat.on(
         "pointerdown",
