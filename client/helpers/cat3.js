@@ -5,14 +5,14 @@ export default class Cat3 {
     this.render = (x, y, sprite) => {
       let cat = scene.add
         .sprite(x, y, sprite, 0)
-        .setScale(.25)
+        .setScale(0.25)
         .setInteractive();
       scene.anims.create({
         key: "Cat3",
         repeat: -1,
         frameRate: 5,
         frames: scene.anims.generateFrameNames("Cat3", { start: 1, end: 4 }),
-      })
+      });
       cat.setData({
         soundOn: false,
         spriteName: "Cat3",
@@ -33,9 +33,6 @@ export default class Cat3 {
               meowSound.start(time);
             }, "0m");
           }
-          // else {
-          //   meowSound.sync().start(0);
-          // }
           this.meowSounds.push(meowSound);
         },
       });
