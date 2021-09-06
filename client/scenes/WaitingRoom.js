@@ -46,7 +46,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.inputElement.addListener("click");
         scene.inputElement.addListener("keyup");
         scene.inputElement.on("keyup", function (event) {
-            if(event.keyCode === 13) {
+            if (event.keyCode === 13) {
                 // if enter key
                 checkRoomKey();
             };
@@ -98,7 +98,6 @@ export default class WaitingRoom extends Phaser.Scene {
 
         //JOINED ROOM - SET STATE
         scene.socket.on("setState", function (state) {
-            console.log("setstate state", state);
             const { roomKey, players, usernames, numPlayers, placedCats, loggedInUser } = state;
 
             scene.state.roomKey = roomKey;

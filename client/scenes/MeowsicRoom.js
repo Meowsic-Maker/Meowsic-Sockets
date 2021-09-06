@@ -229,6 +229,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       const renderedCat = playerCat.render(x, y, spriteName);
       //Handling the Drop Zones:
       renderedCat.data.values.dropZones.push(selectedDropZone);
+      renderedCat.setScale(.34)
       scene[selectedDropZone].data.values.occupied = true;
       // activating cat meow and dance
       renderedCat.data.values.soundOn = true;
@@ -269,7 +270,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.renderPlayerUsernames = () => {
       this.currentUsers.clear(true, true);
       const { players } = scene.state;
-      console.log(players);
       let spacing = 0;
       Object.keys(players).forEach((player, idx) => {
         if (idx < 9) {
@@ -295,10 +295,8 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     this.socket.on("disconnected", function (args) {
       const { players, numPlayers } = args;
-      console.log("args", args);
       scene.state.players = players;
       scene.state.numPlayers = numPlayers;
-      console.log(scene.state);
       scene.renderPlayerUsernames();
     });
 
@@ -314,7 +312,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket.on("catPlayedUpdate", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
       //check to see if the socket that placed the cat is the socket we are one:
-      console.log(scene.state.roomKey);
       if (socketId !== scene.socket.id && roomKey === scene.state.roomKey) {
         //render cats using our function:
         scene.renderCat(selectedDropZone, spriteName, x, y);
@@ -368,18 +365,18 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone7.name = "dropZone7";
 
     let catSpritesArray = [
-      { spriteName: "Cat1", x: 200, y: 300 },
-      { spriteName: "Cat2", x: 200, y: 500 },
-      { spriteName: "Cat3", x: 200, y: 700 },
-      { spriteName: "Cat4", x: 200, y: 900 },
-      { spriteName: "Cat5", x: 200, y: 1100 },
-      { spriteName: "Cat6", x: 200, y: 1300 },
-      { spriteName: "Cat7", x: 200, y: 1500 },
-      { spriteName: "Cat8", x: 400, y: 300 },
+      { spriteName: "Cat1", x: 170, y: 540 },
+      { spriteName: "Cat2", x: 170, y: 780 },
+      { spriteName: "Cat3", x: 170, y: 1020 },
+      { spriteName: "Cat4", x: 170, y: 1260 },
+      { spriteName: "Cat5", x: 170, y: 1500 },
+      { spriteName: "Cat6", x: 360, y: 630 },
+      { spriteName: "Cat7", x: 360, y: 870 },
+      { spriteName: "Cat8", x: 360, y: 1110 },
       // { spriteName: "Cat9", x: 400, y: 500 },
-      { spriteName: "Cat10", x: 400, y: 700 },
+      { spriteName: "Cat10", x: 360, y: 1350 },
       // { spriteName: "Cat11", x: 400, y: 900 },
-      { spriteName: "Cat12", x: 400, y: 1000 },
+      { spriteName: "Cat12", x: 360, y: 1590 },
     ]
 
 
@@ -434,6 +431,7 @@ export default class MeowsicRoom extends Phaser.Scene {
             });
           }.bind(this)
         );
+        gameObject.setScale(.34)
 
         // Update dropzone details on cat object
         gameObject.data.values.dropZones.push(dropZone.name);
