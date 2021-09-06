@@ -1,14 +1,7 @@
 import Phaser from "phaser";
-import Cat1 from "../helpers/cat1";
-import Cat2 from "../helpers/cat2";
-import Cat3 from "../helpers/cat3";
-import Cat4 from "../helpers/cat4";
-import Cat5 from "../helpers/cat5";
-import Cat6 from "../helpers/cat6";
-import Menu from "../helpers/menu";
+import Cat from "../helpers/cat";
 import Zone from "../helpers/zone";
 import * as Tone from "tone";
-import { render } from "react-dom";
 import WebFontFile from "../../public/webfont";
 
 export default class MeowsicRoom extends Phaser.Scene {
@@ -29,41 +22,31 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("homeButton", "/assets/elements/homebutton.png");
     this.load.image("pauseButton", "/assets/elements/pausebutton.png");
     this.load.image("playButton", "/assets/elements/playbutton.png");
-    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
-    this.load.image("Cat2", "/assets/coffeeneko.png");
-    this.load.image("Cat3", "/assets/latteneko.png");
-    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
-    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
-    this.load.image("Cat8", "/assets/kuroneko.png");
-    this.load.image("Cat7", "/assets/sleepyneko.png");
-    this.load.spritesheet("Cat6", "/assets/cats/cat8-sheet.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
+    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat2", "/assets/cats/cat2-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat3", "/assets/cats/cat3-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat6", "/assets/cats/cat6-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat7", "/assets/cats/cat7-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat8", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat12", "/assets/cats/cat12-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat10", "/assets/cats/cat10-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
 
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("bell", "/assets/music/bell.mp3");
-    this.load.audio("cat1", "/assets/music/cat1.wav");
-    this.load.audio("cat2", "/assets/music/cat2.wav");
-    this.load.audio("cat3", "/assets/music/cat3.wav");
-    this.load.audio("cat4", "/assets/music/cat4.wav");
-    this.load.audio("cat5", "/assets/music/cat5.wav");
-    this.load.audio("cat6", "/assets/music/cat6.wav");
-    this.load.audio("cat7", "/assets/music/cat7.wav");
-    this.load.audio("cat8", "/assets/music/cat8.wav");
-    this.load.audio("cat9", "/assets/music/cat9.wav");
-    this.load.audio("cat10", "/assets/music/cat10.wav");
-    this.load.audio("cat11", "/assets/music/cat11.wav");
-    this.load.audio("cat12", "/assets/music/cat12.wav");
+    this.load.audio("Cat1", "/assets/music/cat1.wav");
+    this.load.audio("Cat2", "/assets/music/cat2.wav");
+    this.load.audio("Cat3", "/assets/music/cat3.wav");
+    this.load.audio("Cat4", "/assets/music/cat4.wav");
+    this.load.audio("Cat5", "/assets/music/cat5.wav");
+    this.load.audio("Cat6", "/assets/music/cat6.wav");
+    this.load.audio("Cat7", "/assets/music/cat7.wav");
+    this.load.audio("Cat8", "/assets/music/cat8.wav");
+    this.load.audio("Cat9", "/assets/music/cat9.wav");
+    this.load.audio("Cat10", "/assets/music/cat10.wav");
+    this.load.audio("Cat11", "/assets/music/cat11.wav");
+    this.load.audio("Cat12", "/assets/music/cat12.wav");
   }
 
   init(data) {
@@ -111,7 +94,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         scene.renderCurrentCats();
         scene.renderPlayerUsernames();
         scene.renderButtons();
-        scene.renderCatButtons(1, 2, 3, 4, 5, 6);
+        scene.renderCatButtons(catSpritesArray);
         this.instructions.destroy();
         let roomKey = scene.state.roomKey;
         this.socket.emit("userConnectedToRoom", { roomKey });
@@ -125,6 +108,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       .setFontStyle("Bold")
       .setColor("navy")
       .setInteractive();
+
 
     this.renderButtons = () => {
       //HOME Button
@@ -241,27 +225,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     //Create a renderCat function that renders a placed cat:
     this.renderCat = (selectedDropZone, spriteName, x, y) => {
-      let playerCat;
-      switch (spriteName) {
-        case "Cat1":
-          playerCat = new Cat1(scene);
-          break;
-        case "Cat2":
-          playerCat = new Cat2(scene);
-          break;
-        case "Cat3":
-          playerCat = new Cat3(scene);
-          break;
-        case "Cat4":
-          playerCat = new Cat4(scene);
-          break;
-        case "Cat5":
-          playerCat = new Cat5(scene);
-          break;
-        default:
-          playerCat = new Cat6(scene);
-          break;
-      }
+      let playerCat = new Cat(scene, spriteName)
       const renderedCat = playerCat.render(x, y, spriteName);
       //Handling the Drop Zones:
       renderedCat.data.values.dropZones.push(selectedDropZone);
@@ -403,43 +367,29 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.dropZone7 = this.zone7.renderZone(2550, 1230, 750, 480);
     this.dropZone7.name = "dropZone7";
 
+    let catSpritesArray = [
+      { spriteName: "Cat1", x: 200, y: 300 },
+      { spriteName: "Cat2", x: 200, y: 500 },
+      { spriteName: "Cat3", x: 200, y: 700 },
+      { spriteName: "Cat4", x: 200, y: 900 },
+      { spriteName: "Cat5", x: 200, y: 1100 },
+      { spriteName: "Cat6", x: 200, y: 1300 },
+      { spriteName: "Cat7", x: 200, y: 1500 },
+      { spriteName: "Cat8", x: 400, y: 300 },
+      // { spriteName: "Cat9", x: 400, y: 500 },
+      { spriteName: "Cat10", x: 400, y: 700 },
+      // { spriteName: "Cat11", x: 400, y: 900 },
+      { spriteName: "Cat12", x: 400, y: 1000 },
+    ]
+
+
     // render cat menu buttons
-    this.renderCatButtons = (a, b, c, d, e, f) => {
-      if (a) {
-        let playerCat = new Cat1(this);
-        playerCat.render(200, 300, "Cat1");
-        playerCat.name = "Cat1";
-      }
-
-      if (b) {
-        let playerCat2 = new Cat2(this);
-        playerCat2.render(200, 500, "Cat2");
-        playerCat2.name = "Cat2";
-      }
-
-      if (c) {
-        let playerCat3 = new Cat3(this);
-        playerCat3.render(200, 700, "Cat3");
-        playerCat3.name = "Cat3";
-      }
-
-      if (d) {
-        let playerCat4 = new Cat4(this);
-        playerCat4.render(200, 900, "Cat4");
-        playerCat4.name = "Cat4";
-      }
-
-      if (e) {
-        let playerCat5 = new Cat5(this);
-        playerCat5.render(200, 1100, "Cat5");
-        playerCat5.name = "Cat5";
-      }
-
-      if (f) {
-        let playerCat6 = new Cat6(this);
-        playerCat6.render(200, 1300, "Cat6");
-        playerCat6.name = "Cat6";
-      }
+    this.renderCatButtons = (arrayOfSpriteObjs) => {
+      //sprite Objs: {spriteName:, x:, y:,}
+      arrayOfSpriteObjs.forEach((sprite) => {
+        let playerCat = new Cat(this, sprite.spriteName);
+        playerCat.render(sprite.x, sprite.y, sprite.spriteName);
+      })
     };
 
     this.input.on("drag", function (pointer, gameObject, dragX, dragY) {
@@ -495,28 +445,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         }
 
         //respawn button:
-        let a, b, c, d, e, f;
-        switch (gameObject.data.values.spriteName) {
-          case "Cat1":
-            a = true;
-            break;
-          case "Cat2":
-            b = true;
-            break;
-          case "Cat3":
-            c = true;
-            break;
-          case "Cat4":
-            d = true;
-            break;
-          case "Cat5":
-            e = true;
-            break;
-          case "Cat6":
-            f = true;
-            break;
-        }
-        scene.renderCatButtons(a, b, c, d, e, f);
+        scene.renderCatButtons([{ spriteName: gameObject.data.values.spriteName, x: gameObject.input.dragStartX, y: gameObject.input.dragStartY }]);
 
         //Add cat to the group:
         scene.currentPlayedCats.add(gameObject);
@@ -539,5 +468,6 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
   }
 
-  update() {}
+  update() { }
+  g
 }
