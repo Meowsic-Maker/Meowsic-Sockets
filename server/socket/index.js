@@ -10,7 +10,6 @@ const gameRooms = {
 
 //IMPORT AND INITIALIZE FIREBASE
 const firebase = require("firebase/app");
-const { LibManifestPlugin } = require("webpack");
 const firebaseConfig = require("../firebaseConfig");
 require("firebase/auth");
 const firebaseApp = firebase.initializeApp(firebaseConfig);
