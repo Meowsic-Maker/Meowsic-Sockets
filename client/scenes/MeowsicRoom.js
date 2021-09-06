@@ -22,16 +22,16 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("homeButton", "/assets/elements/homebutton.png");
     this.load.image("pauseButton", "/assets/elements/pausebutton.png");
     this.load.image("playButton", "/assets/elements/playbutton.png");
-    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat2", "/assets/cats/cat2-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat3", "/assets/cats/cat3-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat6", "/assets/cats/cat6-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat7", "/assets/cats/cat7-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat8", "/assets/cats/cat8-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat12", "/assets/cats/cat12-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
-    this.load.spritesheet("Cat10", "/assets/cats/cat10-sheet.png", { frameWidth: 1200, frameHeight: 1200, });
+    this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat2", "/assets/cats/cat2-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat3", "/assets/cats/cat3-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat4", "/assets/cats/cat4-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat5", "/assets/cats/cat5-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat6", "/assets/cats/cat6-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat7", "/assets/cats/cat7-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat8", "/assets/cats/cat8-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat12", "/assets/cats/cat12-sheet.png", { frameWidth: 500, frameHeight: 500, });
+    this.load.spritesheet("Cat10", "/assets/cats/cat10-sheet.png", { frameWidth: 500, frameHeight: 500, });
 
     this.load.audio("bossanova", "/assets/music/bossa-nova-bass.wav");
     this.load.audio("bell", "/assets/music/bell.mp3");
@@ -229,13 +229,13 @@ export default class MeowsicRoom extends Phaser.Scene {
       const renderedCat = playerCat.render(x, y, spriteName);
       //Handling the Drop Zones:
       renderedCat.data.values.dropZones.push(selectedDropZone);
-      renderedCat.setScale(.34)
       scene[selectedDropZone].data.values.occupied = true;
       // activating cat meow and dance
       renderedCat.data.values.soundOn = true;
       if (renderedCat.data.values.dropZones.length <= 1) {
         renderedCat.data.values.meow();
       }
+      renderedCat.setScale(.85)
       renderedCat.play(spriteName, true)
       // Set destruction button
       renderedCat.on(
@@ -431,7 +431,7 @@ export default class MeowsicRoom extends Phaser.Scene {
             });
           }.bind(this)
         );
-        gameObject.setScale(.34)
+        gameObject.setScale(.85)
 
         // Update dropzone details on cat object
         gameObject.data.values.dropZones.push(dropZone.name);

@@ -5,7 +5,7 @@ export default class Cat {
         this.render = (x, y, sprite) => {
             let cat = scene.add
                 .sprite(x, y, sprite, 0)
-                .setScale(0.22)
+                .setScale(0.55)
                 .setInteractive();
             scene.anims.create({
                 key: spriteName,
