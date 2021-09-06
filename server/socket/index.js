@@ -31,8 +31,6 @@ module.exports = (io) => {
       // roomInfo.usernames.push(username);
       // update number of players
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-
-      console.log("roomInfo", roomInfo);
       // set initial state on client side: (Which INCLUDES placed cats!!)
       socket.emit("setState", roomInfo);
     });
