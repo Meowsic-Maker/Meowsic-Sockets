@@ -28,6 +28,7 @@ export default {
         arcade: {
             debug: false, // Whether physics engine should run in debug mode
         },
+        fps: 15
     },
     dom: {
         createContainer: true,
