@@ -1,5 +1,5 @@
 import Phaser from "phaser";
-
+import WebFontFile from "../../public/webfont";
 export default class SignUp extends Phaser.Scene {
   constructor() {
     super("SignUp");
@@ -14,6 +14,7 @@ export default class SignUp extends Phaser.Scene {
   }
 
   preload() {
+    this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
     this.load.html("signupform", "assets/text/signupform.html");
   }
 
@@ -47,17 +48,18 @@ export default class SignUp extends Phaser.Scene {
       }
     });
 
-    scene.notValidText = scene.add.text(670, 295, "", {
-      fill: "#ff0000",
-      fontSize: "15px",
-    });
+    this.notValidText = scene.add.text(1000, 1570, "")
+      .setFontSize(60)
+      .setFontFamily("Gaegu")
+      .setFontStyle("Bold")
+      .setColor("#FF10F0")
 
     scene.socket.on("emailNotValid", function () {
       scene.notValidText.setText("Invalid email! OH NOOOOOOOOOOOOOOOO");
     });
 
-    scene.socket.on("SignUpNotValid", function () {
-      scene.notValidText.setText("Invalid SignUp!");
+    scene.socket.on("signUpNotValid", function (error) {
+      scene.notValidText.setText(`OOPS! ${error} Try Again!`);
     });
     // if the user is able to successfully sign-up, send them to the waiting room
     scene.socket.on("userSignUpSuccess", function (user) {
