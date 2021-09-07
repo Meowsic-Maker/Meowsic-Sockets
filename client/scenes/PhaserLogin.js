@@ -49,18 +49,16 @@ export default class Login extends Phaser.Scene {
       }
     });
 
-    // scene.requestButton.setInteractive();
-    // scene.requestButton.on("pointerdown", () => {
-    //     scene.socket.emit("getRoomCode");
-    // });
 
-    scene.notValidText = scene.add.text(670, 295, "", {
-      fill: "#ff0000",
-      fontSize: "15px",
-    });
+
+    this.notValidText = scene.add.text(1420, 1570, "")
+      .setFontSize(60)
+      .setFontFamily("Gaegu")
+      .setFontStyle("Bold")
+      .setColor("#FF10F0")
 
     scene.socket.on("userNotValid", function () {
-      scene.notValidText.setText("Invalid Login!");
+      scene.notValidText.setText("Invalid Login! Try Again!");
     });
 
     scene.socket.on("userLoginSuccess", function (user) {

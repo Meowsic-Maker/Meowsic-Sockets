@@ -12,6 +12,11 @@ export default class MainScene extends Phaser.Scene {
       });
   }
 
+  init(data) {
+    //initializing the socket passed to the waiting room
+    if (data) this.state.loggedInUser = data.user;
+  }
+
   preload() {
     this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
     this.load.image("loginbutton", "/assets/elements/login-button.png");
@@ -49,7 +54,7 @@ export default class MainScene extends Phaser.Scene {
       .setScale(0.8, 0.8)
       .setInteractive();
     this.meowsicButton.on("pointerdown", function () {
-      scene.scene.launch("WaitingRoom", { socket: scene.socket });
+      scene.scene.launch("WaitingRoom", { socket: scene.socket, user: scene.state.loggedInUser });
       scene.meowsicButton.disableInteractive();
       scene.loginButton.disableInteractive();
     });
@@ -58,7 +63,7 @@ export default class MainScene extends Phaser.Scene {
       .setScale(0.8, 0.8)
       .setInteractive();
     this.loginButton.on("pointerdown", function () {
-      scene.scene.launch("Login", { socket: scene.socket });
+      scene.scene.launch("Login", { ...scene.state, socket: scene.socket });
       scene.loginButton.disableInteractive();
       scene.meowsicButton.disableInteractive();
     });

@@ -115,19 +115,10 @@ module.exports = (io) => {
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
-          console.log(error);
-          // write custom error functions - reference emailNotValid, 56 phaserSignUp
+          console.log(error.message);
+          socket.emit("userNotValid")
         });
-      // ).then(user => {
-      //     console.log("THIS IS OUR USER", user)
-      // }).catch(err => {
-      //     console.log(err)
-      // })
-      // if (user !== undefined) {
-      //
-      // } else {
-      // socket.emit("UserNotValid")
-      // }
+
     });
 
     socket.on("userConnectedToRoom", function (args) {
@@ -138,10 +129,6 @@ module.exports = (io) => {
     })
 
     socket.on("isSignUpValid", function (input) {
-      if (!input.email.includes("@")) {
-        // set this text to display on form!
-        socket.emit("emailNotValid");
-      }
       firebase
         .auth()
         .createUserWithEmailAndPassword(input.email, input.password)
@@ -162,10 +149,12 @@ module.exports = (io) => {
           socket.emit("userSignUpSuccess", { username: input.username, email });
         })
         .catch(function (error) {
+          socket.emit("signUpNotValid", error.message)
           // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
-          console.log(error);
+          console.log('error', error.message);
+          socket.emit("signUpNotValid", error.message)
         });
     });
 
