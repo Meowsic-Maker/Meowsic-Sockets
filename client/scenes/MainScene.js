@@ -6,7 +6,9 @@ import WebFontFile from "../../public/webfont";
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
-    super("MainScene")
+    super("MainScene"),
+      (this.state = {
+      });
   }
 
   init(data) {
