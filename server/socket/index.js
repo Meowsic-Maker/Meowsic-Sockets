@@ -23,6 +23,7 @@ module.exports = (io) => {
 
     //WHEN CLIENT EMITS 'JOIN ROOM'
     socket.on("joinRoom", (roomKey, username) => {
+      console.log(username)
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
       //here is where we are creating a player state with current player info

@@ -23,6 +23,7 @@ export default class WaitingRoom extends Phaser.Scene {
 
     create() {
         const scene = this;
+        console.log(scene.state)
 
         scene.popUp = scene.add.graphics();
 
@@ -73,7 +74,7 @@ export default class WaitingRoom extends Phaser.Scene {
             // scene.roomKeyText.setText(scene.roomKey);
             let username = "Anony-mouse";
             if (scene.state.loggedInUser) {
-                username = scene.state.loggedInUser.username;
+                username = scene.state.loggedInUser;
             }
             scene.socket.emit("joinRoom", roomKey, username);
             scene.scene.stop("WaitingRoom");
@@ -88,7 +89,7 @@ export default class WaitingRoom extends Phaser.Scene {
         scene.socket.on("keyIsValid", function (input) {
             let username = "Anony-mouse";
             if (scene.state.loggedInUser) {
-                username = scene.state.loggedInUser.username;
+                username = scene.state.loggedInUser
             }
             scene.socket.emit("joinRoom", input, username);
             scene.scene.stop("WaitingRoom");

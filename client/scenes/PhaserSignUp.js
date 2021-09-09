@@ -54,12 +54,8 @@ export default class SignUp extends Phaser.Scene {
       .setFontStyle("Bold")
       .setColor("#FF10F0")
 
-    scene.socket.on("emailNotValid", function () {
-      scene.notValidText.setText("Invalid email! OH NOOOOOOOOOOOOOOOO");
-    });
-
     scene.socket.on("signUpNotValid", function (error) {
-      scene.notValidText.setText(`OOPS! ${error} Try Again!`);
+      scene.notValidText.setText(`OOPS! ${error}. Try Again!`);
     });
     // if the user is able to successfully sign-up, send them to the waiting room
     scene.socket.on("userSignUpSuccess", function (user) {
