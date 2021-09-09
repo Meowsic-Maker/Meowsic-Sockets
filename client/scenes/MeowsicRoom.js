@@ -83,7 +83,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.socket = data.socket;
     this.state = { ...data };
     this.user = data.user;
-    this.state.loggedInUser = data.user;
+    if (data.user) this.state.loggedInUser = data.user;
   }
 
   create() {
@@ -154,6 +154,7 @@ export default class MeowsicRoom extends Phaser.Scene {
         });
       });
       //LOGIN/SIGNUP Button
+      console.log(this.state.loggedInUser)
       if (!scene.state.loggedInUser) {
         scene.loginButton = this.add
           .image(3060, 960, "loginButton")
@@ -343,7 +344,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     //Update our page when a cat has been destroyed:
     this.socket.on("catDestroyedUpdate", function (args) {
-      const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
+      const { selectedDropZone, socketId, roomKey } = args;
       //check to see if the socket that destroyed cat is our socket:
       if (socketId !== scene.socket.id && roomKey === scene.state.roomKey) {
         //find the cat in group by dropzone & destroy it
@@ -358,35 +359,24 @@ export default class MeowsicRoom extends Phaser.Scene {
       }
     });
 
-    // render zones
-    this.zone1 = new Zone(this);
-    this.dropZone1 = this.zone1.renderZone(1710, 1530, 1230, 720);
-    this.dropZone1.name = "dropZone1";
+    // render drop zones
+    this.zoneLocations = [
+      [1710, 1530, 1230, 720],
+      [855, 1200, 480, 900],
+      [1200, 885, 480, 900],
+      [1650, 495, 420, 720],
+      [2025, 435, 480, 540],
+      [2250, 870, 840, 600],
+      [2550, 1230, 750, 480]
+    ]
 
-    this.zone2 = new Zone(this);
-    this.dropZone2 = this.zone2.renderZone(855, 1200, 480, 900);
-    this.dropZone2.name = "dropZone2";
+    this.zoneLocations.forEach((zone, idx) => {
+      let newZone = new Zone(this);
+      scene[`dropZone${idx}`] = newZone.renderZone(...zone);
+      scene[`dropZone${idx}`].name = `dropZone${idx}`;
+    })
 
-    this.zone3 = new Zone(this);
-    this.dropZone3 = this.zone3.renderZone(1200, 885, 480, 900);
-    this.dropZone3.name = "dropZone3";
-
-    this.zone4 = new Zone(this);
-    this.dropZone4 = this.zone4.renderZone(1650, 495, 420, 720);
-    this.dropZone4.name = "dropZone4";
-
-    this.zone5 = new Zone(this);
-    this.dropZone5 = this.zone5.renderZone(2025, 435, 480, 540);
-    this.dropZone5.name = "dropZone5";
-
-    this.zone6 = new Zone(this);
-    this.dropZone6 = this.zone6.renderZone(2250, 870, 840, 600);
-    this.dropZone6.name = "dropZone6";
-
-    this.zone7 = new Zone(this);
-    this.dropZone7 = this.zone7.renderZone(2550, 1230, 750, 480);
-    this.dropZone7.name = "dropZone7";
-
+    // render cat menu buttons
     let catSpritesArray = [
       { spriteName: "Cat1", x: 170, y: 540 },
       { spriteName: "Cat2", x: 170, y: 780 },
@@ -402,7 +392,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       { spriteName: "Cat12", x: 360, y: 1590 },
     ];
 
-    // render cat menu buttons
+
     this.renderCatButtons = (arrayOfSpriteObjs) => {
       //sprite Objs: {spriteName:, x:, y:,}
       arrayOfSpriteObjs.forEach((sprite) => {

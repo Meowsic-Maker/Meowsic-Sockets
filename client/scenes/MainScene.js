@@ -15,6 +15,7 @@ export default class MainScene extends Phaser.Scene {
   init(data) {
     //initializing the socket passed to the waiting room
     if (data) this.state.loggedInUser = data.user;
+    if (window.localStorage.getItem('user')) this.state.loggedInUser = window.localStorage.getItem('user')
   }
 
   preload() {
@@ -30,6 +31,7 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    console.log(this.state)
     // could we maybe revert back to this keyword?
     let scene = this;
 

@@ -12,6 +12,7 @@ export default class Login extends Phaser.Scene {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
     this.state.currentRoom = data.currentRoom
+
   }
 
   preload() {
@@ -19,6 +20,7 @@ export default class Login extends Phaser.Scene {
   }
 
   create() {
+
     const scene = this;
 
     scene.popUp = scene.add.graphics();
@@ -62,9 +64,11 @@ export default class Login extends Phaser.Scene {
     });
 
     scene.socket.on("userLoginSuccess", function (user) {
+      window.localStorage.setItem('user', user.username)
+      scene.state.loggedInUser = user.username
+      console.log(localStorage.getItem('user'))
       scene.scene.stop("Login");
       if (scene.state.currentRoom) {
-        // let username = scene.state.loggedInUser.username;
         scene.socket.emit("joinRoom", scene.state.currentRoom, user.username);
         scene.physics.pause();
         scene.scene.stop("MeowsicRoom");
@@ -72,7 +76,7 @@ export default class Login extends Phaser.Scene {
         scene.scene.launch("WaitingRoom", {
           ...scene.state,
           socket: scene.socket,
-          user: user,
+          user: user.username,
         });
       }
     });
