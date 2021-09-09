@@ -59,7 +59,7 @@ export default class MainScene extends Phaser.Scene {
     this.meowsicButton.on("pointerdown", function () {
       scene.scene.launch("WaitingRoom", { socket: scene.socket, user: scene.state.loggedInUser });
       scene.meowsicButton.disableInteractive();
-      scene.loginButton.disableInteractive();
+      scene.loginButton ? (scene.loginButton.disableInteractive()) : (scene.logoutButton.disableInteractive())
     });
     if (!this.state.loggedInUser) {
       this.loginButton = this.add

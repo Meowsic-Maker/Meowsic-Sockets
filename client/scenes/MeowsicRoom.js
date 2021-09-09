@@ -19,6 +19,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     });
 
     this.load.image("loginButton", "/assets/elements/loginbutton.png");
+    this.load.image("logoutButton", "/assets/elements/meowsiclogout-button.png");
     this.load.image("homeButton", "/assets/elements/homebutton.png");
     this.load.image("pauseButton", "/assets/elements/pausebutton.png");
     this.load.image("playButton", "/assets/elements/playbutton.png");
@@ -83,6 +84,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.state = { ...data };
     this.user = data.user;
     if (data.user) this.state.loggedInUser = data.user;
+    if (data.loggedInUser) this.state.loggedInUser = data.loggedInUser
   }
 
   create() {
@@ -153,7 +155,6 @@ export default class MeowsicRoom extends Phaser.Scene {
         });
       });
       //LOGIN/SIGNUP Button
-      console.log(this.state.loggedInUser)
       if (!scene.state.loggedInUser) {
         scene.loginButton = this.add
           .image(3060, 960, "loginButton")
@@ -168,6 +169,24 @@ export default class MeowsicRoom extends Phaser.Scene {
             currentRoom: scene.state.roomKey,
           });
         });
+      } else {
+        scene.logoutButton = this.add
+          .image(3060, 960, "logoutButton")
+          .setInteractive()
+          .setScale(1.2);
+        scene.logoutButton.on("pointerdown", function () {
+          window.localStorage.clear()
+          stopAllCatSounds();
+          Tone.Transport.cancel(0);
+          Tone.Transport.stop();
+          console.log(scene.state)
+          scene.socket.disconnect()
+          scene.scene.start("MainScene", {
+            user: null,
+            loggedInUser: null
+          });
+        });
+
       }
 
       //PLAY Button
