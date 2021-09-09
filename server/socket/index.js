@@ -26,14 +26,12 @@ module.exports = (io) => {
       console.log(username)
       socket.join(roomKey);
       const roomInfo = gameRooms[roomKey];
-      //here is where we are creating a player state with current player info
+      //Create a player state with current player info
       roomInfo.players[socket.id] = { playerId: socket.id, username: username || "Anony-mouse" };
-
       if (username !== "Anony-mouse") roomInfo.loggedInUser = username
-
-      // update number of players
+      //Update number of players
       roomInfo.numPlayers = Object.keys(roomInfo.players).length;
-      // set initial state on client side: (Which INCLUDES placed cats!!)
+      //Set initial room state on client side
       socket.emit("setState", roomInfo);
     });
 
@@ -50,21 +48,18 @@ module.exports = (io) => {
           });
         }
       }
-
       // UPDATE ROOMINFO - REMOVE USERNAME
       const roomInfo = gameRooms[roomKey];
       if (roomInfo) {
         console.log("user disconnected: ", socket.id);
-        // remove this player from our players object
+        // remove this player from our players object & update number of players
         delete roomInfo.players[socket.id];
-        // update numPlayers
         roomInfo.numPlayers = Object.keys(roomInfo.players).length;
         // emit a message to all players to remove this player
         io.to(roomKey).emit("disconnected", {
           players: roomInfo.players,
           numPlayers: roomInfo.numPlayers,
         });
-        //ADD some logic to delete rooms if there are no more players and it's not saved??
       }
     });
 
@@ -115,7 +110,6 @@ module.exports = (io) => {
           socket.emit("userLoginSuccess", { username, email });
         })
         .catch(function (error) {
-          // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log(error.message);
@@ -153,7 +147,6 @@ module.exports = (io) => {
         })
         .catch(function (error) {
           socket.emit("signUpNotValid", error.message)
-          // Handle Errors here.
           var errorCode = error.code;
           var errorMessage = error.message;
           console.log('error', error.message);
@@ -164,22 +157,21 @@ module.exports = (io) => {
     //PLAYING CATS/ UPDATING SOCKETS:
     socket.on("catPlayed", function (args) {
       const { x, y, selectedDropZone, socketId, roomKey, spriteName } = args;
-      //Create a cat object with details needed for re-rendering
+      //Create a cat object with details needed for re-rendering & push to the room's placedCats array
       const cat = { dropZone: selectedDropZone, spriteName: spriteName, x, y };
-      //push new cat obj to the placedCats array in the Selected Room:
       gameRooms[roomKey].placedCats.push(cat);
-      //send placed cat info to other OPEN sockets:
-      io.emit("catPlayedUpdate", args);
+      //Send an update to open sockets in the room
+      io.to(roomKey).emit("catPlayedUpdate", args);
     });
 
     socket.on("catDestroyed", function (args) {
       const { selectedDropZone, roomKey } = args;
-      //filter out the destroyed cat from our placed cats array:
+      //filter out the destroyed cat from the room's placed cats array:
       gameRooms[roomKey].placedCats = gameRooms[roomKey].placedCats.filter(
         (cat) => cat.dropZone !== selectedDropZone
       );
-      //emit a destroyed response to destroy on other users screen
-      io.emit("catDestroyedUpdate", args);
+      //Send an update to open sockets in the room
+      io.to(roomKey).emit("catDestroyedUpdate", args);
     });
   });
 };
@@ -188,7 +180,7 @@ function codeGenerator() {
   let words = ['heart', 'pizza', 'water', 'happy', 'green', 'music', 'party', 'dream', 'apple', 'tiger', 'river', 'house',
     'light', 'story', 'candy', 'puppy', 'queen', 'king', 'plant', 'black', 'zebra', 'panda', 'mouse', 'dress', 'sweet',
     'beach', 'love', 'wolf', 'goat', 'fish', 'tree', 'song', 'star', 'city', 'duck', 'lion', 'fire', 'wood', 'cake', 'dark',
-    'leaf', 'pear', 'boat', 'snow', 'book', 'rose', 'kitten', 'claw', 'bird', 'taco']
+    'leaf', 'pear', 'boat', 'snow', 'book', 'rose', 'kitten', 'claw', 'bird', 'taco', 'hero', 'meow', 'yarn', 'string', 'scratch', 'bite']
   let code = "";
   code += words[Math.floor(Math.random() * words.length)].toUpperCase()
   let chars = "123456789";
