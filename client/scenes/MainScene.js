@@ -6,13 +6,11 @@ import WebFontFile from "../../public/webfont";
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
-    super("MainScene"),
-      (this.state = {
-      });
+    super("MainScene")
   }
 
   init(data) {
-    //initializing the socket passed to the waiting room
+    // Checking to see if there is a logged in user from localStorage OR a passed arg
     if (data) this.state.loggedInUser = data.user;
     if (window.localStorage.getItem('user')) this.state.loggedInUser = window.localStorage.getItem('user')
   }
@@ -31,26 +29,22 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    console.log(this.state)
-    // could we maybe revert back to this keyword?
     let scene = this;
 
-    // Create Background:
+    // Create Background & Animate it:
     const background = scene.add.sprite(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "giflogo", 0).setScale(2.9);
-    // Create background Animation:
     this.anims.create({
       key: "wiggle",
       repeat: -1,
       frameRate: 5,
       frames: this.anims.generateFrameNames("giflogo", { start: 0, end: 11 }),
     });
-    // PLAY background animation:
     background.play("wiggle");
 
-    //create socket:
+    //Create new socket:
     this.socket = io();
 
-    //BUTTONS!!
+    //Make Meowsic Button
     this.meowsicButton = this.add
       .image(2400, 1680, "meowsicbutton")
       .setScale(0.8, 0.8)
@@ -60,6 +54,8 @@ export default class MainScene extends Phaser.Scene {
       scene.meowsicButton.disableInteractive();
       scene.loginButton ? (scene.loginButton.disableInteractive()) : (scene.logoutButton.disableInteractive())
     });
+
+    //Login/Signup Or Logout Button
     if (!this.state.loggedInUser) {
       this.loginButton = this.add
         .image(940, 1680, "loginbutton")
@@ -80,9 +76,5 @@ export default class MainScene extends Phaser.Scene {
         scene.scene.start("MainScene", { user: null });
       })
     }
-  }
-
-  update() {
-    const scene = this;
   }
 }

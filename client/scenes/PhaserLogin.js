@@ -2,16 +2,16 @@ import Phaser from "phaser";
 
 export default class Login extends Phaser.Scene {
   constructor() {
-    super("Login");
+    super("Login")
     this.state = {
       loggedInUser: null,
-    };
+    }
   }
 
   init(data) {
     //initializing the socket passed to the waiting room
     this.socket = data.socket;
-    this.state.currentRoom = data.currentRoom
+    this.state.currentRoom = data.currentRoom;
 
   }
 
@@ -23,9 +23,8 @@ export default class Login extends Phaser.Scene {
 
     const scene = this;
 
+    //Add & Style popup window
     scene.popUp = scene.add.graphics();
-
-    // for popup window
     scene.popUp.lineStyle(1, 0xffffff);
     scene.popUp.fillStyle(0xffebf0, 0.9);
     scene.popUp.strokeRect(75, 75, 3258, 1770);
@@ -51,18 +50,17 @@ export default class Login extends Phaser.Scene {
       }
     });
 
-
-
+    //Error Handling
     this.notValidText = scene.add.text(1420, 1570, "")
       .setFontSize(60)
       .setFontFamily("Gaegu")
       .setFontStyle("Bold")
       .setColor("#FF10F0")
-
     scene.socket.on("userNotValid", function () {
       scene.notValidText.setText("Invalid Login! Try Again!");
     });
 
+    //If Login is Successful, either send them to waiting room or the room they were currently in
     scene.socket.on("userLoginSuccess", function (user) {
       window.localStorage.setItem('user', user.username)
       scene.state.loggedInUser = user.username
@@ -81,5 +79,4 @@ export default class Login extends Phaser.Scene {
       }
     });
   }
-  update() { }
 }

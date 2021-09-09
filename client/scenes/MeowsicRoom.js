@@ -13,17 +13,16 @@ export default class MeowsicRoom extends Phaser.Scene {
   preload() {
     this.load.addFile(new WebFontFile(this.load, "Gaegu"));
     this.load.image("bg", "/assets/elements/stagebg.jpg");
-    this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
-      frameWidth: 1200,
-      frameHeight: 1200,
-    });
-
     this.load.image("loginButton", "/assets/elements/loginbutton.png");
     this.load.image("logoutButton", "/assets/elements/meowsiclogout-button.png");
     this.load.image("homeButton", "/assets/elements/homebutton.png");
     this.load.image("pauseButton", "/assets/elements/pausebutton.png");
     this.load.image("playButton", "/assets/elements/playbutton.png");
 
+    this.load.spritesheet("instructions", "/assets/elements/how-to-play.png", {
+      frameWidth: 1200,
+      frameHeight: 1200,
+    });
     this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", {
       frameWidth: 500,
       frameHeight: 500,
@@ -89,6 +88,7 @@ export default class MeowsicRoom extends Phaser.Scene {
 
   create() {
     const scene = this;
+
     // BACKGROUND
     this.background = this.add
       .image(this.sys.canvas.width / 2, this.sys.canvas.height / 2, "bg")
@@ -186,9 +186,7 @@ export default class MeowsicRoom extends Phaser.Scene {
             loggedInUser: null
           });
         });
-
       }
-
       //PLAY Button
       scene.togglePlay("pause");
     };
@@ -300,13 +298,13 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     //Function that sets the current cats when a user joins an in-prog session:
     this.renderCurrentCats = () => {
-      const { players, numPlayers, placedCats, roomKey } = scene.state;
+      const { placedCats } = scene.state;
       placedCats.forEach((cat) => {
         scene.renderCat(cat.dropZone, cat.spriteName, cat.x, cat.y);
       });
     };
 
-    //USERNAMES:
+    //Render the Meowstros
     this.currentUsers = this.physics.add.group();
 
     this.renderPlayerUsernames = () => {
