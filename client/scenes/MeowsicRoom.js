@@ -22,6 +22,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.image("homeButton", "/assets/elements/homebutton.png");
     this.load.image("pauseButton", "/assets/elements/pausebutton.png");
     this.load.image("playButton", "/assets/elements/playbutton.png");
+
     this.load.spritesheet("Cat1", "/assets/cats/cat1-sheet.png", {
       frameWidth: 500,
       frameHeight: 500,
@@ -72,9 +73,7 @@ export default class MeowsicRoom extends Phaser.Scene {
     this.load.audio("Cat6", "/assets/music/Cat6.wav");
     this.load.audio("Cat7", "/assets/music/Cat7.wav");
     this.load.audio("Cat8", "/assets/music/Cat8.wav");
-    // this.load.audio("Cat9", "/assets/music/cat9.wav");
     this.load.audio("Cat10", "/assets/music/Cat10.wav");
-    // this.load.audio("Cat11", "/assets/music/cat11.wav");
     this.load.audio("Cat12", "/assets/music/Cat12.wav");
   }
 
@@ -347,7 +346,7 @@ export default class MeowsicRoom extends Phaser.Scene {
       const { selectedDropZone, socketId, roomKey } = args;
       //check to see if the socket that destroyed cat is our socket:
       if (socketId !== scene.socket.id && roomKey === scene.state.roomKey) {
-        //find the cat in group by dropzone & destroy it
+        //find the cat in group by dropzone & DESTROY it
         scene.currentPlayedCats.getChildren().forEach((cat) => {
           if (selectedDropZone === cat.data.values.dropZones[0]) {
             cat.data.values.meowSounds[0].disconnect();
@@ -386,15 +385,12 @@ export default class MeowsicRoom extends Phaser.Scene {
       { spriteName: "Cat6", x: 360, y: 630 },
       { spriteName: "Cat7", x: 360, y: 870 },
       { spriteName: "Cat8", x: 360, y: 1110 },
-      // { spriteName: "Cat9", x: 400, y: 500 },
       { spriteName: "Cat10", x: 360, y: 1350 },
-      // { spriteName: "Cat11", x: 400, y: 900 },
       { spriteName: "Cat12", x: 360, y: 1590 },
     ];
 
 
     this.renderCatButtons = (arrayOfSpriteObjs) => {
-      //sprite Objs: {spriteName:, x:, y:,}
       arrayOfSpriteObjs.forEach((sprite) => {
         let playerCat = new Cat(this, sprite.spriteName);
         playerCat.render(sprite.x, sprite.y, sprite.spriteName);
@@ -422,11 +418,10 @@ export default class MeowsicRoom extends Phaser.Scene {
 
     this.input.on("drop", function (pointer, gameObject, dropZone) {
       if (!dropZone.data.values.occupied) {
-        // if cat is dropped in an empty zone
-        // snap into place
+        // if cat is dropped in an empty zone, snap it into place
         gameObject.x = dropZone.x;
         gameObject.y = dropZone.y;
-        //set zone to occupied
+        // Det zone to occupied
         dropZone.data.values.occupied = true;
         // Set destruction button
         gameObject.on(

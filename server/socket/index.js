@@ -171,7 +171,7 @@ module.exports = (io) => {
     });
 
     socket.on("catDestroyed", function (args) {
-      const { selectedDropZone, socketId, roomKey } = args;
+      const { selectedDropZone, roomKey } = args;
       //filter out the destroyed cat from our placed cats array:
       gameRooms[roomKey].placedCats = gameRooms[roomKey].placedCats.filter(
         (cat) => cat.dropZone !== selectedDropZone

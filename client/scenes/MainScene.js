@@ -21,6 +21,7 @@ export default class MainScene extends Phaser.Scene {
   preload() {
     this.load.addFile(new WebFontFile(this.load, 'Gaegu'))
     this.load.image("loginbutton", "/assets/elements/login-button.png");
+    this.load.image("logoutbutton", "/assets/elements/mainpage-logout-button.png");
     this.load.image("loginbuttonhover", "/assets/elements/login-button-hover.png");
     this.load.image("meowsicbutton", "/assets/elements/meowsic-button.png");
     this.load.image("meowsicbuttonhover", "/assets/elements/meowsic-button-hover.png");
@@ -60,15 +61,26 @@ export default class MainScene extends Phaser.Scene {
       scene.meowsicButton.disableInteractive();
       scene.loginButton.disableInteractive();
     });
-    this.loginButton = this.add
-      .image(940, 1680, "loginbutton")
-      .setScale(0.8, 0.8)
-      .setInteractive();
-    this.loginButton.on("pointerdown", function () {
-      scene.scene.launch("Login", { ...scene.state, socket: scene.socket });
-      scene.loginButton.disableInteractive();
-      scene.meowsicButton.disableInteractive();
-    });
+    if (!this.state.loggedInUser) {
+      this.loginButton = this.add
+        .image(940, 1680, "loginbutton")
+        .setScale(0.8, 0.8)
+        .setInteractive();
+      this.loginButton.on("pointerdown", function () {
+        scene.scene.launch("Login", { ...scene.state, socket: scene.socket });
+        scene.loginButton.disableInteractive();
+        scene.meowsicButton.disableInteractive();
+      });
+    } else {
+      this.logoutButton = this.add
+        .image(940, 1680, "logoutbutton")
+        .setScale(0.8, 0.8)
+        .setInteractive();
+      this.logoutButton.on("pointerdown", function () {
+        window.localStorage.clear()
+        scene.scene.start("MainScene", { user: null });
+      })
+    }
   }
 
   update() {

@@ -18,7 +18,6 @@ class Game extends Phaser.Game {
     this.scene.add('Login', Login)
     this.scene.add('SignUp', SignUp)
     //Start the game with the mainscene
-    //<<START GAME WITH LOGIN HERE>>
     this.scene.start('MainScene')
   }
 }
